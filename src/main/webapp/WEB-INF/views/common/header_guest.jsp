@@ -39,7 +39,7 @@
         <!-- 로그인 영역 -->
         <div class="header-auth">
             <span class="auth-text">이미 계정이 있으신가요?</span>
-            <a href="${pageContext.request.contextPath}/login" class="auth-login-btn">로그인</a>
+            <a href="${pageContext.request.contextPath}/member/login" class="auth-login-btn">로그인</a>
         </div>
 
     </div>

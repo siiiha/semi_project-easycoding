@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="user-main-page">
 
@@ -72,7 +72,7 @@
                         </div>
                         </c:if>
 
-                        <a href="${pageContext.request.contextPath}/learn/daily-quiz" class="btn mission-start-btn">학습하기</a>
+                        <a href="${pageContext.request.contextPath}/education/daily-quiz" class="btn mission-start-btn">학습하기</a>
                     </div>
                 </div>
 

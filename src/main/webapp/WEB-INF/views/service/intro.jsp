@@ -14,14 +14,7 @@
 </head>
 <body>
 
-<c:choose>
-    <c:when test="${not empty sessionScope.loginUser}">
-        <jsp:include page="/WEB-INF/views/common/header_user.jsp" />
-    </c:when>
-    <c:otherwise>
-        <jsp:include page="/WEB-INF/views/common/header_guest.jsp" />
-    </c:otherwise>
-</c:choose>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="intro-page">
 
@@ -34,8 +27,7 @@
                 온라인 코딩 학습 플랫폼, 쉽코딩
             </p>
             <div class="intro-hero-btns">
-                <a href="${pageContext.request.contextPath}/register" class="btn intro-btn-primary">무료로 시작하기 →</a>
-                <a href="${pageContext.request.contextPath}/service/guide" class="btn intro-btn-outline">학습 가이드 보기</a>
+                <a href="${pageContext.request.contextPath}/member/join" class="btn intro-btn-primary">무료로 시작하기 →</a>
             </div>
         </div>
     </section>

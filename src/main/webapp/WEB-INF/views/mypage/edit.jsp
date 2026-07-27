@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="mypage-main">
     <div class="mypage-inner">
@@ -136,7 +136,7 @@
                 <!-- ── 액션 버튼 ── -->
                 <div class="form-actions">
                     <button type="submit" class="btn-save">저장하기</button>
-                    <a href="${pageContext.request.contextPath}/mypage" class="btn-cancel">취소</a>
+                    <a href="${pageContext.request.contextPath}/member/mypage" class="btn-cancel">취소</a>
                 </div>
 
             </form>
