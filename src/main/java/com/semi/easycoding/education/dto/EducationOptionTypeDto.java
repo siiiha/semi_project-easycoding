@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EducationOptionTypeDto extends EducationDto {
-    private Long optionId;
-    private String optionContent;
-    private boolean isCorrect;
-    private Integer orderingNumber;
+    private Long[] optionId;
+    private String[] optionContents;
+    private boolean[] isCorrect;
+    private Short[] orderingNumber;
 }

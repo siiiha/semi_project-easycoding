@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EducationBlankTypeDto extends EducationDto {
-    private Long blankId;
-    private String blankContent;
-    private Integer orderingNumber;
+    private Long[] blankId;
+    private String[] blankContent;
+    private Short[] orderingNumber;
 }

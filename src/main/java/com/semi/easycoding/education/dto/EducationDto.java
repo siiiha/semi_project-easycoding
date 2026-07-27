@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class EducationDto {
     private Long EducationId;
-    private Integer EducationType;
+    private Short EducationType;
     private String EducationTitle;
     private String EducationContent;
     private LocalDateTime createdAt;
