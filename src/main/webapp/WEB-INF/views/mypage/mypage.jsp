@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="mypage-main">
     <div class="mypage-inner">
@@ -31,7 +31,7 @@
                 <div class="account-layout">
                     <!-- 아바타 -->
                     <div class="avatar-section">
-                        <div class="avatar-circle">
+                        <div class="avatar-circle avatar-circle-lg">
                             <c:choose>
                                 <c:when test="${not empty sessionScope.loginUser.profileImage}">
                                     <img src="${sessionScope.loginUser.profileImage}" alt="프로필 이미지" class="avatar-img">
@@ -43,7 +43,6 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
-                        <a href="${pageContext.request.contextPath}/mypage/edit" class="avatar-change-btn">이미지 변경</a>
                     </div>
 
                     <!-- 정보 행 -->
@@ -71,7 +70,7 @@
                                 <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                             <span class="info-value">비밀번호</span>
-                            <a href="${pageContext.request.contextPath}/mypage/edit" class="info-modify-btn">수정</a>
+                            <a href="${pageContext.request.contextPath}/member/edit" class="info-modify-btn">수정</a>
                         </div>
                     </div>
                 </div>
@@ -113,7 +112,7 @@
 
                     <!-- 탈퇴 버튼 -->
                     <div class="activity-withdraw-wrap">
-                        <a href="${pageContext.request.contextPath}/mypage/withdraw" class="withdraw-btn">탈퇴 하기</a>
+                        <a href="${pageContext.request.contextPath}/member/withdraw" class="withdraw-btn">탈퇴 하기</a>
                     </div>
                 </div>
             </section>

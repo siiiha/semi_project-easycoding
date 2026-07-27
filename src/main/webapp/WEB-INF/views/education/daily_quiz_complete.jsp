@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="quiz-complete-page">
     <div class="complete-card">
