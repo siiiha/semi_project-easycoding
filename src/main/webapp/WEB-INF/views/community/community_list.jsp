@@ -97,26 +97,26 @@
                         <span>조회수</span>
                         <span>작성일</span>
                     </div>
-                    <c:forEach var="post" items="${posts}" varStatus="st">
-                        <a href="${pageContext.request.contextPath}/community/${post.id}" class="post-table-row">
+                    <c:forEach var="post" items="${postList}" varStatus="st">
+                        <a href="${pageContext.request.contextPath}/community/${post.postId}" class="post-table-row">
                             <span class="post-table-num">${(currentPage - 1) * pageSize + st.count}</span>
                             <span>
                                 <c:choose>
-                                    <c:when test="${post.type == 'qna'}">
-                                        <span class="post-cat-badge qna">질문 &amp; 답변</span>
+                                    <c:when test="${post.category == '질문&답변'}">
+                                        <span class="post-cat-badge qna">${post.category}</span>
                                     </c:when>
-                                    <c:when test="${post.type == 'solution'}">
-                                        <span class="post-cat-badge solution">풀이 공유</span>
+                                    <c:when test="${post.category == '풀이공유'}">
+                                        <span class="post-cat-badge solution">${post.category}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="post-cat-badge problem">문제 제작</span>
+                                        <span class="post-cat-badge problem">${post.category}</span>
                                     </c:otherwise>
                                 </c:choose>
                             </span>
                             <span class="post-table-title">${post.title}</span>
-                            <span>${post.author}</span>
+                            <span>${post.nickname}</span>
                             <span>${post.views}</span>
-                            <span class="post-table-date">${post.createdAt}</span>
+                            <span class="post-table-date">${post.createdAtStr}</span>
                         </a>
                     </c:forEach>
                 </div>
