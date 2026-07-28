@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS `quiz` (
 	PRIMARY KEY (`quiz_id`),
 	CONSTRAINT `fk_quiz_type_id` FOREIGN KEY (`type_id`) REFERENCES `quiz_type` (`type_id`)
 );
+
+ALTER TABLE `quiz` ADD COLUMN `explanation` text;
