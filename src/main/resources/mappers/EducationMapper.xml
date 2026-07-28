@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.semi.easycoding.education.mapper.EducationMapper">
+
+    <!-- useGeneratedKeys="true" : DB가 자동으로 생성해주는 키를 mybatis로 가져올 수 있게 허용
+        keyProperty="EducationId" : DB에서 자동으로 생성된 PK값을 파라미터의 어떤 변수에 넣을 것인가
+    -->
+
+    <insert id="insertQuiz" parameterType="com.semi.easycoding.education.dto.EducationDto"
+            useGeneratedKeys="true" keyProperty="educationId">
+        INSERT INTO quiz (type_id, title, content, explanation, created_at)
+        VALUES (#{educationType}, #{educationTitle}, #{educationContent}, #{educationExplanation}, #{createdAt})
+    </insert>
+
+    <insert id="insertOptions" parameterType="com.semi.easycoding.education.dto.EducationOptionTypeDto">
+        INSERT INTO answer_option (quiz_id, content, is_correct, option_number)
+        VALUES
+        <foreach collection="options" item="option" separator=",">
+            (#{educationId}, #{option.optionContents}, #{option.correct}, #{option.orderingNumber})
+        </foreach>
+    </insert>
+</mapper>
