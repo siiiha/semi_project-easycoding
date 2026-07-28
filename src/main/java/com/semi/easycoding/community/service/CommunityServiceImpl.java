@@ -1,6 +1,9 @@
 package com.semi.easycoding.community.service;
 
+import com.semi.easycoding.common.dto.PageInfo;
 import com.semi.easycoding.community.dto.PostDto;
+import com.semi.easycoding.community.dto.PostListResult;
+import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.mapper.CommunityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +23,20 @@ public class CommunityServiceImpl implements CommunityService {
      * @return : List<PostDto> 게시글 리스트
      */
     @Override
-    public List<PostDto> selectPostList() {
-        List<PostDto> postList = communityMapper.selectPostList();
-        return postList;
+    public PostListResult selectPostList(PostSearchCondition condition) {
+
+        int totalCount = communityMapper.selectPostCount();
+
+        PageInfo pageInfo = new PageInfo(
+                condition.getPage(),
+                condition.getPageSize(),
+                totalCount
+        );
+
+        condition.setOffset(pageInfo.getOffset());
+        condition.setLimit(pageInfo.getLimit());
+
+        List<PostDto> postList = communityMapper.selectPostList(condition);
+        return new PostListResult(postList, pageInfo);
     }
 }

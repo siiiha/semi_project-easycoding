@@ -98,8 +98,8 @@
                         <span>작성일</span>
                     </div>
                     <c:forEach var="post" items="${postList}" varStatus="st">
-                        <a href="${pageContext.request.contextPath}/community/${post.postId}" class="post-table-row">
-                            <span class="post-table-num">${(currentPage - 1) * pageSize + st.count}</span>
+                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}" class="post-table-row">
+                            <span class="post-table-num">${(pageInfo.page - 1) * pageInfo.pageSize + st.count}</span>
                             <span>
                                 <c:choose>
                                     <c:when test="${post.category == '질문&답변'}">
@@ -124,22 +124,22 @@
                 <!-- 페이지네이션 -->
                 <div class="comm-pagination">
                     <c:choose>
-                        <c:when test="${currentPage > 1}">
-                            <a href="?type=${communityType}&page=${currentPage - 1}&keyword=${keyword}" class="page-btn-comm">이전</a>
+                        <c:when test="${pageInfo.hasPrevPage}">
+                            <a href="${pageContext.request.contextPath}/community/?page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">이전</span>
                         </c:otherwise>
                     </c:choose>
 
-                    <c:forEach begin="1" end="${totalPages}" var="p">
-                        <a href="?type=${communityType}&page=${p}&keyword=${keyword}"
-                           class="page-btn-comm ${p == currentPage ? 'active' : ''}">${p}</a>
+                    <c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+                        <a href="${pageContext.request.contextPath}/community?page=${p}"
+                           class="page-btn-comm ${p == pageInfo.page ? 'active' : ''}">${p}</a>
                     </c:forEach>
 
                     <c:choose>
-                        <c:when test="${currentPage < totalPages}">
-                            <a href="?type=${communityType}&page=${currentPage + 1}&keyword=${keyword}" class="page-btn-comm">다음</a>
+                        <c:when test="${pageInfo.hasNextPage}">
+                            <a href="${pageContext.request.contextPath}/community?page=${pageInfo.endPage + 1}" class="page-btn-comm">다음</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">다음</span>
