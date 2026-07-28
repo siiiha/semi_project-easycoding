@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+// todo 서비스로 빼야함
 @Component
 public class ApiKeyValidator {
 
