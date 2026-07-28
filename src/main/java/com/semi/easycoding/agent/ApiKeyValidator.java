@@ -1,14 +1,13 @@
 package com.semi.easycoding.agent;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Component
 public class ApiKeyValidator {
-
-    // @Value("${api.openai.key}")
-    // String apiKey;
 
     public boolean isValidOpenAiKey(String apiKey) {
         // API 키 유효성을 검사합니다
