@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class EducationOptionTypeDto extends EducationDto {
-    private Long[] optionId;
-    private String[] optionContents;
-    private boolean[] isCorrect;
-    private Short[] orderingNumber;
+    private List<OptionDto> options;
 }
