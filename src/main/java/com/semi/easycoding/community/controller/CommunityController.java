@@ -7,10 +7,7 @@ import com.semi.easycoding.community.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +34,19 @@ public class CommunityController {
         model.addAttribute("condition", condition);
 
         return "/community/community_list";
+    }
+
+    // 게시글 상세 조회 및 상세페이지 이동
+    @GetMapping("/detail/{postId}")
+    public String postDetailPage(
+            @PathVariable Long postId,
+            Model model) {
+        System.out.println("요청 들어옴");
+        PostDto postDetail = communityService.selectPostDetail(postId);
+        model.addAttribute("postDetail", postDetail);
+        System.out.println("요청 끝나기 직전");
+
+        return "/community/community_detail";
     }
 
     @GetMapping("/write")
