@@ -29,8 +29,6 @@ public class CommunityController {
     public String communityPage(
             @ModelAttribute PostSearchCondition condition,
             Model model) {
-        System.out.println("요청 들어옴");
-        System.out.println(condition.getPage());
         PostListResult result = communityService.selectPostList(condition);
 
         // 이번 요청에서만 사용할 것이기 때문에 request영역에 "postList"라는 이름으로 DB에서 조회한 게시글 목록을 저장
