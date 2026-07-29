@@ -1,4 +1,4 @@
-package com.semi.easycoding.dto;
+package com.semi.easycoding.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
