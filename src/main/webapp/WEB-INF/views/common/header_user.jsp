@@ -53,26 +53,41 @@
             <!-- 프로필 -->
             <div class="user-profile has-dropdown">
                 <div class="profile-avatar">
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.loginUser.profileImg}">
-                            <img src="${sessionScope.loginUser.profileImg}" alt="프로필">
-                        </c:when>
-                        <c:otherwise>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                <ul class="dropdown dropdown-right">
-                    <li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/settings">설정</a></li>
-                    <li class="dropdown-divider"></li>
-                    <li><a href="${pageContext.request.contextPath}/logout">로그아웃</a></li>
-                </ul>
-            </div>
-        </div>
+<%-- <c:choose>
+     <c:when test="${not empty sessionScope.loginUser.profileImg}">
+         <img src="${sessionScope.loginUser.profileImg}" alt="프로필">
+     </c:when>
+     <c:otherwise>
+         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+             <circle cx="12" cy="7" r="4"/>
+         </svg>
+     </c:otherwise>
+ </c:choose> --%>
 
-    </div>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="22"
+         height="22"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="#6B6B6B"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
+
+    <%--  나중에 삭제할것 --%>
+</div>
+<ul class="dropdown dropdown-right">
+ <li><a href="${pageContext.request.contextPath}/mypage">마이페이지</a></li>
+ <li><a href="${pageContext.request.contextPath}/mypage/settings">설정</a></li>
+ <li class="dropdown-divider"></li>
+ <li><a href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
+</ul>
+</div>
+</div>
+
+</div>
 </header>

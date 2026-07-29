@@ -45,7 +45,7 @@
                 <div class="auth-error">${errorMsg}</div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/login" method="post" class="auth-form">
+            <form action="${pageContext.request.contextPath}/member/login" method="post" class="auth-form">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
                 <!-- 이메일 -->
@@ -109,8 +109,8 @@
             <!-- 회원가입 유도 -->
             <p class="auth-switch">
                 아직 계정이 없으신가요?
-                <a href="${pageContext.request.contextPath}/register" class="auth-link-primary">회원가입</a>
-            </p>
+                <a href="${pageContext.request.contextPath}/member/join" class="auth-link-primary">회원가입</a>
+            </p>s
 
         </div>
     </div>

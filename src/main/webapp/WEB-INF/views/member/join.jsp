@@ -45,19 +45,20 @@
                 <div class="auth-error">${errorMsg}</div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/register" method="post" class="auth-form" id="registerForm">
+            <!-- 회원가입 버튼을 누르면 <from>이 실행된다. -->
+            <form action="${pageContext.request.contextPath}/member/join" method="post" class="auth-form" id="joinForm">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
-                <!-- 이름 / 이메일 (2열) -->
+                <!-- 닉네임 / 이메일 (2열) -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="name">이름</label>
+                        <label class="form-label" for="nickname">닉네임</label>
                         <div class="input-wrap">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49454F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                             </svg>
-                            <input type="text" id="name" name="name" class="form-input-inner"
-                                   placeholder="이름을 입력해주세요." value="${param.name}" required>
+                            <input type="text" id="nickname" name="nickname" class="form-input-inner"
+                                   placeholder="닉네임을 입력해주세요." value="${param.nickname}" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -135,7 +136,7 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
-document.getElementById('registerForm').addEventListener('submit', function (e) {
+document.getElementById('joinForm').addEventListener('submit', function (e) {
     var pw = document.getElementById('password').value;
     var pwc = document.getElementById('passwordConfirm').value;
     if (pw !== pwc) {

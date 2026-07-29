@@ -22,6 +22,7 @@
 
         <h1 class="mypage-title">마이페이지</h1>
 
+
         <div class="mypage-card">
 
             <!-- ── 계정 관리 ── -->

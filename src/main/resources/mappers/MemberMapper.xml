@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.semi.easycoding.mapper.MemberMapper">
+
+    <select id="memberList" parameterType="String" resultType="MemberDto">
+        <!-- 1. id="memberList"는 MemberDto memberList(String memberId)와 연결
+                Mapper 인터페이스의 메서드 이름과 동일해야함.-->
+        <!-- 2. parameterType="String"인 이유는 memberList(String memberId)를 받기 때문-->
+        <!-- 3. resultType="MemberDto"인 이유는 조회 결과를 MemberDto로 받기 때문 -->
+
+        select member_id, email,password, nickname
+        from member
+        where member_id = #{memberId}
+    </select>
+
+    <!-- 조회 결과이기 때문에 resultType을 적어야 한다.-->
+    <select id="login" parameterType="MemberDto" resultType="MemberDto">
+            select member_id, email,password, nickname
+            from member
+            where email = #{email}
+            AND password = #{password}
+    </select>
+
+    <!-- 실제로 DB에 회원을 저장하는 SQL -->
+    <insert id="join" parameterType="MemberDto">
+        insert into member(
+        login_id,
+        email,
+        password,
+        nickname
+        )
+        values (
+        #{email},
+        #{email},
+        #{password},
+        #{nickname}
+        )
+        <!-- 첫번째 email에는 login_id가 두번째에는 email이 저장 -->
+        <!-- #{...}는 MemberDto에서 값을 꺼내는 표현 -->
+    </insert>
+
+
+</mapper>
