@@ -19,8 +19,8 @@
         <where>
             <if test="postCategory != null
                     and postCategory != ''
-                    and postCategory != '전체'">
-                AND p.category = #{postCategory}
+                    and postCategory != 'all'">
+                AND c.category = #{postCategory}
             </if>
 
             <if test="keyword != null and keyword != ''">
