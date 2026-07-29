@@ -14,7 +14,7 @@
 </head>
 <body class="auth-page">
 
-<jsp:include page="/WEB-INF/views/common/header_guest.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="auth-main">
 
@@ -110,7 +110,7 @@
             <p class="auth-switch">
                 아직 계정이 없으신가요?
                 <a href="${pageContext.request.contextPath}/member/join" class="auth-link-primary">회원가입</a>
-            </p>s
+            </p>
 
         </div>
     </div>

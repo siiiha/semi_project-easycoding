@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="withdraw-main">
     <div class="withdraw-inner">
@@ -82,7 +82,7 @@
             <!-- ── 액션 버튼 ── -->
             <div class="withdraw-actions">
                 <button type="button" class="withdraw-btn-confirm" onclick="openModal('withdrawModal')">탈퇴하기</button>
-                <a href="${pageContext.request.contextPath}/mypage" class="withdraw-btn-return">돌아가기</a>
+                <a href="${pageContext.request.contextPath}/member/mypage" class="withdraw-btn-return">돌아가기</a>
             </div>
 
         </div>

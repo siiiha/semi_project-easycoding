@@ -14,7 +14,7 @@
 </head>
 <body class="auth-page">
 
-<jsp:include page="/WEB-INF/views/common/header_guest.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="auth-main">
 
@@ -125,7 +125,7 @@
             <!-- 로그인 유도 -->
             <p class="auth-switch">
                 이미 계정이 있으신가요?
-                <a href="${pageContext.request.contextPath}/login" class="auth-link-primary">로그인</a>
+                <a href="${pageContext.request.contextPath}/member/login" class="auth-link-primary">로그인</a>
             </p>
 
         </div>

@@ -25,7 +25,7 @@
 
 /* ── 로고 ── */
 .header-logo {
-  font-family: 'Jua', sans-serif;
+  font-family: 'Pretendard', sans-serif;
   font-size: 36px;
   color: var(--color-primary);   /* #4CAF50 */
   text-decoration: none;
@@ -76,7 +76,7 @@
 .dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 16px);
+  top: calc(100% + 4px);
   left: -12px;
   min-width: 150px;
   background-color: #fff;
@@ -120,8 +120,9 @@
 
 /* 드롭다운 - 우측 정렬 (프로필 메뉴) */
 .dropdown.dropdown-right {
+  top: calc(100% + 1px);
   left: auto;
-  right: 0;
+  right: -20px;
 }
 
 /* ── 비로그인: 로그인 영역 ── */

@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_guest.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="find-page">
 
