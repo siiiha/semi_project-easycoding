@@ -78,6 +78,14 @@ Commit
 git commit -m "feat: 로그인 기능 구현"
 ```
 
+최신 develop 반영
+
+```bash
+git pull origin develop
+```
+
+> 충돌이 발생하면 충돌을 해결한 후 다시 commit합니다.
+
 최초 Push
 
 ```bash
