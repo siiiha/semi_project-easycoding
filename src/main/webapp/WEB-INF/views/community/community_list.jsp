@@ -77,11 +77,11 @@
                 </div>
 
                 <!-- 검색 -->
-                <form action="${pageContext.request.contextPath}/community/list" method="get" class="post-search-row">
-                    <input type="hidden" name="type" value="${communityType}">
+                <form action="${pageContext.request.contextPath}/community" method="get" class="post-search-row">
+                    <input type="hidden" value="${communityType}">
                     <div class="post-search-input">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요"
+                        <input type="text" name="keyword" value="${keyword}" placeholder="제목 입력..."
                                style="border:none;background:transparent;flex:1;font-size:14px;color:#1E1E1E;outline:none;font-family:'Noto Sans KR',sans-serif;">
                     </div>
                     <button type="submit" class="post-search-btn">검색</button>

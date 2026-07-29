@@ -13,14 +13,11 @@ public class PostSearchCondition {
     private int offset;         // DB에서 사용할 조회하려는 시작 위치
     private int limit;          // 한번에 조회하려는 갯수
 
-<<<<<<< Updated upstream
-=======
     // 검색 파라미터 - 필터 : 질문&답변, 풀이공유, 문제제작
     private String postCategory;
 
     private String keyword; // 검색 키워드
 
->>>>>>> Stashed changes
     public PostSearchCondition(int page, int pageSize) {
         this.page = page;
         this.pageSize = pageSize;

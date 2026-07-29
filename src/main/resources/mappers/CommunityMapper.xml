@@ -7,8 +7,6 @@
 -->
 <mapper namespace="com.semi.easycoding.community.mapper.CommunityMapper">
 
-<<<<<<< Updated upstream
-=======
     <!--
         <sql id="..."> : 여러 <select> 태그에서 공통으로 쓰는 sql 조각을
         한 곳에 정의해두고, 원하는 곳에 <include refid="...">로 재사용 가능
@@ -31,18 +29,15 @@
         </where>
     </sql>
 
->>>>>>> Stashed changes
+
     <!-- 게시글 목록 조회 sql문 -->
     <select id="selectPostList" parameterType="PostSearchCondition" resultType="PostDto">
-        SELECT p.post_id, c.category, p.title, m.nickname, p.views, p.created_at,
-        DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS created_at_str
+        SELECT p.post_id, c.category, p.title, p.content, m.nickname, p.views, p.created_at,
+        DATE_FORMAT(p.created_at, '%Y-%M-%d %H:%i') AS created_at_str
         FROM post p
         LEFT JOIN post_category c USING (category_id)
         LEFT JOIN member m USING (member_id)
-<<<<<<< Updated upstream
-=======
         <include refid="searchWhere"/>
->>>>>>> Stashed changes
         ORDER BY p.post_id DESC
         LIMIT #{offset}, #{limit}
     </select>
