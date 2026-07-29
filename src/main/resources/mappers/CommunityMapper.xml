@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.semi.easycoding.community.mapper.CommunityMapper">
+
+    <!-- 게시글 목록 조회 sql문 -->
+    <select id="selectPostList" parameterType="PostSearchCondition" resultType="PostDto">
+        SELECT p.post_id, c.category, p.title, m.nickname, p.views, p.created_at,
+        DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS created_at_str
+        FROM post p
+        LEFT JOIN post_category c USING (category_id)
+        LEFT JOIN member m USING (member_id)
+        ORDER BY p.post_id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!--  -->
+    <select id="selectPostCount" resultType="int">
+        SELECT COUNT(*)
+        FROM post
+    </select>
+
+</mapper>
