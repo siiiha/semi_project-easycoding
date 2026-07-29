@@ -12,6 +12,10 @@ public class PostDto {
     private Long postId;        // 게시글 번호
     private String category;    // 카테고리
     private String title;       // 제목
+<<<<<<< Updated upstream
+=======
+    private String content;     // 내용
+>>>>>>> Stashed changes
     private String nickname;    // 작성자 닉네임
     private int views;          // 조회수
     private LocalDateTime createAt; // 작성일

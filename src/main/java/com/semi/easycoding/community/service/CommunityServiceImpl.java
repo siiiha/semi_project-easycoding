@@ -25,14 +25,25 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public PostListResult selectPostList(PostSearchCondition condition) {
 
+<<<<<<< Updated upstream
         int totalCount = communityMapper.selectPostCount();
 
+=======
+        // 전체 페이지 갯수
+        int totalCount = communityMapper.selectPostCount();
+
+        // 페이징 정보를 계산하고, 저장하기 위한 PageInfo 객체 생성
+>>>>>>> Stashed changes
         PageInfo pageInfo = new PageInfo(
                 condition.getPage(),
                 condition.getPageSize(),
                 totalCount
         );
 
+<<<<<<< Updated upstream
+=======
+        // PageInfo에서 계산한 값을 검색조건 객체에 달아줌
+>>>>>>> Stashed changes
         condition.setOffset(pageInfo.getOffset());
         condition.setLimit(pageInfo.getLimit());
 
