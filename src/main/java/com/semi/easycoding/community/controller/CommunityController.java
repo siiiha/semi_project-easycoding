@@ -4,6 +4,7 @@ import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
+import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -91,6 +92,10 @@ public class CommunityController {
             HttpSession session
     ) {
         MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
+        System.out.println(loginMember != null);
+        if (loginMember == null) {
+            return "redirect:/member/login";
+        }
         postDto.setMemberId(loginMember.getMemberId());
 
         Long postId = communityService.insertPost(postDto);

@@ -62,9 +62,13 @@ public class CommunityServiceImpl implements CommunityService {
      */
     @Override
     public Long insertPost(PostDto postDto) {
-        PostDto post = communityMapper.insertPost(postDto);
-        Long postId = post.getPostId();
+        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        postDto.setCategoryId(category_id);
+        int result = communityMapper.insertPost(postDto);
+        if (result != 1) {
+            return 0L;
+        }
 
-        return postId;
+        return postDto.getPostId();
     }
 }

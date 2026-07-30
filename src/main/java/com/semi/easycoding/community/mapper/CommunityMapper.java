@@ -17,5 +17,7 @@ public interface CommunityMapper {
 
     PostDto selectPostDetail(Long postId);
 
-    PostDto insertPost(PostDto postDto);
+    int insertPost(PostDto postDto);
+
+    int selectCategoryId(String category);
 }
