@@ -43,4 +43,16 @@ public class CommunityServiceImpl implements CommunityService {
         List<PostDto> postList = communityMapper.selectPostList(condition);
         return new PostListResult(postList, pageInfo);
     }
+
+    /**
+     * 게시글 상세 조회 시 상세정보 조회하는 메소드
+     * @return : PostDto 게시글 1개
+     */
+    @Override
+    public PostDto selectPostDetail(Long postId) {
+
+        PostDto postDetail = communityMapper.selectPostDetail(postId);
+
+        return postDetail;
+    }
 }

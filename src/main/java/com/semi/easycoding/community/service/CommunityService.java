@@ -9,4 +9,6 @@ import java.util.List;
 public interface CommunityService {
 
     PostListResult selectPostList(PostSearchCondition condition);
+
+    PostDto selectPostDetail(Long postId);
 }

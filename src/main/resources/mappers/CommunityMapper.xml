@@ -48,4 +48,14 @@
         FROM post
     </select>
 
+    <!-- 게시글 상세 조회 -->
+    <select id="selectPostDetail" parameterType="Long" resultType="PostDto">
+        SELECT p.post_id, c.category, p.title, p.content, m.nickname, p.views, p.created_at,
+            DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS created_at_str
+        FROM post p
+            LEFT JOIN member m USING (member_id)
+            LEFT JOIN post_category c USING (category_id)
+        WHERE p.post_id = #{postId}
+    </select>
+
 </mapper>

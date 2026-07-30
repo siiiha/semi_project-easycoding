@@ -26,54 +26,20 @@
 
         <div class="comm-body">
 
-            <!-- ── 왼쪽 사이드바 ── -->
-            <nav class="comm-sidebar">
-                <a href="${pageContext.request.contextPath}/community?type=all" class="comm-cat-btn">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="#1E1E1E" stroke-width="1.8">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-                    </svg>
-                    <span class="comm-cat-label">전체</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=qna"
-                   class="comm-cat-btn ${post.type == 'qna' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${post.type == 'qna' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V16m-7-2h2"/>
-                    </svg>
-                    <span class="comm-cat-label">질문 &amp; 답변</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=solution"
-                   class="comm-cat-btn ${post.type == 'solution' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${post.type == 'solution' ? '#4CAF50' : '#333'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 16L4 12L8 8"/><path d="M16 8L20 12L16 16"/><path d="M14 4L10 20"/>
-                    </svg>
-                    <span class="comm-cat-label">풀이 공유</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=problem"
-                   class="comm-cat-btn ${post.type == 'problem' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${post.type == 'problem' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 3L20 7L12 15H8V11L16 3Z"/><path d="M3 21h18"/>
-                    </svg>
-                    <span class="comm-cat-label">문제 제작</span>
-                </a>
-            </nav>
-
-            <div class="comm-divider"></div>
-
             <!-- ── 메인: 글 상세 + 댓글 ── -->
             <div class="comm-content">
 
                 <!-- 브레드크럼 -->
                 <nav style="display:flex;gap:8px;font-size:14px;color:#9CA3AF;">
-                    <a href="${pageContext.request.contextPath}/community" style="color:#9CA3AF;text-decoration:none;">커뮤니티</a>
+                    <span style="color:#9CA3AF;text-decoration:none;">커뮤니티</span>
                     <span>&gt;</span>
-                    <a href="${pageContext.request.contextPath}/community/list?type=${post.type}" style="color:#9CA3AF;text-decoration:none;">
+                    <span style="color:#9CA3AF;text-decoration:none;">
                         <c:choose>
-                            <c:when test="${post.type == 'qna'}">질문 &amp; 답변</c:when>
-                            <c:when test="${post.type == 'solution'}">풀이 공유</c:when>
+                            <c:when test="${postDetail.category == 'qna'}">질문 &amp; 답변</c:when>
+                            <c:when test="${postDetail.category == 'solution'}">풀이 공유</c:when>
                             <c:otherwise>문제 제작</c:otherwise>
                         </c:choose>
-                    </a>
+                    </span>
                     <span>&gt;</span>
                     <span style="color:#1E1E1E;">상세</span>
                 </nav>
@@ -83,27 +49,28 @@
 
                     <!-- 제목 + 작성자 정보 -->
                     <div style="display:flex;flex-direction:column;gap:12px;">
-                        <h2 style="font-size:28px;font-weight:700;color:#1E1E1E;line-height:1.4;">${post.title}</h2>
+                        <h2 style="font-size:28px;font-weight:700;color:#1E1E1E;line-height:1.4;">${postDetail.title}</h2>
                         <div style="display:flex;align-items:center;justify-content:space-between;">
                             <div style="display:flex;align-items:center;gap:8px;">
                                 <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;border:1px solid #E5E7EB;overflow:hidden;flex-shrink:0;">
-                                    <c:if test="${not empty post.authorProfileImage}">
-                                        <img src="${post.authorProfileImage}" alt="${post.author}" style="width:100%;height:100%;object-fit:cover;">
-                                    </c:if>
+<%--                                    <c:if test="${not empty postDetail.authorProfileImage}">--%>
+<%--                                        <img src="${postDetail.authorProfileImage}" alt="${post.author}" style="width:100%;height:100%;object-fit:cover;">--%>
+<%--                                    </c:if>--%>
+                                        <%-- 삭제할지 말지 고민중입니다. --%>
                                 </div>
                                 <div style="display:flex;flex-direction:column;gap:2px;">
-                                    <span style="font-size:15px;font-weight:600;color:#1E1E1E;">${post.author}</span>
-                                    <span style="font-size:12px;color:#9CA3AF;">${post.createdAt}</span>
+                                    <span style="font-size:15px;font-weight:600;color:#1E1E1E;">${postDetail.nickname}</span>
+                                    <span style="font-size:12px;color:#9CA3AF;">${postDetail.createdAtStr}</span>
                                 </div>
                             </div>
-                            <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회 ${post.views} &nbsp;|&nbsp; 추천 ${post.likes} &nbsp;|&nbsp; 댓글 ${post.commentCount}</span>
+                            <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회수 ${postDetail.views} &nbsp;|&nbsp; 댓글수 ${post.commentCount ? post.commentCount : '0'}</span>
                         </div>
                     </div>
 
                     <div style="height:1px;background:#B8BEC5;"></div>
 
                     <!-- 본문 -->
-                    <div style="font-size:16px;color:#1E1E1E;line-height:1.7;white-space:pre-line;">${post.content}</div>
+                    <div style="font-size:16px;color:#1E1E1E;line-height:1.7;white-space:pre-line;">${postDetail.content}</div>
 
                     <div style="height:1px;background:#B8BEC5;"></div>
 
@@ -195,7 +162,7 @@
 
                 <!-- 목록으로 -->
                 <div>
-                    <a href="${pageContext.request.contextPath}/community/list?type=${post.type}"
+                    <a href="${pageContext.request.contextPath}${redirectURL}"
                        style="display:inline-flex;padding:10px 24px;border:1.5px solid #9CA3AF;border-radius:8px;font-size:14px;font-weight:600;color:#5B5B5B;text-decoration:none;">
                         ← 목록으로
                     </a>
