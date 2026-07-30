@@ -12,3 +12,12 @@ CREATE TABLE IF NOT EXISTS `member` (
     `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`member_id`)
 );
+
+ALTER TABLE member
+    ADD CONSTRAINT uq_member_email UNIQUE (email);
+
+ALTER TABLE member
+    ADD CONSTRAINT uq_member_nickname UNIQUE (nickname);
+
+ALTER TABLE member
+    MODIFY COLUMN password varchar(100);

@@ -21,13 +21,13 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily-quiz")
     public String dailyQuizPage(){
-        return "/education/daily_quiz";
+        return "education/daily_quiz";
     }
 
     // 카테고리 학습 페이지 이동
     @GetMapping("/category")
     public String categoryPage(){
-        return "/education/category";
+        return "education/category";
     }
 
     @GetMapping("/test")
