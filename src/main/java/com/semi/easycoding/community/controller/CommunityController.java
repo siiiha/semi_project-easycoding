@@ -85,4 +85,13 @@ public class CommunityController {
         return "community/community_write";
     }
 
+    @PostMapping("/{postId}/delete")
+    public String deletePost(
+            @PathVariable Long postId
+    ) {
+        communityService.deletePost(postId);
+
+        return "redirect:/community";
+    }
+
 }

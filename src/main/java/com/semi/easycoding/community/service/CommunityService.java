@@ -11,4 +11,6 @@ public interface CommunityService {
     PostListResult selectPostList(PostSearchCondition condition);
 
     PostDto selectPostDetail(Long postId);
+
+    void deletePost(Long postId);
 }

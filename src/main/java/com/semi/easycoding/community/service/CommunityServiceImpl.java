@@ -64,4 +64,16 @@ public class CommunityServiceImpl implements CommunityService {
 
         return postDetail;
     }
+
+    /**
+     * 게시글 삭제하는 메소드
+     */
+    @Override
+    public void deletePost(Long postId) {
+        int result = communityMapper.deletePost(postId);
+        if (result <= 0) {
+            // 실패 시 로직
+        }
+        // 성공 시 로직
+    }
 }
