@@ -60,7 +60,7 @@ public class CommunityController {
             }
         }
 
-        return "/community/community_list";
+        return "community/community_list";
     }
 
     // 게시글 상세 조회 및 상세페이지 이동
@@ -72,16 +72,16 @@ public class CommunityController {
         PostDto postDetail = communityService.selectPostDetail(postId);
         model.addAttribute("postDetail", postDetail);
 
-        String redirectURL = "/community?postCategory=all&page=" + condition.getPage();
+        String redirectURL = "community?postCategory=all&page=" + condition.getPage();
 //        String redirectURL = "/community?postCategory=" + condition.getPostCategory + "&page=" + condition.getPage();
         model.addAttribute("redirectURL", redirectURL);
 
-        return "/community/community_detail";
+        return "community/community_detail";
     }
 
     @GetMapping("/write")
     public String writePage(){
-        return "/community/community_write";
+        return "community/community_write";
     }
 
 }
