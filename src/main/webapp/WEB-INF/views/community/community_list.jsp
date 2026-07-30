@@ -28,31 +28,31 @@
 
             <!-- ── 왼쪽 사이드바 ── -->
             <nav class="comm-sidebar">
-                <a href="${pageContext.request.contextPath}/community?type=all"
-                   class="comm-cat-btn ${empty communityType or communityType == 'all' ? 'active' : ''}">
+                <a href="${pageContext.request.contextPath}/community?postCategory=all&page=${condition.page}"
+                   class="comm-cat-btn ${empty condition.postCategory or condition.postCategory == 'all' ? 'active' : ''}">
                     <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${empty communityType or communityType == 'all' ? '#4CAF50' : '#1E1E1E'}" stroke-width="1.8">
                         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
                         <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
                     </svg>
                     <span class="comm-cat-label">전체</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=qna"
-                   class="comm-cat-btn ${communityType == 'qna' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${communityType == 'qna' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <a href="${pageContext.request.contextPath}/community?postCategory=qna&page=${condition.page}"
+                   class="comm-cat-btn ${condition.postCategory == 'qna' ? 'active' : ''}">
+                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'qna' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V16m-7-2h2"/>
                     </svg>
                     <span class="comm-cat-label">질문 &amp; 답변</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=solution"
-                   class="comm-cat-btn ${communityType == 'solution' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${communityType == 'solution' ? '#4CAF50' : '#333'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <a href="${pageContext.request.contextPath}/community?postCategory=solution&page=${condition.page}"
+                   class="comm-cat-btn ${condition.postCategory == 'solution' ? 'active' : ''}">
+                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'solution' ? '#4CAF50' : '#333'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M8 16L4 12L8 8"/><path d="M16 8L20 12L16 16"/><path d="M14 4L10 20"/>
                     </svg>
                     <span class="comm-cat-label">풀이 공유</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community/list?type=problem"
-                   class="comm-cat-btn ${communityType == 'problem' ? 'active' : ''}">
-                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${communityType == 'problem' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <a href="${pageContext.request.contextPath}/community?postCategory=problem&page=${condition.page}"
+                   class="comm-cat-btn ${condition.postCategory == 'problem' ? 'active' : ''}">
+                    <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'problem' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 3L20 7L12 15H8V11L16 3Z"/><path d="M3 21h18"/>
                     </svg>
                     <span class="comm-cat-label">문제 제작</span>
@@ -67,9 +67,9 @@
                 <div class="comm-section-header">
                     <h2 class="comm-section-title">
                         <c:choose>
-                            <c:when test="${communityType == 'qna'}">질문 &amp; 답변</c:when>
-                            <c:when test="${communityType == 'solution'}">풀이 공유</c:when>
-                            <c:when test="${communityType == 'problem'}">문제 제작</c:when>
+                            <c:when test="${condition.postCategory == 'qna'}">질문 &amp; 답변</c:when>
+                            <c:when test="${condition.postCategory == 'solution'}">풀이 공유</c:when>
+                            <c:when test="${condition.postCategory == 'problem'}">문제 제작</c:when>
                             <c:otherwise>전체글 보기</c:otherwise>
                         </c:choose>
                     </h2>
@@ -77,11 +77,11 @@
                 </div>
 
                 <!-- 검색 -->
-                <form action="${pageContext.request.contextPath}/community/list" method="get" class="post-search-row">
-                    <input type="hidden" name="type" value="${communityType}">
+                <form action="${pageContext.request.contextPath}/community" method="get" class="post-search-row">
+                    <input type="hidden" name="postCategory" value="${condition.postCategory}">
                     <div class="post-search-input">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요"
+                        <input type="text" name="keyword" value="${keyword}" placeholder="제목 입력..."
                                style="border:none;background:transparent;flex:1;font-size:14px;color:#1E1E1E;outline:none;font-family:'Noto Sans KR',sans-serif;">
                     </div>
                     <button type="submit" class="post-search-btn">검색</button>
@@ -126,7 +126,7 @@
                 <div class="comm-pagination">
                     <c:choose>
                         <c:when test="${pageInfo.hasPrevPage}">
-                            <a href="${pageContext.request.contextPath}/community/?page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
+                            <a href="${pageContext.request.contextPath}/community/?postCategory=${condition.postCategory}&page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">이전</span>
@@ -134,13 +134,13 @@
                     </c:choose>
 
                     <c:forEach var="p" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-                        <a href="${pageContext.request.contextPath}/community?page=${p}"
+                        <a href="${pageContext.request.contextPath}/community?postCategory=${condition.postCategory}&page=${p}"
                            class="page-btn-comm ${p == pageInfo.page ? 'active' : ''}">${p}</a>
                     </c:forEach>
 
                     <c:choose>
                         <c:when test="${pageInfo.hasNextPage}">
-                            <a href="${pageContext.request.contextPath}/community?page=${pageInfo.endPage + 1}" class="page-btn-comm">다음</a>
+                            <a href="${pageContext.request.contextPath}/community?postCategory=${condition.postCategory}&page=${pageInfo.endPage + 1}" class="page-btn-comm">다음</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">다음</span>
