@@ -15,5 +15,9 @@ public interface CommunityMapper {
     // 전체 게시글의 갯수를 조회
     int selectPostCount();
 
+    // 게시글 상세 조회
     PostDto selectPostDetail(Long postId);
+
+    // 게시글의 조회수 변경
+    int increseViews(Long postId);
 }

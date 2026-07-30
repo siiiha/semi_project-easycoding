@@ -58,4 +58,10 @@
         WHERE p.post_id = #{postId}
     </select>
 
+    <update id="increseViews" parameterType="Long">
+        UPDATE post
+        SET views = views + 1
+        WHERE post_id = #{postId}
+    </update>
+
 </mapper>
