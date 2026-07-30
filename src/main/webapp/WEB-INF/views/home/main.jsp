@@ -35,7 +35,8 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="${pageContext.request.contextPath}/images/sheep-coding.png" alt="코딩하는 양 캐릭터">
+                <img src="${pageContext.request.contextPath}/images/코딩_집중_양.png"
+                     alt="코딩에 집중하는 양">
             </div>
         </div>
     </section>

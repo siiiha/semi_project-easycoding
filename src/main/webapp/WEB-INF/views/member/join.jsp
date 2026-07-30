@@ -28,7 +28,7 @@
             <p class="branding-sub">매일 함께 성장해요.</p>
         </div>
         <div class="branding-image">
-            <img src="${pageContext.request.contextPath}/images/sheep-welcome.png" alt="인사하는 양 캐릭터">
+            <img src="${pageContext.request.contextPath}/images/인사하는_양.png" alt="인사하는 양 캐릭터">
         </div>
     </div>
 
@@ -50,8 +50,7 @@
             <form action="${pageContext.request.contextPath}/member/join" method="post" class="auth-form" id="joinForm">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
-                <!-- 닉네임 / 이메일 (2열) -->
-                <div class="form-row">
+                <!-- 닉네임 -->
                     <div class="form-group">
                         <label class="form-label" for="nickname">닉네임</label>
                         <div class="input-wrap">
@@ -65,8 +64,10 @@
                                    placeholder="닉네임을 입력해주세요." value="${param.nickname}" required>
                         </div>
                     </div>
+
+                <!-- 아이디(이메일) -->
                     <div class="form-group">
-                        <label class="form-label" for="email">이메일</label>
+                        <label class="form-label" for="email">아이디</label>
                         <div class="input-wrap">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                  fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"
@@ -84,10 +85,8 @@
                         </div>
                         <p id="check-email-result"></p>
                     </div>
-                </div>
 
-                <!-- 비밀번호 / 비밀번호 확인 (2열) -->
-                <div class="form-row">
+                <!-- 비밀번호 -->
                     <div class="form-group">
                         <label class="form-label" for="password">비밀번호</label>
                         <div class="input-wrap">
@@ -101,6 +100,8 @@
                                    placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
                         </div>
                     </div>
+
+                <!-- 비밀번호 확인 -->
                     <div class="form-group">
                         <label class="form-label" for="passwordConfirm">비밀번호 확인</label>
                         <div class="input-wrap">
@@ -117,11 +118,11 @@
                             <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                         </div>
                     </div>
-                </div>
 
                 <button type="submit" class="btn btn-primary auth-submit-btn">회원가입</button>
             </form>
 
+            <%-- 소셜 연동 회원가입 영역
             <!-- 구분선 -->
             <div class="auth-divider"><span>또는</span></div>
 
@@ -149,6 +150,7 @@
                     <span>GitHub로 로그인</span>
                 </a>
             </div>
+            --%>
 
             <!-- 로그인 유도 -->
             <p class="auth-switch">

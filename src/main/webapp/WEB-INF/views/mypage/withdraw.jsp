@@ -10,10 +10,17 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
 <body>
+
+
+<p class="edit-error">${errorMsg}</p>
+<!-- $ {errorMsg} JSP에서 값을 꺼내는 문법
+     오류 메세지가 없을 땐 빈 공간, 있으면 JSP에서 값을 꺼낸다. -->
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
@@ -77,7 +84,10 @@
 
             <!-- ── 비밀번호 확인 (1차) → modal_withdraw.jsp로 처리됨 ── -->
             <%-- 실제 탈퇴 요청은 modal_withdraw.jsp에서 비밀번호 확인 후 진행 --%>
+
+            <p class="edit-error">${errorMsg}</p>
             <jsp:include page="/WEB-INF/views/common/modal_withdraw.jsp" />
+
 
             <!-- ── 액션 버튼 ── -->
             <div class="withdraw-actions">

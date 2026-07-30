@@ -19,4 +19,14 @@ public interface MemberService {
 
     //멤버 컨트롤러에서 사용된 int result = memberService.join(memberDto);에 관련된 메소드로
     //받은 값이 1이면 DB에 회원 한 행이 추가, 0이면 추가가 된 행이 없다.
+
+    int countPostByMemberId(String memberId);
+    int countCommentByMemberId(String memberId);
+
+    boolean withdraw(String memberId, String password);
+
+
+
+
+
 }

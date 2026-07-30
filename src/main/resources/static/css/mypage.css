@@ -328,6 +328,19 @@
   cursor: not-allowed;
 }
 
+.edit-input-wrap-readonly {
+  background-color: #F3F4F6;
+  border-color: #D1D5DB;
+}
+
+.edit-input-wrap-readonly:focus-within {
+  border-color: #D1D5DB;
+}
+
+.edit-input-wrap-readonly .edit-input {
+  background-color: transparent;
+}
+
 /* 읽기 전용 행 (2열) */
 .edit-readonly-row {
   display: flex;

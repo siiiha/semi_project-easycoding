@@ -41,7 +41,7 @@ public class MemberController {
             return "member/join";
         }
 
-        if (memberService.isEmailDuplicate(memberDto.getEmail())){
+        if (memberService.isEmailDuplicate(memberDto.getEmail())) {
             //메서드가 실행 될 때 값이 true면 이미 사용 중, false면 사용 가능.
             model.addAttribute(
                     "errorMsg",
@@ -88,31 +88,83 @@ public class MemberController {
     // 로그인 페이지 이동
     @GetMapping("/login")
     public String loginPage() {
-        return "/member/login";
+        return "member/login";
     }
 
     // 회원가입 페이지 이동
     @GetMapping("/join")
     public String joinPage() {
-        return "/member/join";
+        return "member/join";
     }
 
     // 마이페이지 이동
     @GetMapping("/mypage")
-    public String myPage() {
-        return "/mypage/mypage";
+    public String myPage(HttpSession session, Model model) {
+
+        //세션에 저장된 로그인 회원 정보 가져오기
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+        //로그인 하지 않은 경우 로그인 페이지로 이동
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+        String memberId = loginUser.getMemberId();
+
+        //해당 회원이 작성한 게시글과 댓글 개수 조회
+        int postCount = memberService.countPostByMemberId(memberId);
+        int commentCount = memberService.countCommentByMemberId(memberId);
+
+        //조회 결과 전달
+        model.addAttribute("postCount", postCount);
+        model.addAttribute("commentCount", commentCount);
+
+        return "mypage/mypage";
     }
 
     // 회원정보 수정 페이지 이동
     @GetMapping("/edit")
     public String memberEditPage() {
-        return "/mypage/edit";
+        return "mypage/edit";
     }
 
     // 회원탈퇴 페이지 이동
     @GetMapping("/withdraw")
-    public String memberWithdrawPage() {
-        return "/mypage/withdraw";
+    public String memberWithdrawPage(HttpSession session) {
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        return "mypage/withdraw";
+
     }
 
+    @PostMapping("/withdraw")
+    public String withdraw(@RequestParam String password, HttpSession session, Model model) {
+
+
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+
+        boolean result = memberService.withdraw(
+                loginUser.getMemberId(), password
+        );
+
+
+        if (!result) {
+            model.addAttribute(
+                    "errorMsg", "비밀번호가 일치하지 않습니다."
+            );
+            return "mypage/withdraw";
+        }
+
+        session.invalidate();
+        return "redirect:/";
+    }
 }

@@ -3,6 +3,8 @@ package com.semi.easycoding.member.mapper;
 
 import com.semi.easycoding.member.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+//MyBatis가 제공하는 @Param 어노테이션을 사용하겠다.
 
 @Mapper
 public interface MemberMapper {
@@ -19,4 +21,9 @@ public interface MemberMapper {
     int join(MemberDto memberDto);
     //회원정보가 담긴 memberDto를 받고, DB처리 결과를 숫자로 돌려주는 join()메서드
 
+    int countPostByMemberId(String memberId);
+    int countCommentByMemberId(String memberId);
+
+    int withdraw(@Param("memberId") String memberId);
+    //loginUser.getMemberId() = 실제 로그인한 회원번호
 }
