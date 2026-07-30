@@ -77,3 +77,4 @@ build/
 ### VS Code (Visual Studio Code) ###
 .vscode/                        
 # VS Code 에디터 전용 설정 폴더 (확장 프로그램 세팅 등)
+/src/main/webapp/WEB-INF/views/test/test.jsp
