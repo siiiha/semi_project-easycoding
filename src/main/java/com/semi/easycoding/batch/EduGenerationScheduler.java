@@ -1,6 +1,6 @@
-package com.semi.easycoding.Batch;
+package com.semi.easycoding.batch;
 
-import com.semi.easycoding.Batch.service.BatchService;
+import com.semi.easycoding.batch.service.BatchService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

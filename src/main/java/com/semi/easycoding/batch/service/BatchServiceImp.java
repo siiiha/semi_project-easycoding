@@ -1,4 +1,4 @@
-package com.semi.easycoding.Batch.service;
+package com.semi.easycoding.batch.service;
 
 import com.semi.easycoding.agent.service.AgentService;
 import org.springframework.stereotype.Service;
