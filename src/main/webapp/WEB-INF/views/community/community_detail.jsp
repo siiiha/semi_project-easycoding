@@ -63,7 +63,7 @@
                                     <span style="font-size:12px;color:#9CA3AF;">${postDetail.createdAtStr}</span>
                                 </div>
                             </div>
-                            <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회수 ${postDetail.views} &nbsp;|&nbsp; 댓글수 ${post.commentCount}</span>
+                            <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회수 ${postDetail.views} &nbsp;|&nbsp; 댓글수 ${post.commentCount ? post.commentCount : '0'}</span>
                         </div>
                     </div>
 
@@ -162,7 +162,7 @@
 
                 <!-- 목록으로 -->
                 <div>
-                    <a href="${pageContext.request.contextPath}/community/list?type=${post.type}"
+                    <a href="${pageContext.request.contextPath}${redirectURL}"
                        style="display:inline-flex;padding:10px 24px;border:1.5px solid #9CA3AF;border-radius:8px;font-size:14px;font-weight:600;color:#5B5B5B;text-decoration:none;">
                         ← 목록으로
                     </a>

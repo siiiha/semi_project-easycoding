@@ -4,11 +4,16 @@ import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -39,12 +44,15 @@ public class CommunityController {
     // 게시글 상세 조회 및 상세페이지 이동
     @GetMapping("/detail/{postId}")
     public String postDetailPage(
+            PostSearchCondition condition,
             @PathVariable Long postId,
             Model model) {
-        System.out.println("요청 들어옴");
         PostDto postDetail = communityService.selectPostDetail(postId);
         model.addAttribute("postDetail", postDetail);
-        System.out.println("요청 끝나기 직전");
+
+        String redirectURL = "/community?postCategory=all&page=" + condition.getPage();
+//        String redirectURL = "/community?postCategory=" + condition.getPostCategory + "&page=" + condition.getPage();
+        model.addAttribute("redirectURL", redirectURL);
 
         return "/community/community_detail";
     }
