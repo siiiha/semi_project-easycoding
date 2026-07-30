@@ -64,4 +64,19 @@
         WHERE post_id = #{postId}
     </update>
 
+    <!-- 카테고리 별로 category_id 조회 -->
+    <select id="selectCategoryId" parameterType="String" resultType="int">
+        SELECT category_id
+        FROM post_category
+        WHERE category = #{category}
+    </select>
+
+    <update id="updatePost" parameterType="PostDto">
+        UPDATE post
+        SET title = #{title},
+            content = #{content},
+            category_id = #{categoryId}
+        WHERE post_id = #{postId}
+    </update>
+
 </mapper>

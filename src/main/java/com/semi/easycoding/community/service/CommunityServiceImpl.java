@@ -64,4 +64,19 @@ public class CommunityServiceImpl implements CommunityService {
 
         return postDetail;
     }
+
+    /**
+     * 게시글 수정한 내용으로 DB에 저장하는 메소드
+     * @return : int
+     */
+    @Override
+    public Long updatePost(PostDto postDto) {
+        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        postDto.setCategoryId(category_id);
+        int result = communityMapper.updatePost(postDto);
+        if (result != 1) {
+            return 0L;
+        }
+        return postDto.getPostId();
+    }
 }

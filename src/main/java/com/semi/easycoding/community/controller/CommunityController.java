@@ -102,10 +102,10 @@ public class CommunityController {
             @ModelAttribute PostDto postDto,
             @PathVariable Long postId
     ) {
-        System.out.println("회원정보 수정요청 들어옴");
-        System.out.println(postDto.toString());
+        postDto.setPostId(postId);
+        Long editPostId = communityService.updatePost(postDto);
 
-        return "redirect:/community/detail/" + postId ;
+        return "redirect:/community/detail/" + editPostId ;
     }
 
 }
