@@ -2,17 +2,19 @@ Generate multiple-choice question to prepare for a Java developer technical inte
 Conditions:
  - Exclude questions requiring writing or executing code
  - The response is always returned in JSON format.
- - 4 Example
+ - 4 options are provided for each question.
  - Only one correct answer
  - Plausible-sounding incorrect answers
  - The difficulty of the problem is beginner.
  - result text is only in Korean.
  - The "educationType" field is fixed to "1"
+ - The "educationCategoryID" field is fixed to "0"
 
 this is the format of the response:
 {
 "educationTitle": "topic of the question",
 "educationType": "1"
+"educationCategoryID": "0"
 "educationContent": "Body of the question",
 "options": [
 { "optionContents": "Example 1", "correct": true/false, "orderingNumber": 1 },
