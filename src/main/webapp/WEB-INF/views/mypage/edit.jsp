@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -23,7 +23,7 @@
         <h1 class="mypage-title">회원정보 수정</h1>
 
         <div class="mypage-card">
-            <form action="${pageContext.request.contextPath}/mypage/edit" method="post" id="editForm" enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/member/edit" method="post" id="editForm" enctype="multipart/form-data">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
                 <!-- ── 상단: 아바타 + 기본정보 ── -->
@@ -33,8 +33,8 @@
                     <div class="avatar-section">
                         <div class="avatar-circle avatar-circle-lg">
                             <c:choose>
-                                <c:when test="${not empty sessionScope.loginUser.profileImage}">
-                                    <img src="${sessionScope.loginUser.profileImage}" alt="프로필 이미지" class="avatar-img">
+                                <c:when test="${not empty sessionScope.loginUser.profileImg}">
+                                    <img src="${sessionScope.loginUser.profileImg}" alt="프로필 이미지" class="avatar-img">
                                 </c:when>
                                 <c:otherwise>
                                     <svg width="100" height="100" viewBox="0 0 28 28" fill="none" aria-hidden="true">
@@ -49,23 +49,23 @@
 
                     <!-- 필드 그리드 -->
                     <div class="edit-fields-grid">
-                        <!-- 이름 -->
+                        <!-- 닉네임 -->
                         <div class="edit-field">
-                            <label class="edit-field-label" for="name">이름</label>
+                            <label class="edit-field-label" for="nickname">닉네임</label>
                             <div class="edit-input-wrap">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                                 </svg>
-                                <input type="text" id="name" name="name" class="edit-input"
-                                       value="${sessionScope.loginUser.name}" required>
+                                <input type="text" id="nickname" name="nickname" class="edit-input"
+                                       value="${sessionScope.loginUser.nickname}" required>
                             </div>
                         </div>
 
-                        <!-- 이메일(변경불가) + 가입일 -->
+                        <!-- 이메일 + 회원번호 (읽기 전용) -->
                         <div class="edit-readonly-row">
                             <div class="edit-field edit-field-flex">
-                                <label class="edit-field-label">이메일 (변경불가)</label>
-                                <div class="edit-input-wrap">
+                                <label class="edit-field-label">이메일</label>
+                                <div class="edit-input-wrap edit-input-wrap-readonly">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
                                     </svg>
@@ -73,12 +73,12 @@
                                 </div>
                             </div>
                             <div class="edit-field edit-field-flex">
-                                <label class="edit-field-label">가입일</label>
-                                <div class="edit-input-wrap">
+                                <label class="edit-field-label">회원번호</label>
+                                <div class="edit-input-wrap edit-input-wrap-readonly">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                                     </svg>
-                                    <input type="text" class="edit-input" value="${sessionScope.loginUser.joinDate}" readonly>
+                                    <input type="text" class="edit-input" value="${sessionScope.loginUser.memberId}" readonly>
                                 </div>
                             </div>
                         </div>
