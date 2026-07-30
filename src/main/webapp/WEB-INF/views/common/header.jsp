@@ -28,15 +28,28 @@
             </ul>
         </nav>
 
+
+
         <!-- 로그인 영역 -->
+        <c:choose>
+            <c:when test="${empty sessionScope.loginUser}">
+                <!-- c:choose 조건문 전체
+                c:when 조건이 참일 때
+                c:otherwise 조건이 거짓일 때
+                empty 값이 없거나 비어 있는지 확인
+                sessionScope.loginUser 세션에 저장된 로그인 회원 정보-->
+
         <div class="header-auth">
             <span class="auth-text">이미 계정이 있으신가요?</span>
             <a href="${pageContext.request.contextPath}/member/login" class="auth-login-btn">로그인</a>
         </div>
 
         <!-- 로그인 후 유저 영역 -->
+
+            </c:when>
+            <c:otherwise>
         <div class="header-user">
-            <!-- 알림 버튼 -->
+            <%-- 알림 버튼
             <div class="notif-btn" title="알림">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B5B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -46,6 +59,7 @@
                     <span class="notif-count">${notifCount}</span>
                 </c:if>
             </div>
+            --%>
 
             <!-- 프로필 -->
             <div class="user-profile has-dropdown">
@@ -69,6 +83,8 @@
                 </ul>
             </div>
         </div>
+            </c:otherwise>
+        </c:choose>
 
     </div>
 </header>
