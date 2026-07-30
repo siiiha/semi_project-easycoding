@@ -2,7 +2,7 @@ insert into quiz_category (`category_name`)
        values ('Java기본(자료형,연산자,제어문,메서드)'),
                 ('객체지향(상속,다향성,추상화,캡슐화)'),
                 ('클래스(인터페이스,추상클래스,중첩클래스)'),
-                ('예외처리'),
+                ('예외처리(try-catch-finally,throw,throws)'),
                 ('컬렉션(List,Set,Map,Queue,Iterator)'),
                 ('제네릭(타입매개변수,타입소거,와일드카드)'),
                 ('JVM(메모리구조,GC,클래스로딩)'),
