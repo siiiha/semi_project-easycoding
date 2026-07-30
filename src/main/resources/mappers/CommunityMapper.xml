@@ -34,4 +34,9 @@
         WHERE p.post_id = #{postId}
     </select>
 
+    <!-- 게시글 작성/추가 -->
+    <insert id="insertPost" parameterType="PostDto" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO post (post_id,
+    </insert>
+
 </mapper>

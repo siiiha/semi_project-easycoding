@@ -6,6 +6,7 @@ import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +61,19 @@ public class CommunityController {
     @GetMapping("/write")
     public String writePage(){
         return "/community/community_write";
+    }
+
+    @PostMapping("/write")
+    public String writePost(
+            @ModelAttribute PostDto postDto,
+            HttpSession session
+    ) {
+        MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
+        postDto.setMemberId(loginMember.getMemberId());
+
+        Long postId = communityService.insertPost(postDto);
+
+        return "redirect:/community/detail/" + postId;
     }
 
 }
