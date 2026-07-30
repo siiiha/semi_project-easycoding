@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class PostDto {
     private Long postId;        // 게시글 번호
     private String category;    // 카테고리
