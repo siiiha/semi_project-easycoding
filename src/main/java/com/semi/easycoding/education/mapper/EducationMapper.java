@@ -5,6 +5,7 @@ import com.semi.easycoding.education.dto.EducationBlankTypeDto;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.EducationOptionTypeDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,9 +21,14 @@ public interface EducationMapper {
     // 주관식 답변 삽입
     List<EducationCategoryDto> selectAllEduCategory();
     // 모든 문제 카테고리 조회
-    List<EducationDto> selectUserEducationAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
+    List<EducationDto> selectUserEducationAtDate(@Param("memberId") Long memberId,
+                                                 @Param("startDate") LocalDateTime startDate,
+                                                 @Param("endDate") LocalDateTime endDate);
     // 특정 기간 동안 사용자에게 할당된 문제 조회
     List<EducationDto> selectEducationNotAssigned(Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
+    int insertMemberQuizHistory(@Param("memberID") Long memberID,
+                                @Param("educationIdList") List<Long> educationIdList);
+    // 사용자에게 문제를 할당, 멤버_퀴즈_히스토리 테이블에 삽입시행
 
 }
