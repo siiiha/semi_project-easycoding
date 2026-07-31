@@ -48,11 +48,11 @@ public class EducationServiceImp implements EducationService {
     // DB에서 특정 기간동안 사용자에게 할당된 문제들을 조회한다
 
     @Override
-    public boolean memberTodayEducationIsEmpty(Long memberID) {
+    public boolean memberTodayEducationIsEmpty(Long memberId) {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
 
-        List<EducationDto> todayEducation = userEducationAtDate(memberID, startOfToday, endOfToday);
+        List<EducationDto> todayEducation = userEducationAtDate(memberId, startOfToday, endOfToday);
         return todayEducation.isEmpty();
     }
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
@@ -72,14 +72,26 @@ public class EducationServiceImp implements EducationService {
     // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
 
     @Override
-    public List<EducationDto> assignEducation(Long memberID, List<EducationDto> educationList) {
+    public List<EducationDto> NotAssignedEducations(Long memberId, int qty, Long categoryId) {
+
+        List<EducationDto> educationList = educationMapper.selectEducationNotAssignedByCategory(memberId, categoryId);
+        // 리스트를 무작위로 섞고 앞의 n개 꺼내옴
+        // 리스트가 qty보다 작으면 오류 날 수 있어서 최솟값 활용
+        Collections.shuffle(educationList);
+        educationList = educationList.subList(0, Math.min(qty, educationList.size()));
+        return educationList;
+    }
+    // (카테고리별) DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
+
+    @Override
+    public List<EducationDto> assignEducation(Long memberId, List<EducationDto> educationList) {
         if(educationList == null || educationList.isEmpty()) {
             return Collections.emptyList();
         }
         List<Long> educationIdList = educationList.stream()
                                                   .map(EducationDto::getEducationId)
                                                   .toList();
-        educationMapper.insertMemberQuizHistory(memberID, educationIdList);
+        educationMapper.insertMemberQuizHistory(memberId, educationIdList);
         return educationList;
     }
     // 사용자에게 해당문제들을 할당한다
