@@ -13,20 +13,37 @@
 
     <insert id="insertQuiz" parameterType="com.semi.easycoding.education.dto.EducationDto"
             useGeneratedKeys="true" keyProperty="educationId">
-        INSERT INTO quiz (type_id, title, category_id, content, explanation, created_at)
-        VALUES (#{educationType}, #{educationTitle}, #{educationCategoryID}, #{educationContent}, #{educationExplanation}, #{createdAt})
+        INSERT INTO quiz (type_id,
+                          title,
+                          category_id,
+                          content,
+                          explanation,
+                          created_at)
+        VALUES (#{educationType},
+                #{educationTitle},
+                #{educationCategoryID},
+                #{educationContent},
+                #{educationExplanation},
+                #{createdAt})
     </insert>
 
     <insert id="insertOptions" parameterType="com.semi.easycoding.education.dto.EducationOptionTypeDto">
-        INSERT INTO answer_option (quiz_id, content, is_correct, option_number)
+        INSERT INTO answer_option (quiz_id,
+                                   content,
+                                   is_correct,
+                                   option_number)
         VALUES
         <foreach collection="options" item="option" separator=",">
-            (#{educationId}, #{option.optionContents}, #{option.correct}, #{option.orderingNumber})
+            (#{educationId},
+             #{option.optionContents},
+             #{option.correct},
+             #{option.orderingNumber})
         </foreach>
     </insert>
 
     <select id="selectAllEduCategory" resultType="com.semi.easycoding.education.dto.EducationCategoryDto">
-        SELECT category_id AS categoryId, category_name AS categoryName
+        SELECT category_id AS categoryId,
+               category_name AS categoryName
         FROM quiz_category
     </select>
 
@@ -41,7 +58,24 @@
         FROM member_quiz_history mqh
         INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
         WHERE mqh.member_id = #{memberId}
-          AND mqh.created_at BETWEEN #{startDate} AND #{endDate}
+        AND mqh.created_at BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="selectEducationNotAssigned" resultType="com.semi.easycoding.education.dto.EducationDto">
+        SELECT q.quiz_id AS educationId,
+               q.type_id AS educationType,
+               q.category_id AS educationCategoryID,
+               q.title AS educationTitle,
+               q.content AS educationContent,
+               q.explanation AS educationExplanation,
+               q.created_at AS createdAt
+        FROM quiz q
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM member_quiz_history mqh
+            WHERE mqh.member_id = #{memberId}
+            AND mqh.quiz_id = q.quiz_id
+        )
     </select>
 
 </mapper>
