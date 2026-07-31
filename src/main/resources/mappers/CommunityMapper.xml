@@ -58,6 +58,13 @@
         WHERE p.post_id = #{postId}
     </select>
 
+
+    <update id="increseViews" parameterType="Long">
+        UPDATE post
+        SET views = views + 1
+        WHERE post_id = #{postId}
+    </update>
+
     <!-- 카테고리 별로 category_id 조회 -->
     <select id="selectCategoryId" parameterType="String" resultType="int">
         SELECT category_id
