@@ -23,4 +23,8 @@ public interface CommunityMapper {
     int insertPost(PostDto postDto);
 
     int selectCategoryId(String category);
+
+    // 게시글 수정
+    int updatePost(PostDto postDto);
+
 }

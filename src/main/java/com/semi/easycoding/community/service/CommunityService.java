@@ -13,4 +13,6 @@ public interface CommunityService {
     PostDto selectPostDetail(Long postId);
 
     Long insertPost(PostDto postDto);
+
+    Long updatePost(PostDto postDto);
 }
