@@ -45,6 +45,7 @@ public class CommunityController {
         model.addAttribute("postList", result.getPostList());
         model.addAttribute("pageInfo", result.getPageInfo());
         model.addAttribute("condition", condition);
+        System.out.println(condition.getKeyword());
 
         for (PostDto postDto : result.getPostList()) {
             switch(postDto.getCategory()) {
