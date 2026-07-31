@@ -43,9 +43,11 @@
     </select>
 
     <!--  -->
-    <select id="selectPostCount" resultType="int">
+    <select id="selectPostCount" parameterType="PostSearchCondition" resultType="int">
         SELECT COUNT(*)
-        FROM post
+        FROM post p
+            LEFT JOIN post_category c USING (category_id)
+        <include refid="searchWhere"/>
     </select>
 
     <!-- 게시글 상세 조회 -->

@@ -28,7 +28,7 @@
 
             <!-- ── 왼쪽 사이드바 ── -->
             <nav class="comm-sidebar">
-                <a href="${pageContext.request.contextPath}/community?postCategory=all&page=${condition.page}"
+                <a href="${pageContext.request.contextPath}/community?postCategory=all&page=1"
                    class="comm-cat-btn ${empty condition.postCategory or condition.postCategory == 'all' ? 'active' : ''}">
                     <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${empty communityType or communityType == 'all' ? '#4CAF50' : '#1E1E1E'}" stroke-width="1.8">
                         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -36,21 +36,21 @@
                     </svg>
                     <span class="comm-cat-label">전체</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community?postCategory=qna&page=${condition.page}"
+                <a href="${pageContext.request.contextPath}/community?postCategory=qna&page=1"
                    class="comm-cat-btn ${condition.postCategory == 'qna' ? 'active' : ''}">
                     <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'qna' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V16m-7-2h2"/>
                     </svg>
                     <span class="comm-cat-label">질문 &amp; 답변</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community?postCategory=solution&page=${condition.page}"
+                <a href="${pageContext.request.contextPath}/community?postCategory=solution&page=1"
                    class="comm-cat-btn ${condition.postCategory == 'solution' ? 'active' : ''}">
                     <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'solution' ? '#4CAF50' : '#333'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M8 16L4 12L8 8"/><path d="M16 8L20 12L16 16"/><path d="M14 4L10 20"/>
                     </svg>
                     <span class="comm-cat-label">풀이 공유</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/community?postCategory=problem&page=${condition.page}"
+                <a href="${pageContext.request.contextPath}/community?postCategory=problem&page=1"
                    class="comm-cat-btn ${condition.postCategory == 'problem' ? 'active' : ''}">
                     <svg class="comm-cat-icon" viewBox="0 0 24 24" fill="none" stroke="${condition.postCategory == 'problem' ? '#4CAF50' : '#333'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 3L20 7L12 15H8V11L16 3Z"/><path d="M3 21h18"/>

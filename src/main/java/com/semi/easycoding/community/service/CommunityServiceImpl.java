@@ -26,7 +26,7 @@ public class CommunityServiceImpl implements CommunityService {
     public PostListResult selectPostList(PostSearchCondition condition) {
 
         // 전체 페이지 갯수
-        int totalCount = communityMapper.selectPostCount();
+        int totalCount = communityMapper.selectPostCount(condition);
 
         // 페이징 정보를 계산하고, 저장하기 위한 PageInfo 객체 생성
         PageInfo pageInfo = new PageInfo(

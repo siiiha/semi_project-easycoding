@@ -13,7 +13,7 @@ public interface CommunityMapper {
     List<PostDto> selectPostList(PostSearchCondition condition);
 
     // 전체 게시글의 갯수를 조회
-    int selectPostCount();
+    int selectPostCount(PostSearchCondition condition);
 
     PostDto selectPostDetail(Long postId);
 }
