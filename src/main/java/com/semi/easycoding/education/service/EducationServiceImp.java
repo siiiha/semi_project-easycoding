@@ -37,17 +37,30 @@ public class EducationServiceImp implements EducationService {
     }
 
     @Override
-    public EducationDto requestUserEducation(Long EducationID, Long userId) {
-        return null;
+    public List<EducationDto> userEducationAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
+        return educationMapper.selectUserEducationAtDate(memberId, startDate, endDate);
     }
 
     @Override
-    public EducationDto[] lookupUserEducationAtDate(Long UserId, LocalDateTime startDate, LocalDateTime endDate) {
-        return new EducationDto[0];
+    public boolean memberTodayEducationIsEmpty(Long memberID) {
+
     }
+
+
+
+
+
+// 이 밑으로 구현해야함
+    @Override
+    public EducationDto requestUserEducation(Long educationId, Long memberId) {
+        return null;
+    }
+
+
 
     @Override
     public List<EducationCategoryDto> getAllEduCategory() {
         return educationMapper.selectAllEduCategory();
     }
+
 }
