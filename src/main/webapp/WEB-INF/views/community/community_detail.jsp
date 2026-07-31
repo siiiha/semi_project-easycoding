@@ -75,11 +75,11 @@
                     <div style="height:1px;background:#B8BEC5;"></div>
 
                     <!-- 수정 / 삭제 (본인 글만 노출) -->
-                    <c:if test="${post.author == sessionScope.loginUser.nickname}">
+                    <c:if test="${postDetail.nickname == sessionScope.loginUser.nickname}">
                         <div style="display:flex;gap:12px;justify-content:flex-end;">
-                            <a href="${pageContext.request.contextPath}/community/${post.id}/edit"
+                            <a href="${pageContext.request.contextPath}/community/${postDetail.postId}/edit"
                                style="padding:6px 16px;background:#fff;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;font-weight:600;color:#5B5B5B;text-decoration:none;">수정</a>
-                            <form action="${pageContext.request.contextPath}/community/${post.id}/delete" method="post" style="display:inline;"
+                            <form action="${pageContext.request.contextPath}/community/${postDetail.postId}/delete" method="post" style="display:inline;"
                                   onsubmit="return confirm('정말 삭제하시겠습니까?')">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                                 <button type="submit"

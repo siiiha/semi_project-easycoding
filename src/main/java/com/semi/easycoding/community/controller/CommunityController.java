@@ -4,8 +4,10 @@ import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
+import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +45,7 @@ public class CommunityController {
         model.addAttribute("postList", result.getPostList());
         model.addAttribute("pageInfo", result.getPageInfo());
         model.addAttribute("condition", condition);
+        System.out.println(condition.getKeyword());
 
         for (PostDto postDto : result.getPostList()) {
             switch(postDto.getCategory()) {
@@ -71,8 +74,9 @@ public class CommunityController {
             Model model) {
         PostDto postDetail = communityService.selectPostDetail(postId);
         model.addAttribute("postDetail", postDetail);
+        System.out.println(postDetail.getViews());
 
-        String redirectURL = "community?postCategory=all&page=" + condition.getPage();
+        String redirectURL = "/community?postCategory=all&page=" + condition.getPage();
 //        String redirectURL = "/community?postCategory=" + condition.getPostCategory + "&page=" + condition.getPage();
         model.addAttribute("redirectURL", redirectURL);
 
@@ -82,6 +86,46 @@ public class CommunityController {
     @GetMapping("/write")
     public String writePage(){
         return "community/community_write";
+    }
+
+    @PostMapping("/write")
+    public String writePost(
+            @ModelAttribute PostDto postDto,
+            HttpSession session
+    ) {
+        MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
+        System.out.println(loginMember != null);
+        if (loginMember == null) {
+            return "redirect:/member/login";
+        }
+        postDto.setMemberId(loginMember.getMemberId());
+
+        Long postId = communityService.insertPost(postDto);
+
+        return "redirect:/community/detail/" + postId;
+    }
+
+    // 게시글 번호(PK)를 가지고 게시글을 조회 및 수정페이지 이동
+    @GetMapping("/{postId}/edit")
+    public String editPage(
+            @PathVariable Long postId,
+            Model model
+    ) {
+        PostDto postDetail = communityService.selectPostDetail(postId);
+        model.addAttribute("postDetail", postDetail);
+
+        return "community/community_edit";
+    }
+
+    @PostMapping("/{postId}/edit")
+    public String editPost(
+            @ModelAttribute PostDto postDto,
+            @PathVariable Long postId
+    ) {
+        postDto.setPostId(postId);
+        Long editPostId = communityService.updatePost(postDto);
+
+        return "redirect:/community/detail/" + editPostId ;
     }
 
 }

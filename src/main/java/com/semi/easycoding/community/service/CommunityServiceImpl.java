@@ -26,7 +26,7 @@ public class CommunityServiceImpl implements CommunityService {
     public PostListResult selectPostList(PostSearchCondition condition) {
 
         // 전체 페이지 갯수
-        int totalCount = communityMapper.selectPostCount();
+        int totalCount = communityMapper.selectPostCount(condition);
 
         // 페이징 정보를 계산하고, 저장하기 위한 PageInfo 객체 생성
         PageInfo pageInfo = new PageInfo(
@@ -51,8 +51,48 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public PostDto selectPostDetail(Long postId) {
 
+        // 조회하는 게시글의 조회수 1증가
+        int increseViews = communityMapper.increseViews(postId);
+        if (increseViews <= 0) {
+            return null;
+        }
+
         PostDto postDetail = communityMapper.selectPostDetail(postId);
+        if (postDetail == null) {
+            return null;
+        }
 
         return postDetail;
+    }
+
+    /**
+     * 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
+     * @return : PostDto의 postId
+     */
+    @Override
+    public Long insertPost(PostDto postDto) {
+        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        postDto.setCategoryId(category_id);
+        int result = communityMapper.insertPost(postDto);
+        if (result != 1) {
+            return 0L;
+        }
+
+        return postDto.getPostId();
+    }
+
+    /**
+     * 게시글 수정한 내용으로 DB에 저장하는 메소드
+     * @return : int
+     */
+    @Override
+    public Long updatePost(PostDto postDto) {
+        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        postDto.setCategoryId(category_id);
+        int result = communityMapper.updatePost(postDto);
+        if (result != 1) {
+            return 0L;
+        }
+        return postDto.getPostId();
     }
 }
