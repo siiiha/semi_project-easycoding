@@ -10,8 +10,13 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+
+    <script src="${pageContext.request.contextPath}/js/nickname-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/password-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/member.js" defer></script>
+
+
+
 </head>
 <body class="auth-page">
 
@@ -61,8 +66,10 @@
                                 <circle cx="12" cy="7" r="4"/>
                             </svg>
                             <input type="text" id="nickname" name="nickname" class="form-input-inner"
-                                   placeholder="닉네임을 입력해주세요." value="${param.nickname}" required>
+                                   placeholder="닉네임을 입력해주세요." value="${param.nickname}"
+                                   maxlength="8" required>
                         </div>
+                        <p id="check-nickname-result"></p>
                     </div>
 
                 <!-- 아이디(이메일) -->
@@ -99,6 +106,7 @@
                             <input type="password" id="password" name="password" class="form-input-inner"
                                    placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
                         </div>
+                        <p id="check-password-format-result"></p>
                     </div>
 
                 <!-- 비밀번호 확인 -->
@@ -113,10 +121,10 @@
                             </svg>
                             <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input-inner"
                                    placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password" required>
-                            <p id="check-password-result"></p>
-                            <!-- 이 부분은 패스워드 체크의 결과값이 들어간다.-->
-                            <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                         </div>
+                        <p id="check-password-result"></p>
+                        <!-- 이 부분은 패스워드 체크의 결과값이 들어간다.-->
+                        <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                     </div>
 
                 <button type="submit" class="btn btn-primary auth-submit-btn">회원가입</button>
@@ -179,9 +187,16 @@
     //이메일이 비어있으면 안내문구를 표시하고 중복 확인을 중단한다.
     checkEmailButton.addEventListener('click', async function () {
         const email = emailInput.value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (email === '') {
             checkEmailResult.textContent = '이메일을 입력해주세요.';
+            checkedEmail = null;
+            emailInput.focus();
+            return;
+        }
+        if (!emailPattern.test(email)) {
+            checkEmailResult.textContent = '올바른 이메일 형식이 아닙니다.';
             checkedEmail = null;
             emailInput.focus();
             return;
@@ -270,19 +285,20 @@
 
         if (checkedEmail !== currentEmail) {
             event.preventDefault();
-            alert('이메일 중복 확인을 진행해주세요.');
+            checkEmailResult.textContent = '이메일 중복 확인을 진행해주세요.';
             emailInput.focus();
             return;
         }
 
         if (!isPasswordMatched) {
             event.preventDefault();
-            alert('비밀번호가 일치하지 않습니다.');
+            checkPasswordResult.textContent = '비밀번호가 일치하지 않습니다.';
             passwordConfirmInput.focus();
         }   //위에 있는 것과의 차이는 위는 작성할시 바로바로 비교. 아래는 버튼을 누르면 비교하여 문구가 나온다.
 
 
     });
 </script>
+
 </body>
 </html>

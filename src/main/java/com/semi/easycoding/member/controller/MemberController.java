@@ -26,26 +26,47 @@ public class MemberController {
         return memberService.isEmailDuplicate(email);
     }
 
+    @GetMapping("/check-nickname")
+    @ResponseBody
+    public boolean checkNickname(@RequestParam String nickname) {
+        return memberService.isNicknameDuplicate(nickname.trim());
+    }
+
 
     //사용자가 입력한 정보를 받는다.
     @PostMapping("/join")
     public String join(MemberDto memberDto, //email, nickname, password가 있음
-                       @RequestParam String passwordConfirm, //passwordConfirm : 두 번째 비밀번호 확인
+                       //passwordConfirm : 두 번째 비밀번호 확인
                        Model model) {
+
+        if (memberDto.getNickname() == null
+                || memberDto.getNickname().trim().isEmpty()) {
+            model.addAttribute("errorMsg", "닉네임을 입력해주세요.");
+            return "member/join";
+        }
+        memberDto.setNickname(memberDto.getNickname().trim());
 
         //memberDto.getPassword() : 첫 번째 비밀번호
         //passwordConfirm : 두 번째 비밀번호 확인
         //Model : 서로 다를 때 화면에 오류 문구를 전달한다.
-        if (!memberDto.getPassword().equals(passwordConfirm)) {
-            model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
-            return "member/join";
-        }
+//        if (!memberDto.getPassword().equals(passwordConfirm)) {
+//            model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
+//            return "member/join";
+//        }
 
         if (memberService.isEmailDuplicate(memberDto.getEmail())) {
             //메서드가 실행 될 때 값이 true면 이미 사용 중, false면 사용 가능.
             model.addAttribute(
                     "errorMsg",
                     "이미 사용중인 이메일입니다."
+            );
+            return "member/join";
+        }
+
+        if (memberService.isNicknameDuplicate(memberDto.getNickname())) {
+            model.addAttribute(
+                    "errorMsg",
+                    "이미 사용중인 닉네임입니다."
             );
             return "member/join";
         }
@@ -115,17 +136,76 @@ public class MemberController {
         int commentCount = memberService.countCommentByMemberId(memberId);
 
         //조회 결과 전달
+        model.addAttribute("member", loginUser);
         model.addAttribute("postCount", postCount);
         model.addAttribute("commentCount", commentCount);
 
         return "mypage/mypage";
     }
 
-    // 회원정보 수정 페이지 이동
+
+    // 회원정보 화면-데이터를 가져옴!
     @GetMapping("/edit")
-    public String memberEditPage() {
+    public String memberEditPage(HttpSession session) {
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
         return "mypage/edit";
     }
+
+
+    // 회원정보 수정 페이지 이동
+    @PostMapping("/edit")
+    public String memberEdit(
+        @RequestParam String nickname, HttpSession session, Model model) {
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        String trimmedNickname = nickname.trim();
+
+        if (trimmedNickname.isEmpty()) {
+            model.addAttribute("errorMsg", "닉네임을 입력해주세요.");
+            return "mypage/edit";
+        }
+
+        if (trimmedNickname.length() > 8){
+            model.addAttribute(
+                    "errorMsg", "닉네임은 8자 이하로 입력해주세요."
+            );
+            return "mypage/edit";
+        }
+
+        if (!loginUser.getNickname().equals(trimmedNickname)
+                && memberService.isNicknameDuplicate(trimmedNickname)) {
+            model.addAttribute("errorMsg", "이미 사용중인 닉네임입니다.");
+            return "mypage/edit";
+        }
+
+        //현재 로그인한 회원의 닉네임을 실제 DB에서 변경하고, 수정 결과를 받는 코드
+        int result = memberService.updateNickname(
+                loginUser.getMemberId(),
+                trimmedNickname
+        );
+
+
+
+        if (result == 0) {
+            model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
+            return "mypage/edit";
+        }
+
+        //DB에서 최신 회원정보 다시 조회
+        MemberDto updatedMember = memberService.memberList(loginUser.getMemberId());
+        //세션 정보를 최신 값으로 교체
+        session.setAttribute("loginUser", updatedMember);
+        return "redirect:/member/mypage";
+    }
+
 
     // 회원탈퇴 페이지 이동
     @GetMapping("/withdraw")
@@ -142,20 +222,15 @@ public class MemberController {
 
     @PostMapping("/withdraw")
     public String withdraw(@RequestParam String password, HttpSession session, Model model) {
-
-
-
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
         }
 
-
         boolean result = memberService.withdraw(
                 loginUser.getMemberId(), password
         );
-
 
         if (!result) {
             model.addAttribute(
@@ -167,4 +242,6 @@ public class MemberController {
         session.invalidate();
         return "redirect:/";
     }
+
+
 }

@@ -10,6 +10,8 @@ public interface MemberService {
     boolean isEmailDuplicate(String email);
     //이메일 중복 여부를 확인 (true:이미 사용중. false:사용가능한이메일
 
+    boolean isNicknameDuplicate(String nickname);
+
     MemberDto memberList(String memberId);
 
     int join(MemberDto memberDto);
@@ -26,7 +28,7 @@ public interface MemberService {
     boolean withdraw(String memberId, String password);
 
 
-
+    int updateNickname(String memberId, String nickname);
 
 
 }

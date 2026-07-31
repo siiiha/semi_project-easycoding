@@ -18,6 +18,8 @@ public interface MemberMapper {
     //DB에서 찾은 이메일의 갯수를 int값으로 알려준다.
     //countByEmail은 이메일을 기준으로 개수를 센다는 뜻이다.
 
+    int countByNickname(String nickname);
+
     int join(MemberDto memberDto);
     //회원정보가 담긴 memberDto를 받고, DB처리 결과를 숫자로 돌려주는 join()메서드
 
@@ -26,4 +28,10 @@ public interface MemberMapper {
 
     int withdraw(@Param("memberId") String memberId);
     //loginUser.getMemberId() = 실제 로그인한 회원번호
+
+    int updateNickname(
+            @Param("memberId") String memberId,
+            @Param("nickname") String nickname
+    );
+
 }

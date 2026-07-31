@@ -22,6 +22,11 @@ public class MemberServiceImpl implements MemberService {
     }
     //조회된 이메일의 개수가 1이면 결과값이 true로 이미 사용중인 이메일이라는 것.
 
+    @Override
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberMapper.countByNickname(nickname) > 0;
+    }
+
     @Override    //MemberService 설명서에 선언된 join() 메서드를 여기서 구현
     public int join(MemberDto memberDto) {
 
@@ -55,9 +60,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDto memberList(String memberId) {
-        MemberDto memberdto = memberMapper.memberList(memberId);
+        return memberMapper.memberList(memberId);
+    }
+    //1. 회원탈퇴를 할 때 DB에서 회원정보와 암호화된 비밀번호를 가져온다.
+    //2. 닉네임을 수정하고 최신 회원 정보를 가져온다.
 
-        return memberdto;
+    @Override
+    //반환형 int는 DB에서 수정된 행의 개수
+    public int updateNickname(String memberId, String nickname) {
+        String trimmedNickname = nickname.trim();
+
+        return memberMapper.updateNickname(memberId, trimmedNickname);
     }
 
     @Override
@@ -72,26 +85,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean withdraw(String memberId, String password) {
-
         MemberDto member = memberMapper.memberList(memberId);
-
-
         if (member == null) {
             return false;
         }
-
         boolean passwordMatcheds =
                 passwordEncoder.matches(
                         password,
                         member.getPassword()
                 );
-
         if (!passwordMatcheds) {
             return false;
         }
-
         int result = memberMapper.withdraw(memberId);
-
         if (result > 0) {
             return true;
         } else {

@@ -25,13 +25,16 @@
 
 /* ── 로고 ── */
 .header-logo {
-  font-family: 'Pretendard', sans-serif;
+  font-family: var(--font-logo);
+  font-weight: 400;
   font-size: 36px;
-  color: var(--color-primary);   /* #4CAF50 */
+  color: var(--color-primary);
   text-decoration: none;
   flex-shrink: 0;
   line-height: 1;
 }
+
+
 .header-logo:hover {
   color: var(--color-primary-hover);
 }
@@ -225,4 +228,27 @@
 }
 .dropdown-divider a {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    height: 64px;
+  }
+
+  .header-inner {
+    padding: 0 20px;
+  }
+
+  .header-logo {
+    font-size: 30px;
+  }
+
+  .header-nav,
+  .auth-text {
+    display: none;
+  }
+
+  .auth-login-btn {
+    font-size: 15px;
+  }
 }
