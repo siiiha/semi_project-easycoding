@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class EducationDto {
     private Long educationId;
     private Short educationType;
+    private Short educationCategoryID;
+    private String educationCategoryName;
     private String educationTitle;
     private String educationContent;
     private String educationExplanation;

@@ -39,20 +39,19 @@ public class AgentController {
         if(!apiChecker.isValidOpenAiKey(apiKey)){
             return "APIKey Error";
         }
-        String requestMsg = "주제: "+topic;
         String json;
         EducationDto dto;
 
         switch (type){
             // 1은 객관식 생성
             case 1:
-                json = agentService.requestOptional(requestMsg);
+                json = agentService.requestOptional(topic);
                 dto = agentService.stringToEducationDto(json);
                 educationService.storeEducation(dto);
                 return "good";
             // 2는 빈칸채우기 생성
             case 2:
-                json = agentService.requestBlank(requestMsg);
+                json = agentService.requestBlank(topic);
                 dto = agentService.stringToEducationDto(json);
                 educationService.storeEducation(dto);
                 return "good";
@@ -60,6 +59,13 @@ public class AgentController {
 
         return "type Error";
     }
+
+    @GetMapping("/test/agent/createall")
+    @ResponseBody
+    int createEducationsAll(){
+        return agentService.generationAllEducationOption();
+    }
+
 
     EducationDto[] educationMapping(String response){
         return null;
