@@ -27,7 +27,10 @@ public interface EducationMapper {
     // 특정 기간 동안 사용자에게 할당된 문제 조회
     List<EducationDto> selectEducationNotAssigned(Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
-    int insertMemberQuizHistory(@Param("memberID") Long memberID,
+    List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
+                                                            @Param("categoryId") Long categoryId);
+
+    int insertMemberQuizHistory(@Param("memberId") Long memberId,
                                 @Param("educationIdList") List<Long> educationIdList);
     // 사용자에게 문제를 할당, 멤버_퀴즈_히스토리 테이블에 삽입시행
 
