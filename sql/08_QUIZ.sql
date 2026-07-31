@@ -6,11 +6,15 @@ USE `project_easycoding`;
 CREATE TABLE IF NOT EXISTS `quiz` (
 	`quiz_id` bigint NOT NULL AUTO_INCREMENT,
 	`type_id` int2 NOT NULL,
+    `category_id` int2 NOT NULL,
 	`title` varchar(127) NOT NULL,
 	`content` text NOT NULL,
+    `explanation` text NULL DEFAULT NULL,
 	`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`quiz_id`),
-	CONSTRAINT `fk_quiz_type_id` FOREIGN KEY (`type_id`) REFERENCES `quiz_type` (`type_id`)
+	CONSTRAINT `fk_quiz_type_id` FOREIGN KEY (`type_id`) REFERENCES `quiz_type` (`type_id`),
+	CONSTRAINT `fk_quiz_category_id` FOREIGN KEY (`category_id`) REFERENCES `quiz_category` (`category_id`)
 );
 
-ALTER TABLE `quiz` ADD COLUMN `explanation` text;
+ALTER TABLE `quiz`
+    ADD COLUMN explanation text NULL DEFAULT NULL AFTER `content`;

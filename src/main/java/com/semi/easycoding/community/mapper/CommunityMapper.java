@@ -20,4 +20,7 @@ public interface CommunityMapper {
 
     // 게시글의 조회수 변경
     int increseViews(Long postId);
+    int insertPost(PostDto postDto);
+
+    int selectCategoryId(String category);
 }

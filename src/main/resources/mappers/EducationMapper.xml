@@ -13,8 +13,8 @@
 
     <insert id="insertQuiz" parameterType="com.semi.easycoding.education.dto.EducationDto"
             useGeneratedKeys="true" keyProperty="educationId">
-        INSERT INTO quiz (type_id, title, content, explanation, created_at)
-        VALUES (#{educationType}, #{educationTitle}, #{educationContent}, #{educationExplanation}, #{createdAt})
+        INSERT INTO quiz (type_id, title, category_id, content, explanation, created_at)
+        VALUES (#{educationType}, #{educationTitle}, #{educationCategoryID}, #{educationContent}, #{educationExplanation}, #{createdAt})
     </insert>
 
     <insert id="insertOptions" parameterType="com.semi.easycoding.education.dto.EducationOptionTypeDto">
@@ -24,4 +24,10 @@
             (#{educationId}, #{option.optionContents}, #{option.correct}, #{option.orderingNumber})
         </foreach>
     </insert>
+
+    <select id="selectAllEduCategory" resultType="com.semi.easycoding.education.dto.EducationCategoryDto">
+        SELECT category_id AS categoryId, category_name AS categoryName
+        FROM quiz_category
+    </select>
+
 </mapper>

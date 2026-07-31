@@ -1,7 +1,6 @@
 package com.semi.easycoding.education.service;
 
-import com.semi.easycoding.agent.ApiKeyValidator;
-import com.semi.easycoding.agent.service.AgentServiceImp;
+import com.semi.easycoding.education.dto.EducationCategoryDto;
 import com.semi.easycoding.education.dto.EducationBlankTypeDto;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.EducationOptionTypeDto;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EducationServiceImp implements EducationService {
@@ -44,5 +44,10 @@ public class EducationServiceImp implements EducationService {
     @Override
     public EducationDto[] lookupUserEducationAtDate(Long UserId, LocalDateTime startDate, LocalDateTime endDate) {
         return new EducationDto[0];
+    }
+
+    @Override
+    public List<EducationCategoryDto> getAllEduCategory() {
+        return educationMapper.selectAllEduCategory();
     }
 }

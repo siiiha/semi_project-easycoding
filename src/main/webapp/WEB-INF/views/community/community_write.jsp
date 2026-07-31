@@ -32,7 +32,7 @@
 
                 <!-- 브레드크럼 -->
                 <div class="comm-form-breadcrumb">
-                    <a href="${pageContext.request.contextPath}/community" style="color:#9CA3AF;text-decoration:none;">커뮤니티</a>
+                    <span style="color:#9CA3AF;text-decoration:none;">커뮤니티</span>
                     <span>&gt;</span>
                     <span class="current">글작성</span>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="comm-form-row">
                     <label class="comm-form-label" for="postType">카테고리</label>
                     <div class="comm-form-select">
-                        <select id="postType" name="type" required>
+                        <select id="postType" name="category" required>
                             <option value="" disabled selected>카테고리를 선택해주세요</option>
                             <option value="qna">질문 &amp; 답변</option>
                             <option value="solution">풀이 공유</option>
