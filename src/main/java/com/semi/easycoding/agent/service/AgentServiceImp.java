@@ -1,10 +1,9 @@
 package com.semi.easycoding.agent.service;
 
 
-import com.semi.easycoding.education.dto.EducationBlankTypeDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionTypeDto;
-import com.semi.easycoding.education.dto.OptionDto;
+import com.semi.easycoding.agent.ApiKeyValidator;
+import com.semi.easycoding.education.dto.*;
+import com.semi.easycoding.education.service.EducationService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -14,24 +13,36 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AgentServiceImp implements AgentService {
 
     private final ChatClient chatClient;
+    private final ApiKeyValidator apiChecker;
 
+    @Value("${spring.ai.openai.api-key}")
+    String apiKey;
     @Value("classpath:prompts/system-prompt-optional.st")
     Resource optionalSystemPromptFile;
     @Value("classpath:prompts/system-prompt-blank.st")
     Resource blankSystemPromptFile;
 
+    private final EducationService educationService;
+
     private String SystemPrompt;
 
-    public AgentServiceImp(ChatClient.Builder builder){
+    public AgentServiceImp(ChatClient.Builder builder,
+                           ApiKeyValidator apiChecker,
+                           EducationService educationService){
         this.chatClient = builder.build();
+        this.apiChecker = apiChecker;
+        this.educationService = educationService;
     }
 
-    private String requestToAgent(String requestMsg){
+    private String requestToAgent(String topic){
+        String requestMsg = "주제 : "+ topic;
         return chatClient.prompt()
                 .system(SystemPrompt)
                 .user(requestMsg)
@@ -81,5 +92,26 @@ public class AgentServiceImp implements AgentService {
         }
 
         return myDto;
+    }
+
+    @Override
+    public int generationAllEducationOption() {
+        if(!apiChecker.isValidOpenAiKey(apiKey)){
+            return 0;
+        }
+
+        List<EducationCategoryDto> myList = educationService.getAllEduCategory();
+        int cnt=0;
+
+
+        for(EducationCategoryDto category : myList){
+            String json = requestOptional(category.getCategoryName());
+            EducationDto dto = stringToEducationDto(json);
+            dto.setEducationCategoryID(category.getCategoryId());
+            educationService.storeEducation(dto);
+            cnt++;
+        }
+
+        return cnt;
     }
 }
