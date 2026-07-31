@@ -17,8 +17,11 @@ public interface EducationService {
     boolean memberTodayEducationIsEmpty(Long memberID);
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
 
-    EducationDto requestUserEducation(Long educationId, Long memberId);
-    // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제하나를 무직위로 할당하고 그 문제를 반환한다
+    List<EducationDto> requestUserEducation(Long memberId, int qty);
+    // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
+
+    boolean assignEducation(Long memberID, List<EducationDto> educationList);
+    // 사용자에게 해당문제들을 할당한다
 
     List<EducationDto> userEducationAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
     // DB에서 특정 기간동안 사용자에게 할당된 문제들을 조회한다
