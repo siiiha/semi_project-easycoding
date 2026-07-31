@@ -58,6 +58,7 @@
         WHERE p.post_id = #{postId}
     </select>
 
+
     <update id="increseViews" parameterType="Long">
         UPDATE post
         SET views = views + 1
@@ -78,5 +79,11 @@
             category_id = #{categoryId}
         WHERE post_id = #{postId}
     </update>
+
+    <!-- 게시글 작성/추가 -->
+    <insert id="insertPost" parameterType="PostDto" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO post (member_id, category_id, title, content)
+            VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
+    </insert>
 
 </mapper>

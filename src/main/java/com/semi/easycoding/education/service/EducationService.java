@@ -1,8 +1,10 @@
 package com.semi.easycoding.education.service;
 
+import com.semi.easycoding.education.dto.EducationCategoryDto;
 import com.semi.easycoding.education.dto.EducationDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface EducationService {
 
@@ -14,4 +16,6 @@ public interface EducationService {
 
     EducationDto[] lookupUserEducationAtDate(Long UserId, LocalDateTime startDate, LocalDateTime endDate);
     // DB에서 특정 기간동안 사용자에게 할당된 문제들을 조회한다
+
+    List<EducationCategoryDto> getAllEduCategory();
 }

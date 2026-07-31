@@ -66,6 +66,22 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     /**
+     * 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
+     * @return : PostDto의 postId
+     */
+    @Override
+    public Long insertPost(PostDto postDto) {
+        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        postDto.setCategoryId(category_id);
+        int result = communityMapper.insertPost(postDto);
+        if (result != 1) {
+            return 0L;
+        }
+
+        return postDto.getPostId();
+    }
+
+    /**
      * 게시글 수정한 내용으로 DB에 저장하는 메소드
      * @return : int
      */
