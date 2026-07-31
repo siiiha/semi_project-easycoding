@@ -56,14 +56,10 @@ public class EducationServiceImp implements EducationService {
         return todayEducation.isEmpty();
     }
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
+    // 이거 로직 짜보니까 필요가 없는데?
 
-
-
-
-
-// 이 밑으로 구현해야함
     @Override
-    public List<EducationDto> requestUserEducation(Long memberId, int qty) {
+    public List<EducationDto> NotAssignedEducations(Long memberId, int qty) {
         // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제들을 전부 받아옴
         List<EducationDto> educationList = educationMapper.selectEducationNotAssigned(memberId);
 
@@ -76,8 +72,15 @@ public class EducationServiceImp implements EducationService {
     // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
 
     @Override
-    public boolean assignEducation(Long memberID, List<EducationDto> educationList) {
-        return false;
+    public List<EducationDto> assignEducation(Long memberID, List<EducationDto> educationList) {
+        if(educationList == null || educationList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> educationIdList = educationList.stream()
+                                                  .map(EducationDto::getEducationId)
+                                                  .toList();
+        educationMapper.insertMemberQuizHistory(memberID, educationIdList);
+        return educationList;
     }
     // 사용자에게 해당문제들을 할당한다
 
@@ -87,5 +90,21 @@ public class EducationServiceImp implements EducationService {
         return educationMapper.selectAllEduCategory();
     }
     // DB에서 모든 문제 카테고리 정보를 조회한다
+
+    @Override
+    public List<EducationDto> todayEducations(Long memberId) {
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
+
+        List<EducationDto> todayEducationList = userEducationAtDate(memberId, startOfToday, endOfToday);
+
+        if (todayEducationList.isEmpty()) {
+            List<EducationDto> newEducationList = NotAssignedEducations(memberId, 5); // 예시로 5개 할당
+            todayEducationList = assignEducation(memberId, newEducationList);
+        }
+        return todayEducationList;
+    }
+    // 특정 사용자가 오늘 할당받은 학습 조회하여 반환
+    // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습을 조회회여 반환
 
 }
