@@ -2,6 +2,124 @@
    daily_quiz.css - 일일 퀴즈 / 학습 완료 페이지 스타일
    ============================================================ */
 
+/* ── 일일 미션 요약 화면 ── */
+.daily-mission-page {
+  background-color: #fff;
+  min-height: calc(100vh - 80px - 100px);
+  padding: 36px 16px 56px;
+}
+
+.daily-mission-wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.daily-mission-title {
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.daily-mission-subtitle {
+  margin-top: 6px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.daily-mission-card {
+  margin-top: 18px;
+  border: 1px solid #c8ebcc;
+  border-radius: 14px;
+  background-color: #fff;
+  padding: 18px 16px 16px;
+}
+
+.daily-mission-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.daily-mission-label {
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.daily-mission-rate {
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.daily-mission-count {
+  margin-top: 8px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+.daily-mission-count strong {
+  color: var(--color-primary);
+  font-size: 54px;
+  font-weight: 700;
+}
+
+.daily-mission-text {
+  margin-top: 8px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.daily-mission-progress-track {
+  margin-top: 14px;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background-color: #eef0f2;
+  overflow: hidden;
+}
+
+.daily-mission-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  transition: width .25s ease;
+}
+
+.daily-mission-btn {
+  margin-top: 14px;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 10px;
+  background-color: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.daily-mission-btn:hover {
+  color: #fff;
+  background-color: var(--color-primary-hover);
+}
+
 /* ── 퀴즈 페이지 공통 ── */
 .quiz-page,
 .quiz-complete-page {
