@@ -200,7 +200,7 @@ public class MemberController {
         }
 
         //DB에서 최신 회원정보 다시 조회
-        MemberDto updatedMember = memberService.memberList(loginUser.getMemberId());
+        MemberDto updatedMember = memberService.findByMemberId(loginUser.getMemberId());
         //세션 정보를 최신 값으로 교체
         session.setAttribute("loginUser", updatedMember);
         return "redirect:/member/mypage";

@@ -72,13 +72,13 @@
                         </div>
                         </c:if>
 
-                        <a href="${pageContext.request.contextPath}/education/daily-quiz" class="btn mission-start-btn">학습하기</a>
+                        <a href="${pageContext.request.contextPath}/education/daily-quiz" class="btn mission-start-btn">오늘의 학습 시작하기</a>
                     </div>
                 </div>
 
                 <!-- 양 캐릭터 이미지 -->
                 <div class="hero-banner-right">
-                    <img src="${pageContext.request.contextPath}/images/sheep-focus.png" alt="집중하는 양 캐릭터" class="hero-sheep-img">
+                    <img src="${pageContext.request.contextPath}/images/코딩_집중_양.png" alt="집중하는 양 캐릭터" class="hero-sheep-img">
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberMapper {
 
-    MemberDto memberList(String memberId);
+    MemberDto findByMemberId(String memberId);
 
     MemberDto login(MemberDto memberDto);
     //MemberDto 안에 이미 private String email과 private String password가 들어있다.

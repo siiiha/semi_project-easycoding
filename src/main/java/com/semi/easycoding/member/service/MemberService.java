@@ -12,7 +12,7 @@ public interface MemberService {
 
     boolean isNicknameDuplicate(String nickname);
 
-    MemberDto memberList(String memberId);
+    MemberDto findByMemberId(String memberId);
 
     int join(MemberDto memberDto);
     //회원가입 메서드의 사용 규칙을 정하는 것!

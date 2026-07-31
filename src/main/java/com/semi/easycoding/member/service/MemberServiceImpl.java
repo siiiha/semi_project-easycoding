@@ -59,8 +59,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDto memberList(String memberId) {
-        return memberMapper.memberList(memberId);
+    public MemberDto findByMemberId(String memberId) {
+        return memberMapper.findByMemberId(memberId);
     }
     //1. 회원탈퇴를 할 때 DB에서 회원정보와 암호화된 비밀번호를 가져온다.
     //2. 닉네임을 수정하고 최신 회원 정보를 가져온다.
@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean withdraw(String memberId, String password) {
-        MemberDto member = memberMapper.memberList(memberId);
+        MemberDto member = memberMapper.findByMemberId(memberId);
         if (member == null) {
             return false;
         }

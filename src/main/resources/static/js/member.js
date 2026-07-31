@@ -8,7 +8,80 @@ const memberNicknameInput = document.querySelector("#nickname");
 const emailResult = document.querySelector("#check-email-result");
 const nicknameResult = document.querySelector("#check-nickname-result");
 const passwordFormatResult = document.querySelector("#check-password-format-result");
+
+const checkEmailButton = document.querySelector("#check-email-button");
+const passwordConfirmInput = document.querySelector("#passwordConfirm");
+const passwordConfirmResult = document.querySelector("#check-password-result");
+
 let checkedNickname = null;
+let checkedEmail = null;
+let isPasswordMatched = false;
+
+checkEmailButton.addEventListener("click", async function () {
+    const email = memberEmailInput.value.trim();
+    if (!validateEmailFormat()) {
+        checkedEmail = null;
+        memberEmailInput.focus();
+        return;
+    }
+    const requestUrl = new URL("check-email", memberJoinForm.action);
+    requestUrl.searchParams.set("email", email);
+
+    // requestUrl     → 방금 만든 이메일 확인 주소
+    // searchParams   → 주소 뒤의 ?email=... 부분
+    // set            → 파라미터 추가
+    // "email"        → Controller의 @RequestParam 이름
+    // email          → 사용자가 입력한 이메일 값
+
+    try {
+        const response = await fetch(requestUrl);
+
+        if (!response.ok) {
+            throw new Error("이메일 중복 확인 요청 실패");
+        }
+
+        const isDuplicate = await response.json();
+
+        if (isDuplicate) {
+            emailResult.textContent = "이미 사용 중인 이메일입니다.";
+            checkedEmail = null;
+        } else {
+            emailResult.textContent = "사용 가능한 이메일입니다.";
+            checkedEmail = email;
+        }
+
+    } catch (error) {
+        emailResult.textContent = "이메일 중복 확인 중 오류가 발생했습니다.";
+        checkedEmail = null;
+    }
+
+});
+
+memberEmailInput.addEventListener("input", function () {
+    checkedEmail = null;
+    emailResult.textContent = "";
+});
+
+function validatePasswordConfirm() {
+    const password = memberPasswordInput.value;
+    const passwordConfirm = passwordConfirmInput.value;
+
+    if (passwordConfirm === "") {
+        passwordConfirmResult.textContent = "";
+        isPasswordMatched = false;
+        return;
+    }
+
+    isPasswordMatched = password === passwordConfirm;
+    passwordConfirmResult.textContent = isPasswordMatched
+        ? "비밀번호가 일치합니다."
+        : "비밀번호가 일치하지 않습니다.";
+}
+
+memberPasswordInput.addEventListener("input", validatePasswordConfirm);
+passwordConfirmInput.addEventListener("input", validatePasswordConfirm);
+
+
 
 function validateEmailFormat() {
     const email = memberEmailInput.value.trim();
@@ -98,8 +171,22 @@ memberJoinForm.addEventListener("submit", function (event) {
         return;
     }
 
+    if (checkedEmail !== memberEmailInput.value.trim()) {
+        event.preventDefault();
+        emailResult.textContent = "이메일 중복 확인을 진행해주세요.";
+        memberEmailInput.focus();
+        return;
+    }
+
     if (!validatePasswordFormat()) {
         event.preventDefault();
         memberPasswordInput.focus();
+        return;
+    }
+
+    if (!isPasswordMatched) {
+        event.preventDefault();
+        passwordConfirmResult.textContent = "비밀번호가 일치하지 않습니다.";
+        passwordConfirmInput.focus();
     }
 });
