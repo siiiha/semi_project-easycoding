@@ -74,7 +74,7 @@ public class CommunityController {
         PostDto postDetail = communityService.selectPostDetail(postId);
         model.addAttribute("postDetail", postDetail);
 
-        String redirectURL = "community?postCategory=all&page=" + condition.getPage();
+        String redirectURL = "/community?postCategory=all&page=" + condition.getPage();
 //        String redirectURL = "/community?postCategory=" + condition.getPostCategory + "&page=" + condition.getPage();
         model.addAttribute("redirectURL", redirectURL);
 
