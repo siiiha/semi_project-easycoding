@@ -58,7 +58,7 @@
         FROM member_quiz_history mqh
         INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
         WHERE mqh.member_id = #{memberId}
-        AND mqh.created_at BETWEEN #{startDate} AND #{endDate}
+        AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
     </select>
 
     <select id="selectEducationNotAssigned" resultType="com.semi.easycoding.education.dto.EducationDto">
@@ -77,5 +77,17 @@
             AND mqh.quiz_id = q.quiz_id
         )
     </select>
+
+    <insert id="insertMemberQuizHistory" parameterType="map">
+        INSERT INTO member_quiz_history
+            (member_id,
+             quiz_id)
+        VALUES
+        <foreach collection="educationIdList" item="educationId" separator=",">
+            (#{memberID},
+             #{educationId})
+        </foreach>
+    </insert>
+
 
 </mapper>
