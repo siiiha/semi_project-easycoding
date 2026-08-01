@@ -69,11 +69,14 @@ public class CommunityServiceImpl implements CommunityService {
      * 게시글 삭제하는 메소드
      */
     @Override
-    public void deletePost(Long postId) {
-        int result = communityMapper.deletePost(postId);
+    public int deletePost(Long postId, String  memberId) {
+
+
+        int result = communityMapper.deletePost(postId, memberId);
         if (result <= 0) {
             // 실패 시 로직
         }
         // 성공 시 로직
+        return result;
     }
 }

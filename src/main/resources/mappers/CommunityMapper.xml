@@ -64,9 +64,10 @@
         WHERE post_id = #{postId}
     </update>
 
-    <delete id="deletePost" parameterType="Long">
+    <delete id="deletePost">
         DELETE FROM post
         WHERE post_id = #{postId}
+            AND member_id = #{memberId}
     </delete>
 
 </mapper>
