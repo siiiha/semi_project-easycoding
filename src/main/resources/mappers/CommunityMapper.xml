@@ -67,6 +67,7 @@
         WHERE post_id = #{postId}
     </update>
 
+  
     <!-- 카테고리 별로 category_id 조회 -->
     <select id="selectCategoryId" parameterType="String" resultType="int">
         SELECT category_id
@@ -87,5 +88,11 @@
         INSERT INTO post (member_id, category_id, title, content)
             VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
     </insert>
+  
+    <delete id="deletePost">
+        DELETE FROM post
+        WHERE post_id = #{postId}
+            AND member_id = #{memberId}
+    </delete>
 
 </mapper>

@@ -65,7 +65,7 @@ public class CommunityServiceImpl implements CommunityService {
         return postDetail;
     }
 
-    /**
+
      * 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
      * @return : PostDto의 postId
      */
@@ -94,5 +94,20 @@ public class CommunityServiceImpl implements CommunityService {
             return 0L;
         }
         return postDto.getPostId();
+    }
+  
+      /**
+     * 게시글 삭제하는 메소드
+     */
+    @Override
+    public int deletePost(Long postId, String  memberId) {
+
+
+        int result = communityMapper.deletePost(postId, memberId);
+        if (result <= 0) {
+            // 실패 시 로직
+        }
+        // 성공 시 로직
+        return result;
     }
 }

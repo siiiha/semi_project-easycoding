@@ -127,5 +127,16 @@ public class CommunityController {
 
         return "redirect:/community/detail/" + editPostId ;
     }
+  
+    @PostMapping("/{postId}/delete")
+    public String deletePost(
+            @PathVariable Long postId,
+            HttpSession session
+    ) {
+        MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
+        communityService.deletePost(postId, loginUser.getMemberId());
+
+        return "redirect:/community";
+    }
 
 }
