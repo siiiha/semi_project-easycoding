@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class MemberQuizHistoryDto {
     Long historyId;
     Long educationId;
-    boolean answered;
-    boolean correct;
+    boolean isAnswered;
+    boolean isCorrect;
     LocalDateTime educationDate;
     String educationDateStr; // 화면 표시용 문자열
 
