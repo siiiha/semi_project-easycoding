@@ -66,7 +66,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
 
-     * 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
+     /** 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
      * @return : PostDto의 postId
      */
     @Override
