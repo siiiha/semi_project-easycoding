@@ -69,7 +69,7 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/comment/{postId}/{commentId}")
+    @PostMapping("/delete/{postId}/{commentId}")
     public ResponseEntity<ApiResponse<List<CommentDto>>> deleteComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
