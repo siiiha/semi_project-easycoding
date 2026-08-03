@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MemberQuizStatusDto {
+public class MemberQuizHistoryDto {
     Long historyId;
     Long educationId;
     boolean answered;
