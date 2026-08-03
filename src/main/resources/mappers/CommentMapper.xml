@@ -34,4 +34,11 @@
         WHERE comment_id = #{commentId}
     </update>
 
+    <update id="deleteComment" parameterType="Long">
+        UPDATE comment
+        SET deleted_at = NOW()
+        WHERE comment_id = #{comemntId}
+            AND deleted_at IS NULL
+    </update>
+
 </mapper>
