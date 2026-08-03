@@ -133,7 +133,7 @@ function reloadComment(comment) {
     // ==== 작성자인 경우 수정/삭제 버튼 ====
     if (comment.nickname === loginNickname) {
         // 수정 버튼
-        const editBtn = document.createElement('span');
+        const editBtn = document.createElement('button');
         editBtn.textContent = '수정';
         editBtn.classList.add('comment-action-btn');
         editBtn.onclick = () => toggleCommentEdit(comment.commentId);
