@@ -35,10 +35,13 @@ public class EducationController {
         // isEmpty() == true    : 신규 학습을 할당받도록 요청 후, 그 학습을 보여준다
         // isEmpty() == false   : 이미 할당받은 학습이 존재하므로, 그 학습을 그대로 보여준다
 
-        // todo 비로그인시, 처리로직 생각해야함
+        // 비로그인시, 로그인쪽으로 리다이렉팅
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        if(loginUser == null){
+            return "redirect:/member/login";
+        }
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
 
