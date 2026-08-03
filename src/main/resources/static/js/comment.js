@@ -138,6 +138,10 @@ function reloadComment(comment) {
         editBtn.classList.add('comment-action-btn');
         editBtn.onclick = () => toggleCommentEdit(comment.commentId);
 
+        editBtn.addEventListener('click', () => {
+            createEditForm(commentArea, comment);
+        });
+
         // 삭제 폼
         const deleteForm = document.createElement('form');
         deleteForm.action = `${contextPath}/comment/delete/${postId}/${comment.commentId}`;
@@ -172,6 +176,81 @@ function reloadComment(comment) {
     commentArea.appendChild(contentArea);
 
     commentsArea.appendChild(commentArea);
+}
+
+function createEditForm(commentArea, comment) {
+    commentArea.style.display = 'none';
+
+    const editForm = document.createElement('form');
+    editForm.classList.add('edit-form');
+
+    const editContentInput = document.createElement('textarea');
+    editContentInput.classList.add('edit-content-input');
+    editContentInput.textContent = comment.content;
+
+    const editBtnArea = document.createElement('div');
+    editBtnArea.classList.add('edit-btn-area');
+
+    const btns = document.createElement('span');
+    btns.classList.add('btns');
+
+    const editCommentBtn = document.createElement('button');
+    editCommentBtn.className = 'edit-comment-btn btn';
+    editCommentBtn.type = 'button';
+    editCommentBtn.textContent = '수정';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'cancel-btn btn';
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = '취소';
+
+    editForm.appendChild(editContentInput);
+    btns.appendChild(editCommentBtn);
+    btns.appendChild(cancelBtn);
+    editBtnArea.appendChild(btns);
+    editForm.appendChild(editBtnArea);
+
+    commentArea.after(editForm);
+
+    editCommentBtn.addEventListener('click', async function() {
+        const content = editContentInput.value.trim();
+
+        console.log("수정 버튼 클릭됨");
+        const commentId = comment.commentId;
+        const postId = postIdInput.value;
+        const response = await fetch(`/comment/update/${postId}/${commentId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
+                "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+            },
+            body: JSON.stringify({content})
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            alert(result.message || "댓글 수정에 실패했습니다.");
+            return;
+        }
+
+        const commentList = result.data;
+        if (commentList == null) {
+            return;
+        }
+        commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
+        commentList.forEach(function(comment) {
+            reloadComment(comment); // 각 댓글을 하나씩 전달
+        })
+        commentCountArea.textContent = "댓글수 " + commentList.length;
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        editForm.remove();
+        commentArea.style.display = 'flex';
+    })
+
+
 }
 
 
