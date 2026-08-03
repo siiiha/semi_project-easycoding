@@ -8,9 +8,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class PostDto {
     private Long postId;        // 게시글 번호
+    private String memberId;    // 작성자 번호 (PK)
     private String category;    // 카테고리
+    private int categoryId;    // post테이블에 저장할 FK (카테고리 번호)
     private String title;       // 제목
     private String content;     // 내용
     private String nickname;    // 작성자 닉네임

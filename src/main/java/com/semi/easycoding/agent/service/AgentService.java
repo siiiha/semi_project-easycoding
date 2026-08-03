@@ -9,4 +9,7 @@ public interface AgentService {
     String requestOptional(String requestMsg);
 
     EducationDto stringToEducationDto(String json);
+
+    int generationAllEducationOption();
+
 }

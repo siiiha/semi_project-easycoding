@@ -13,7 +13,7 @@ public interface CommunityMapper {
     List<PostDto> selectPostList(PostSearchCondition condition);
 
     // 전체 게시글의 갯수를 조회
-    int selectPostCount();
+    int selectPostCount(PostSearchCondition condition);
 
     // 게시글 상세 조회
     PostDto selectPostDetail(Long postId);
@@ -21,5 +21,13 @@ public interface CommunityMapper {
     // 게시글의 조회수 변경
     int increseViews(Long postId);
 
+    int insertPost(PostDto postDto);
+
+    int selectCategoryId(String category);
+
+    // 게시글 수정
+    int updatePost(PostDto postDto);
+  
     int deletePost(Long postId, String memberId);
+
 }
