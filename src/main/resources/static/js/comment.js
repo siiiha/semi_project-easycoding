@@ -142,25 +142,19 @@ function reloadComment(comment) {
             createEditForm(commentArea, comment);
         });
 
-        // 삭제 폼
-        const deleteForm = document.createElement('form');
-        deleteForm.action = `${contextPath}/comment/delete/${postId}/${comment.commentId}`;
-        deleteForm.method = 'post';
-        deleteForm.style.display = 'inline';
-        deleteForm.onsubmit = () => confirm('삭제하시겠습니까?');
-
         // 삭제 버튼
         const deleteBtn = document.createElement('button');
-        deleteBtn.type = 'submit';
+        deleteBtn.type = 'button';
         deleteBtn.textContent = '삭제';
         deleteBtn.classList.add('comment-action-btn');
 
-        deleteForm.appendChild(deleteBtn);
-
         actionArea.appendChild(editBtn);
-        actionArea.appendChild(deleteForm);
+        actionArea.appendChild(deleteBtn);
 
         deleteBtn.addEventListener('click', async function() {
+            if (!confirm('삭제하시겠습니까?')) {
+                return;
+            }
             const commentId = comment.commentId;
             const postId = postIdInput.value;
             const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
