@@ -155,7 +155,6 @@ public class MemberController {
         return "mypage/edit";
     }
 
-
     // 회원정보 수정 페이지 이동
     @PostMapping("/edit")
     public String memberEdit(
@@ -191,9 +190,6 @@ public class MemberController {
                 loginUser.getMemberId(),
                 trimmedNickname
         );
-
-
-
         if (result == 0) {
             model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
             return "mypage/edit";
@@ -215,9 +211,7 @@ public class MemberController {
         if (loginUser == null) {
             return "redirect:/member/login";
         }
-
         return "mypage/withdraw";
-
     }
 
     @PostMapping("/withdraw")
@@ -238,10 +232,7 @@ public class MemberController {
             );
             return "mypage/withdraw";
         }
-
         session.invalidate();
         return "redirect:/";
     }
-
-
 }

@@ -13,19 +13,29 @@
         <!-- 2. parameterType="String"인 이유는 findByMemberId(String memberId)를 받기 때문-->
         <!-- 3. resultType="MemberDto"인 이유는 조회 결과를 MemberDto로 받기 때문 -->
 
-        select member_id, email, password, nickname,
+        select member_id, email, nickname,
                date_format(created_at, '%Y.%m.%d') as created_at
         from member
         where member_id = #{memberId}
+          and deleted_at is null
+    </select>
+
+    <select id="findPasswordByMemberId"
+            parameterType="String"
+            resultType="String">
+
+        select password
+        from member
+        where member_id = #{memberId}
+          and deleted_at is null
     </select>
 
     <!-- 조회 결과이기 때문에 resultType을 적어야 한다.-->
     <select id="login" parameterType="MemberDto" resultType="MemberDto">
-            select member_id, email, password, nickname,
-                   date_format(created_at, '%Y.%m.%d') as created_at
-            from member
-            where email = #{email}
-            AND deleted_at IS NULL
+        select member_id, password
+        from member
+        where email = #{email}
+          and deleted_at is null
     </select>
 
     <select id="countByEmail" parameterType="String" resultType="int">
@@ -96,6 +106,5 @@
         WHERE member_id = #{memberId}
         and deleted_at Is NULL
     </update>
-
 
 </mapper>

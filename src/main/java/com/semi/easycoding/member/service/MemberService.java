@@ -30,5 +30,4 @@ public interface MemberService {
 
     int updateNickname(String memberId, String nickname);
 
-
 }

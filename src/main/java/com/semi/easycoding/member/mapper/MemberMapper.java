@@ -11,6 +11,12 @@ public interface MemberMapper {
 
     MemberDto findByMemberId(String memberId);
 
+    String findPasswordByMemberId(String memberId);
+
+    // 두 메서드는 조회 대상이 다르므로 반환 타입도 다르다.
+    // findByMemberId: 비밀번호를 제외한 회원정보 조회용
+    // findPasswordByMemberId: 암호화된 비밀번호 조회용
+
     MemberDto login(MemberDto memberDto);
     //MemberDto 안에 이미 private String email과 private String password가 들어있다.
 
