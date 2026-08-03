@@ -19,6 +19,7 @@
         FROM comment c
             LEFT JOIN member m USING (member_id)
         WHERE c.post_id = #{postId}
+            AND c.deleted_at IS NULL
         ORDER BY c.comment_id DESC
     </select>
 
