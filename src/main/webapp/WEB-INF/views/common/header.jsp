@@ -13,7 +13,7 @@
                     <a href="${pageContext.request.contextPath}/service/guide" class="nav-link">서비스 소개</a>
                 </li>
                 <li class="nav-item has-dropdown">
-                    <a href="${pageContext.request.contextPath}/education/category" class="nav-link">학습하기</a>
+                    <a href="${pageContext.request.contextPath}/education/daily-quiz" class="nav-link">학습하기</a>
                     <ul class="dropdown">
                         <li><a href="${pageContext.request.contextPath}/education/daily-quiz">일일퀴즈</a></li>
                         <li><a href="${pageContext.request.contextPath}/education/category">카테고리학습</a></li>
