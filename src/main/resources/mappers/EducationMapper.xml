@@ -107,4 +107,15 @@
         )
     </select>
 
+    <select id="selectMemberQuizHistoryAtDate" resultType="com.semi.easycoding.education.dto.MemberQuizHistoryDto">
+        SELECT mqh.history_id AS historyId,
+               mqh.answered AS isAnswered,
+               mqh.quiz_id AS educationId,
+               mqh.correct AS isCorrect,
+               mqh.exam_at AS educationDate
+        FROM member_quiz_history mqh
+        WHERE mqh.member_id = #{memberId}
+        AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
+    </select>
+
 </mapper>

@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.mapper;
 
-import com.semi.easycoding.education.dto.EducationCategoryDto;
-import com.semi.easycoding.education.dto.EducationBlankTypeDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionTypeDto;
+import com.semi.easycoding.education.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -34,4 +31,7 @@ public interface EducationMapper {
                                 @Param("educationIdList") List<Long> educationIdList);
     // 사용자에게 문제를 할당, 멤버_퀴즈_히스토리 테이블에 삽입시행
 
+    List<MemberQuizHistoryDto> selectMemberQuizHistoryAtDate(@Param("memberId") Long memberId,
+                                                             @Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
 }

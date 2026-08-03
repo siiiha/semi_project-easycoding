@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.service;
 
-import com.semi.easycoding.education.dto.EducationCategoryDto;
-import com.semi.easycoding.education.dto.EducationBlankTypeDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionTypeDto;
+import com.semi.easycoding.education.dto.*;
 import com.semi.easycoding.education.mapper.EducationMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +43,11 @@ public class EducationServiceImp implements EducationService {
         return educationMapper.selectUserEducationAtDate(memberId, startDate, endDate);
     }
     // DB에서 특정 기간동안 사용자에게 할당된 문제들을 조회한다
+
+    @Override
+    public List<MemberQuizHistoryDto> getMemberQuizHistoryAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
+        return educationMapper.selectMemberQuizHistoryAtDate(memberId, startDate, endDate);
+    }
 
     @Override
     public boolean memberTodayEducationIsEmpty(Long memberId) {
@@ -104,19 +106,21 @@ public class EducationServiceImp implements EducationService {
     // DB에서 모든 문제 카테고리 정보를 조회한다
 
     @Override
-    public List<EducationDto> todayEducations(Long memberId) {
+    public List<MemberQuizHistoryDto> todayEducations(Long memberId) {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
 
-        List<EducationDto> todayEducationList = userEducationAtDate(memberId, startOfToday, endOfToday);
+        List<MemberQuizHistoryDto> todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
 
-        if (todayEducationList.isEmpty()) {
+        if (todayEducationHistory.isEmpty()) {
             List<EducationDto> newEducationList = NotAssignedEducations(memberId, 5); // 예시로 5개 할당
-            todayEducationList = assignEducation(memberId, newEducationList);
+            assignEducation(memberId, newEducationList);
+            todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
         }
-        return todayEducationList;
+        return todayEducationHistory;
     }
-    // 특정 사용자가 오늘 할당받은 학습 조회하여 반환
-    // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습을 조회회여 반환
+    // 컨트롤러의 "/daily-quiz" 요청을 받는 오케스트레이션 메서드
+    // 특정 사용자가 오늘 할당받은 학습에대한 현황을 조회하여 반환
+    // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
 
 }

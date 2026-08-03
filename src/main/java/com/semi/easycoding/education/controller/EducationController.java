@@ -1,6 +1,7 @@
 package com.semi.easycoding.education.controller;
 
 import com.semi.easycoding.education.dto.EducationDto;
+import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
 import com.semi.easycoding.education.service.EducationService;
 import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
@@ -45,9 +46,9 @@ public class EducationController {
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
 
-        List<EducationDto> todayEducationList = educationService.todayEducations(memberId);
+        List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
 
-        model.addAttribute("todayEducationList", todayEducationList);
+        model.addAttribute("todayEducationHistory", todayEducationHistory);
 
         return "education/daily_quiz";
     }
