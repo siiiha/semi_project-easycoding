@@ -17,6 +17,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="comm-main">
+    <input type="hidden" name="postId" id="post-key" value="${postDetail.postId}">
     <div class="comm-inner">
 
         <div class="comm-title-block">
@@ -63,7 +64,10 @@
                                     <span style="font-size:12px;color:#9CA3AF;">${postDetail.createdAtStr}</span>
                                 </div>
                             </div>
-                            <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회수 ${postDetail.views} &nbsp;|&nbsp; 댓글수 ${post.commentCount ? post.commentCount : '0'}</span>
+                            <span>
+                                <span style="font-size:14px;font-weight:600;color:#5B5B5B;">조회수 ${postDetail.views} &nbsp;|&nbsp;</span>
+                                <span id="comment-count" style="font-size:14px;font-weight:600;color:#5B5B5B;"></span>
+                            </span>
                         </div>
                     </div>
 
@@ -94,7 +98,7 @@
                     <p style="font-size:22px;font-weight:700;color:#1E1E1E;">댓글 ${post.commentCount}</p>
 
                     <!-- 댓글 입력 -->
-                    <form action="${pageContext.request.contextPath}/community/${post.id}/comment" method="post" style="display:flex;flex-direction:column;gap:12px;">
+                    <form id="comment-form" action="${pageContext.request.contextPath}/comment/insert/${postDetail.postId}" method="post" style="display:flex;flex-direction:column;gap:12px;">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                         <textarea name="content" rows="4"
                                   placeholder="답글을 입력해보세요... (커뮤니티 가이드를 준수하여 고운 말을 사용해주세요.)"
@@ -109,22 +113,29 @@
                     <div style="height:1px;background:#E6E6E6;"></div>
 
                     <!-- 댓글 목록 -->
-                    <div style="display:flex;flex-direction:column;gap:24px;">
+                    <div id="comments-area" style="display:flex;flex-direction:column;gap:24px;">
                         <c:forEach var="comment" items="${comments}">
-                            <div style="display:flex;flex-direction:column;gap:12px;">
-                                <div style="display:flex;align-items:center;justify-content:space-between;">
+                            <div class="comment" style="display:flex;flex-direction:column;gap:12px;">
+                                <!--게시글 하나 영역--><div style="display:flex;align-items:center;justify-content:space-between;">
+                                    <!--프로필+작성자 영역-->
                                     <div style="display:flex;align-items:center;gap:10px;">
+                                        <!--프로필영역-->
                                         <div style="width:32px;height:32px;border-radius:50%;background:#F3F4F6;border:1px solid #E5E7EB;overflow:hidden;flex-shrink:0;">
                                             <c:if test="${not empty comment.authorProfileImage}">
+                                                <!--이미지 태그-->
                                                 <img src="${comment.authorProfileImage}" alt="${comment.author}" style="width:100%;height:100%;object-fit:cover;">
                                             </c:if>
                                         </div>
+                                        <!--작성자 + 작성일영역-->
                                         <div style="display:flex;flex-direction:column;gap:2px;">
+                                            <!--작성자-->
                                             <span style="font-size:14px;font-weight:600;color:#1E1E1E;">${comment.author}</span>
+                                            <!--작성일-->
                                             <span style="font-size:11px;color:#9CA3AF;">${comment.createdAt}</span>
                                         </div>
                                     </div>
                                     <c:if test="${comment.author == sessionScope.loginUser.nickname}">
+                                        <!--댓글 내용 영역-->
                                         <div style="display:flex;gap:12px;font-size:12px;color:#9CA3AF;">
                                             <span onclick="toggleCommentEdit(${comment.id})" style="cursor:pointer;">수정</span>
                                             <form action="${pageContext.request.contextPath}/community/${post.id}/comment/${comment.id}/delete"
@@ -177,6 +188,11 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
+    const loginNickname = "${sessionScope.loginUser.nickname}";
+    const contextPath = "${pageContext.request.contextPath}";
+    const postId = "${post.id}";
+</script>
+<script>
 function toggleCommentEdit(id) {
     var textDiv = document.getElementById('comment-text-' + id);
     var formEl  = document.getElementById('comment-edit-' + id);
@@ -185,5 +201,6 @@ function toggleCommentEdit(id) {
     formEl.style.display  = isHidden ? 'flex' : 'none';
 }
 </script>
+<script src="${pageContext.request.contextPath}/js/comment.js"></script>
 </body>
 </html>
