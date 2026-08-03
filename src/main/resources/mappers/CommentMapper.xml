@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.semi.easycoding.comment.mapper.CommentMapper">
+
+    <insert id="insertComment" parameterType="CommentDto">
+        INSERT INTO comment (post_id, member_id, content)
+            VALUES (#{postId}, #{memberId}, #{content})
+    </insert>
+
+    <select id="selectCommentList" parameterType="Long" resultType="CommentDto">
+        SELECT c.comment_id, c.post_id, c.member_id, m.profile_id, c.content, c.created_at,
+            DATE_FORMAT(c.created_at, '%Y-%m-%d %H:%i') AS created_at_str,
+            m.nickname
+        FROM comment c
+            LEFT JOIN member m USING (member_id)
+        WHERE c.post_id = #{postId}
+        ORDER BY c.comment_id DESC
+    </select>
+
+
+</mapper>
