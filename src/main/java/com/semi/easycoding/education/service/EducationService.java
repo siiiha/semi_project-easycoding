@@ -3,6 +3,7 @@ package com.semi.easycoding.education.service;
 import com.semi.easycoding.education.dto.EducationCategoryDto;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
+import com.semi.easycoding.education.dto.OptionDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +42,12 @@ public interface EducationService {
 
     List<MemberQuizHistoryDto> getMemberQuizHistoryAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
     // DB에서 특정 기간동한 사용자에게 할당된 문제들의 상태를 조회한다
+
+    EducationDto educationDtoToType(EducationDto dto);
+    // 전달받은 EducationDto의 문제 타입에 따라 알맞은 자식 객체로 변환
+
+    List<OptionDto> getAnswerByEducationId(Long educationId, Short educationType);
+    // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다
