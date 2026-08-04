@@ -30,7 +30,7 @@ public class EducationController {
     // ---- 페이지 이동을 위한 메소드 ----
 
     // 일일 학습 페이지 이동
-    @GetMapping("/daily-quiz")
+    @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
         // 금일 할당된 학습을 조회한 다음, isEmpty() 여부에 따라서 분기
         // isEmpty() == true    : 신규 학습을 할당받도록 요청 후, 그 학습을 보여준다
@@ -50,7 +50,12 @@ public class EducationController {
 
         model.addAttribute("todayEducationHistory", todayEducationHistory);
 
-        return "education/daily_quiz";
+        return "education/daily";
+    }
+
+    @GetMapping("/daily/quiz")
+    public String mainQuizPage(){
+        return "education/daily/quiz";
     }
 
     // 카테고리 학습 페이지 이동
