@@ -54,7 +54,19 @@ public class EducationController {
     }
 
     @GetMapping("/daily/quiz")
-    public String mainQuizPage(){
+    public String mainQuizPage(HttpSession session, Model model){
+        // 비로그인시, 로그인쪽으로 리다이렉팅
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        if(loginUser == null){
+            return "redirect:/member/login";
+        }
+
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
+        Long memberId = Long.valueOf(loginUser.getMemberId());
+
+        List<EducationDto> todayEducation = educationService.getTodayEducations(memberId);
+        model.addAttribute("todayEducation", todayEducation);
+
         return "education/daily_quiz";
     }
 
