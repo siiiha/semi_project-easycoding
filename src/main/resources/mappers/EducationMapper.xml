@@ -118,4 +118,13 @@
         AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
     </select>
 
+    <select id="selectOptionsByEducationId" resultType="com.semi.easycoding.education.dto.OptionDto">
+        SELECT ao.answer_id AS optionId,
+               ao.content AS optionContents,
+               ao.is_correct AS correct,
+               ao.option_number AS orderingNumber
+        FROM answer_option ao
+        WHERE ao.quiz_id = #{educationId}
+    </select>
+
 </mapper>
