@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
+
+    <script src="${pageContext.request.contextPath}/js/nickname-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/password-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/mypage-edit.js" defer></script>
+
 </head>
 <body>
 
@@ -38,7 +41,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <svg width="100" height="100" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                                        <path clip-rule="evenodd" d="M14 2a5 5 0 1 1 0 10A5 5 0 0 1 14 2zm0 12c6 0 10 2.7 10 4v2H4v-2c0-1.3 4-4 10-4z" fill="#4F378A" fill-rule="evenodd"/>
+                                        <path clip-rule="evenodd" d="M14 2a5 5 0 1 1 0 10A5 5 0 0 1 14 2zm0 12c6 0 10 2.7 10 4v2H4v-2c0-1.3 4-4 10-4z" fill="currentColor" fill-rule="evenodd"/>
                                     </svg>
                                 </c:otherwise>
                             </c:choose>
@@ -53,12 +56,16 @@
                         <div class="edit-field">
                             <label class="edit-field-label" for="nickname">닉네임</label>
                             <div class="edit-input-wrap">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                                 </svg>
                                 <input type="text" id="nickname" name="nickname" class="edit-input"
-                                       value="${sessionScope.loginUser.nickname}" required>
+                                       value="${sessionScope.loginUser.nickname}"
+                                       data-original-nickname="${sessionScope.loginUser.nickname}"
+                                       maxlength="8"
+                                       required>
                             </div>
+                            <p id="check-edit-nickname-result"></p>
                         </div>
 
                         <!-- 이메일 + 회원번호 (읽기 전용) -->
@@ -66,7 +73,7 @@
                             <div class="edit-field edit-field-flex">
                                 <label class="edit-field-label">이메일</label>
                                 <div class="edit-input-wrap edit-input-wrap-readonly">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
                                     </svg>
                                     <input type="text" class="edit-input" value="${sessionScope.loginUser.email}" readonly>
@@ -75,7 +82,7 @@
                             <div class="edit-field edit-field-flex">
                                 <label class="edit-field-label">회원번호</label>
                                 <div class="edit-input-wrap edit-input-wrap-readonly">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                                     </svg>
                                     <input type="text" class="edit-input" value="${sessionScope.loginUser.memberId}" readonly>
@@ -95,7 +102,7 @@
                     <div class="edit-field">
                         <label class="edit-field-label" for="currentPassword">현재 비밀번호</label>
                         <div class="edit-input-wrap">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                             <input type="password" id="currentPassword" name="currentPassword" class="edit-input"
@@ -108,22 +115,25 @@
                         <div class="edit-field edit-field-flex">
                             <label class="edit-field-label" for="newPassword">새 비밀번호</label>
                             <div class="edit-input-wrap">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
                                 <input type="password" id="newPassword" name="newPassword" class="edit-input"
                                        placeholder="새 비밀번호를 입력해주세요.">
                             </div>
+                            <p id="check-new-password-result"></p>
                         </div>
+
                         <div class="edit-field edit-field-flex">
                             <label class="edit-field-label" for="confirmPassword">새 비밀번호 확인</label>
                             <div class="edit-input-wrap">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
                                 <input type="password" id="confirmPassword" name="confirmPassword" class="edit-input"
                                        placeholder="새 비밀번호를 다시 입력해주세요.">
                             </div>
+                            <p id="check-confirm-password-result"></p>
                         </div>
                     </div>
 

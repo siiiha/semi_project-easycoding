@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
+
+    <script src="${pageContext.request.contextPath}/js/nickname-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/password-validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/member.js" defer></script>
+
+
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 
     <script defer src="${pageContext.request.contextPath}/js/modal.js"></script>
@@ -65,7 +72,8 @@
                                 <circle cx="12" cy="7" r="4"/>
                             </svg>
                             <input type="text" id="nickname" name="nickname" class="form-input-inner"
-                                   placeholder="닉네임을 입력해주세요." value="${param.nickname}" required>
+                                   placeholder="닉네임을 입력해주세요." value="${param.nickname}"
+                                   maxlength="8" required>
                         </div>
                     </div>
 

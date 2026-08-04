@@ -25,7 +25,7 @@ public class EmailController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/join/send")
+    @PostMapping("/join/send")  
     public String sendJoinCode(@RequestParam String email, HttpSession session){
         String code = emailService.sendVerificationCode(email);
 

@@ -36,7 +36,7 @@
                                          fill="none" aria-hidden="true">
                                         <path clip-rule="evenodd"
                                               d="M14 2a5 5 0 1 1 0 10A5 5 0 0 1 14 2zm0 12c6 0 10 2.7 10 4v2H4v-2c0-1.3 4-4 10-4z"
-                                              fill="#4F378A" fill-rule="evenodd"/>
+                                              fill="currentColor" fill-rule="evenodd"/>
                                     </svg>
                                 </c:otherwise>
                             </c:choose>
@@ -85,7 +85,7 @@
                     <div class="activity-card">
                         <div class="activity-icon-wrap green">
                             <svg width="52" height="52" viewBox="0 0 24 24" fill="none"
-                                 stroke="#43A047" stroke-width="2" stroke-linecap="round"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round" aria-hidden="true">
                                 <path d="M12 20h9"/>
                                 <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
@@ -100,7 +100,7 @@
                     <div class="activity-card">
                         <div class="activity-icon-wrap yellow">
                             <svg width="52" height="52" viewBox="0 0 24 24" fill="none"
-                                 stroke="#F4A900" stroke-width="2" stroke-linecap="round"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round" aria-hidden="true">
                                 <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/>
                                 <path d="M8 10h.01M12 10h.01M16 10h.01"/>

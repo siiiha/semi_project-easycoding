@@ -22,6 +22,11 @@ public class MemberServiceImpl implements MemberService {
     }
     //조회된 이메일의 개수가 1이면 결과값이 true로 이미 사용중인 이메일이라는 것.
 
+    @Override
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberMapper.countByNickname(nickname) > 0;
+    }
+
     @Override    //MemberService 설명서에 선언된 join() 메서드를 여기서 구현
     public int join(MemberDto memberDto) {
 
@@ -35,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
+    // 로그인 성공 시 비밀번호가 없는 회원 정보를 반환한다.
     @Override
     public MemberDto login(MemberDto memberDto) {
         MemberDto loginMember = memberMapper.login(memberDto);
@@ -45,19 +51,27 @@ public class MemberServiceImpl implements MemberService {
 
         boolean passwordMatches = passwordEncoder.matches(
                 memberDto.getPassword(),
-                loginMember.getPassword());
+                loginMember.getPassword()
+        );
         if (!passwordMatches) {
             return null;
         }
 
-        return loginMember;
+        return memberMapper.findByMemberId(loginMember.getMemberId());
     }
 
     @Override
-    public MemberDto memberList(String memberId) {
-        MemberDto memberdto = memberMapper.memberList(memberId);
+    public MemberDto findByMemberId(String memberId) {
+        return memberMapper.findByMemberId(memberId);
+    }
 
-        return memberdto;
+    // 일반 회원정보 조회 시 비밀번호는 포함하지 않는다.
+
+    @Override
+    public int updateNickname(String memberId, String nickname) {
+        String trimmedNickname = nickname.trim();
+
+        return memberMapper.updateNickname(memberId, trimmedNickname);
     }
 
     @Override
@@ -70,33 +84,28 @@ public class MemberServiceImpl implements MemberService {
         return memberMapper.countCommentByMemberId(memberId);
     }
 
+    // 회원 탈퇴 시 암호화된 비밀번호만 별도로 조회하여 사용한다.
     @Override
     public boolean withdraw(String memberId, String password) {
+        String encodedPassword =
+                memberMapper.findPasswordByMemberId(memberId);
 
-        MemberDto member = memberMapper.memberList(memberId);
-
-
-        if (member == null) {
+        if (encodedPassword == null) {
             return false;
         }
 
-        boolean passwordMatcheds =
+        boolean passwordMatches =
                 passwordEncoder.matches(
                         password,
-                        member.getPassword()
+                        encodedPassword
                 );
 
-        if (!passwordMatcheds) {
+        if (!passwordMatches) {
             return false;
         }
 
         int result = memberMapper.withdraw(memberId);
-
-        if (result > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return result > 0;
     }
 
     @Override
