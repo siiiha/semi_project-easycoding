@@ -22,7 +22,7 @@ public interface EducationMapper {
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
     // 특정 기간 동안 사용자에게 할당된 문제 조회
-    List<EducationDto> selectEducationNotAssigned(Long memberId);
+    List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
     List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
                                                             @Param("categoryId") Long categoryId);
@@ -34,4 +34,7 @@ public interface EducationMapper {
     List<MemberQuizHistoryDto> selectMemberQuizHistoryAtDate(@Param("memberId") Long memberId,
                                                              @Param("startDate") LocalDateTime startDate,
                                                              @Param("endDate") LocalDateTime endDate);
+
+    List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
+    // 문제ID로 객관식 답변 조회(answer_option) 테이블
 }
