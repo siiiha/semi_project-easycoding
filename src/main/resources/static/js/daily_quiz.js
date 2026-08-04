@@ -46,14 +46,15 @@
 
     // JSP에서 저장해둔 todayEducation DOM 데이터를 읽어 JS에서 쓰기 편하게 저장
     function readQuizData() {
-        // 문제 데이터 컨테이너 안의 항목 노드 목록
-        var nodes = document.querySelectorAll("#today-education-data .quiz-data-item");
         // id: today-education-data안에 담긴 class: quiz-data-item 요소들을 NodeList 형태로 저장
+        var nodes = document.querySelectorAll("#today-education-data .quiz-data-item");
 
+        // nodes를 배열형태로 변환 후 순회하면서 배열 만들고 반환
         return Array.prototype.map.call(nodes, function (item) {
+            // 문제 타입별로 다른 테이터타입을 읽어야 하기 때문에 우선 별도로 읽어두기
             var typeValue = getElementText(item, ".quiz-data-type");
 
-            // 공통 필드 먼저 읽어온 뒤, 타입별 필드를 분기해서 채운다.
+            // 공통부문 먼저채워넣고, 타입별로 달라지는 부분은 비워놓기
             var quizData = {
                 educationId: getElementText(item, ".quiz-data-id"),
                 educationType: typeValue,
@@ -66,7 +67,7 @@
             };
 
             if (typeValue === "1") {
-                // 객관식: options 리스트를 순회해서 보기 텍스트 배열을 만든다.
+                // 객관식: options 리스트를 순회해서 보기 텍스트 배열을 answers에 저장
                 var optionNodes = item.querySelectorAll(".quiz-data-option-item");
                 quizData.answers = Array.prototype.map.call(optionNodes, function (node) {
                     return {
@@ -82,14 +83,15 @@
                 // TODO: 빈칸채우기 타입(EducationBlankTypeDto) 전용 데이터 파싱 로직 추가
             }
 
-            // 화면 렌더링용 표준 문제 객체
+            // 완성된 문제 객체 반환(최종적으로 반환될 리스트에 추가됨)
             return quizData;
         });
     }
 
-    // 상단 진행 점(dot)에서 현재 문제 인덱스만 active로 표시한다.
+    // 상단 진행도를 표시하는 dots에서 현 인덱스를 선택해 활성화상태로 변경(active 클래스 삽입)
+    // 나머지는 비활성화 상태로 만들기
     function setActiveDot(index) {
-        // 모든 진행 점 노드
+        // 모든 진행 점 노드 배열순회
         var dots = document.querySelectorAll(".quiz-step-dots .dot");
         Array.prototype.forEach.call(dots, function (dot, dotIndex) {
             if (dotIndex === index) {
@@ -100,7 +102,7 @@
         });
     }
 
-    // 현재 문제의 선택지 목록을 DOM으로 렌더링하고 클릭 이벤트를 연결한다.
+    // 현재 문제의 선택지 목록을 DOM으로 렌더링하고 클릭 이벤트를 연결
     function renderOptions(quiz) {
         // 선택지 렌더링 대상 컨테이너
         var optionsWrap = document.getElementById("quiz-options");
@@ -163,7 +165,7 @@
         });
     }
 
-    // 현재 인덱스(state.currentIndex)에 해당하는 문제를 화면 전체에 반영한다.
+    // 현재 인덱스(state.currentIndex)에 해당하는 문제를 화면 전체에 반영
     function renderCurrentQuiz() {
         // 전체 문제 수
         var totalCount = state.educations.length;
@@ -215,14 +217,14 @@
         renderByEducationType(quiz);
     }
 
-    // 정답/오답 피드백 박스를 모두 숨긴다.
+    // 정답/오답 피드백 박스를 모두 숨기기
     function hideFeedback() {
         document.querySelectorAll(".quiz-feedback").forEach(function (node) {
             node.classList.add("is-hidden");
         });
     }
 
-    // 폼 제출 이벤트를 가로채서 페이지 리로드 없이 다음 문제로 이동한다.
+    // 폼 제출 이벤트를 가로채서 페이지 리로드 없이 다음 문제로 이동
     function bindFormSubmit() {
         // 문제 폼 노드
         var form = document.getElementById("quiz-form");
