@@ -55,7 +55,7 @@ public class EducationController {
 
     @GetMapping("/daily/quiz")
     public String mainQuizPage(){
-        return "education/daily/quiz";
+        return "education/daily_quiz";
     }
 
     // 카테고리 학습 페이지 이동
