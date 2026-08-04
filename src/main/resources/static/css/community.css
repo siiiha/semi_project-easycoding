@@ -573,6 +573,7 @@
 }
 
 .comment-action-btn:hover {
+  font-weight: 600;
   color: #6B7280;
 }
 
@@ -609,11 +610,6 @@
 }
 
 .edit-comment-btn {
-  /*width: 60px;*/
-  /*height: 36px;*/
-  /*padding: 4px 8px;*/
-  /*border: 1px solid #2db34a;*/
-  /*border-radius: 10px;*/
   background: #2db34a;
   color: #E5E7EB;
 }
@@ -621,7 +617,6 @@
 .edit-btn-area {
   display: flex;
   justify-content: end;
-  /*padding: 4px 8px 4px 0;*/
 }
 
 .btns {

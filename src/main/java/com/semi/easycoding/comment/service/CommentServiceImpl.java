@@ -77,4 +77,28 @@ public class CommentServiceImpl implements CommentService {
 
         return commentMapper.selectCommentList(comment.getPostId());
     }
+
+    /**
+     * 삭제하려는 댓글의 회원이 로그인한 회원이 맞는지 확인 후 DB에 댓글을 삭제하는 메소드
+     * @param commentId
+     * @param memberId
+     * @return
+     */
+    @Override
+    public List<CommentDto> deleteComment(Long postId, Long commentId, String memberId) {
+        // String인 memberId를 Long형태로 변환
+        Long longMemberId = Long.valueOf(memberId);
+
+        // 삭제하려는 댓글의 작성자를 조회하는 메소드
+        Long writerId = commentMapper.selectCommentWriter(commentId);
+        if (!writerId.equals(longMemberId)) {
+            return null;    // 삭제하려는 댓글의 작성자와 로그인한 회원이 다를 경우
+        }
+        int result = commentMapper.deleteComment(commentId);
+        if (result < 1) {
+            return null;    // 삭제 실패한 경우
+        }
+
+        return commentMapper.selectCommentList(postId);
+    }
 }

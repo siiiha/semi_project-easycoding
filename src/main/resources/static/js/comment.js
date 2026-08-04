@@ -133,7 +133,7 @@ function reloadComment(comment) {
     // ==== 작성자인 경우 수정/삭제 버튼 ====
     if (comment.nickname === loginNickname) {
         // 수정 버튼
-        const editBtn = document.createElement('span');
+        const editBtn = document.createElement('button');
         editBtn.textContent = '수정';
         editBtn.classList.add('comment-action-btn');
         editBtn.onclick = () => toggleCommentEdit(comment.commentId);
@@ -142,23 +142,46 @@ function reloadComment(comment) {
             createEditForm(commentArea, comment);
         });
 
-        // 삭제 폼
-        const deleteForm = document.createElement('form');
-        deleteForm.action = `${contextPath}/comment/delete/${postId}/${comment.commentId}`;
-        deleteForm.method = 'post';
-        deleteForm.style.display = 'inline';
-        deleteForm.onsubmit = () => confirm('삭제하시겠습니까?');
-
         // 삭제 버튼
         const deleteBtn = document.createElement('button');
-        deleteBtn.type = 'submit';
+        deleteBtn.type = 'button';
         deleteBtn.textContent = '삭제';
         deleteBtn.classList.add('comment-action-btn');
 
-        deleteForm.appendChild(deleteBtn);
-
         actionArea.appendChild(editBtn);
-        actionArea.appendChild(deleteForm);
+        actionArea.appendChild(deleteBtn);
+
+        deleteBtn.addEventListener('click', async function() {
+            if (!confirm('삭제하시겠습니까?')) {
+                return;
+            }
+            const commentId = comment.commentId;
+            const postId = postIdInput.value;
+            const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
+                    "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+                }
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                alert(result.message || "댓글 삭제에 실패했습니다.");
+                return;
+            }
+
+            const commentList = result.data;
+            if (commentList == null) {
+                return;
+            }
+            commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
+            commentList.forEach(function(comment) {
+                reloadComment(comment); // 각 댓글을 하나씩 전달
+            })
+            commentCountArea.textContent = "댓글수 " + commentList.length;
+        });
     }
 
     // 상단 영역 구성
