@@ -45,7 +45,7 @@
                 <div class="daily-mission-progress-fill" style="width: ${progressPercent}%"></div>
             </div>
 
-            <a class="daily-mission-btn" href="${pageContext.request.contextPath}/education/daily-quiz/quiz">
+            <a class="daily-mission-btn" href="${pageContext.request.contextPath}/education/daily/quiz">
                 오늘의 문제 바로가기 →
             </a>
         </section>
