@@ -1,7 +1,7 @@
 .daily-quiz-page {
     min-height: calc(100vh - 80px - 100px);
     background: #ffffff;
-    padding: 20px 16px 48px;
+    padding: 36px 16px 56px;
 }
 
 .daily-quiz-wrap {
@@ -18,7 +18,7 @@
 }
 
 .quiz-back-link {
-    font-size: 30px;
+    font-size: 18px;
     font-weight: 500;
     color: #9ea3d9;
     justify-self: start;
@@ -36,19 +36,19 @@
 }
 
 .quiz-step-dots .dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 999px;
     background: #e8edf5;
 }
 
 .quiz-step-dots .dot.active {
-    width: 44px;
+    width: 32px;
     background: #50b84f;
 }
 
 .quiz-step-text {
-    font-size: 34px;
+    font-size: 20px;
     font-weight: 700;
     color: #2f4da0;
     justify-self: end;
@@ -60,13 +60,13 @@
 
 .quiz-card {
     border: 1px solid #d7f1d8;
-    border-radius: 22px;
+    border-radius: 14px;
     background: #ffffff;
     overflow: hidden;
 }
 
 .quiz-card-head {
-    padding: 18px 26px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -82,10 +82,10 @@
 .badge-level {
     display: inline-flex;
     align-items: center;
-    height: 40px;
+    height: 30px;
     border-radius: 999px;
-    padding: 0 18px;
-    font-size: 24px;
+    padding: 0 14px;
+    font-size: 14px;
     font-weight: 700;
     color: #ffffff;
     background: #4fb34d;
@@ -94,23 +94,23 @@
 .badge-level-num {
     display: inline-flex;
     align-items: center;
-    height: 40px;
+    height: 30px;
     border-radius: 999px;
-    padding: 0 16px;
-    font-size: 24px;
+    padding: 0 12px;
+    font-size: 14px;
     font-weight: 700;
     color: #2a5dc8;
     background: #e7f1ff;
 }
 
 .badge-type {
-    font-size: 30px;
+    font-size: 16px;
     font-weight: 600;
     color: #1b1f37;
 }
 
 .badge-lang {
-    font-size: 30px;
+    font-size: 16px;
     font-weight: 500;
     color: #9da2da;
 }
@@ -121,15 +121,15 @@
 }
 
 .quiz-question {
-    padding: 44px 48px 28px;
-    font-size: 50px;
+    padding: 24px 16px 16px;
+    font-size: 36px;
     font-weight: 800;
     color: #0d193a;
     line-height: 1.4;
 }
 
 .quiz-form {
-    padding: 0 48px 30px;
+    padding: 0 16px 16px;
 }
 
 .quiz-option {
@@ -138,9 +138,9 @@
     gap: 14px;
     width: 100%;
     border: 1px solid #dfe9f8;
-    border-radius: 18px;
-    padding: 19px 20px;
-    margin-bottom: 14px;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
     cursor: pointer;
     background: #ffffff;
     transition: border-color .15s ease, background-color .15s ease;
@@ -180,22 +180,22 @@
 }
 
 .option-label {
-    min-width: 42px;
-    font-size: 36px;
+    min-width: 28px;
+    font-size: 20px;
     font-weight: 700;
     color: #8da2cf;
 }
 
 .option-text {
-    font-size: 40px;
+    font-size: 20px;
     font-weight: 600;
     color: #0a183d;
 }
 
 .quiz-feedback {
     margin-top: 10px;
-    border-radius: 14px;
-    padding: 16px 18px;
+    border-radius: 10px;
+    padding: 12px 14px;
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -234,14 +234,14 @@
 }
 
 .feedback-title {
-    font-size: 36px;
+    font-size: 20px;
     font-weight: 800;
     line-height: 1.2;
 }
 
 .feedback-desc {
     margin-top: 4px;
-    font-size: 36px;
+    font-size: 18px;
     font-weight: 500;
     color: #12203f;
     line-height: 1.25;
@@ -263,12 +263,13 @@
     width: 100%;
     margin-top: 18px;
     border: none;
-    border-radius: 18px;
+    border-radius: 10px;
     background: #bcebc0;
     color: #ffffff;
-    font-size: 44px;
+    font-size: 20px;
     font-weight: 800;
-    padding: 18px 24px;
+    min-height: 52px;
+    padding: 10px 24px;
     cursor: pointer;
 }
 
@@ -278,49 +279,49 @@
 
 @media (max-width: 1200px) {
     .quiz-back-link {
-        font-size: 24px;
+        font-size: 16px;
     }
 
     .quiz-step-text {
-        font-size: 26px;
+        font-size: 18px;
     }
 
     .badge-level,
     .badge-level-num {
-        font-size: 18px;
-        height: 34px;
+        font-size: 13px;
+        height: 28px;
     }
 
     .badge-type,
     .badge-lang {
-        font-size: 22px;
+        font-size: 15px;
     }
 
     .quiz-question {
-        font-size: 34px;
-        padding: 32px 28px 24px;
+        font-size: 28px;
+        padding: 20px 14px 14px;
     }
 
     .quiz-form {
-        padding: 0 28px 26px;
+        padding: 0 14px 14px;
     }
 
     .option-label {
-        font-size: 26px;
+        font-size: 18px;
     }
 
     .option-text {
-        font-size: 28px;
+        font-size: 18px;
     }
 
     .feedback-title,
     .feedback-desc {
-        font-size: 24px;
+        font-size: 16px;
     }
 
     .quiz-submit-btn {
-        font-size: 32px;
-        border-radius: 14px;
+        font-size: 18px;
+        border-radius: 10px;
     }
 }
 
