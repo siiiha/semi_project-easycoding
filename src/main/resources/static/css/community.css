@@ -547,6 +547,12 @@
   cursor: pointer;
 }
 
+.reply-btn:hover {
+  scale: calc(1.03);
+  font-weight: 800;
+  color: #6B7280;
+}
+
 /* 상단 영역 (프로필 + 수정/삭제) */
 .top-area {
   display: flex;
