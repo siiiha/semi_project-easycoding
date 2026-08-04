@@ -138,11 +138,5 @@ public class CommunityController {
 
         return "redirect:/community";
     }
-    
-    @GetMapping("/modal")
-    public String modalPage() {
-        System.out.println("모달 요청 들어옴");
-        return "common/modal_post_created";
-    }
 
 }

@@ -21,7 +21,7 @@
     <div class="comm-inner">
 
         <div class="comm-title-block">
-            <a href="${pageContext.request.contextPath}/community/modal" class="comm-title">커뮤니티</a>
+            <h1 class="comm-title">커뮤니티</h1>
             <p class="comm-subtitle">함께 나누고, 함께 성장해요!</p>
         </div>
 
