@@ -26,4 +26,9 @@ public interface MemberMapper {
 
     int withdraw(@Param("memberId") String memberId);
     //loginUser.getMemberId() = 실제 로그인한 회원번호
+
+    int updatePasswordByEmail(
+            @Param("email") String email,
+            @Param("password") String password
+    );
 }

@@ -25,6 +25,11 @@ public interface MemberService {
 
     boolean withdraw(String memberId, String password);
 
+    boolean resetPassword(
+            String email,
+            String newPassword
+    );
+
 
 
 

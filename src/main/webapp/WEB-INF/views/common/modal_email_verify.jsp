@@ -39,7 +39,7 @@
 </div>
 
 <script>
-(function () {
+    (function () {
     const digits = document.querySelectorAll('#emailVerifyModal .code-digit');
 
     digits.forEach(function (input, idx) {
@@ -58,18 +58,45 @@
 
     document.getElementById('resendCodeBtn').addEventListener('click', function (e) {
         e.preventDefault();
-        // TODO: 재발송 AJAX 요청
-        alert('인증 코드가 재발송되었습니다.');
-    });
+        digits.forEach(function (input) {
+            input.value = '';
+            //input : 인증번호 입력칸 한 개
+        });
+        document.getElementById('send-email-code-button').click();
+    }); //기존에 입력했던 인증번호 삭제 후 다시 이메일 인증 버튼 클릭
 
-    document.getElementById('emailVerifyConfirmBtn').addEventListener('click', function () {
+    document.getElementById('emailVerifyConfirmBtn').addEventListener('click', async function () {
         var code = Array.from(digits).map(function (d) { return d.value; }).join('');
         if (code.length < 6) {
             alert('6자리 코드를 모두 입력해주세요.');
             return;
         }
-        // TODO: 서버 인증 요청
-        console.log('인증 코드:', code);
+        const response = await fetch(
+            '${pageContext.request.contextPath}/email/join/verify', //인증번호 확인 주소
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    code: code
+                })
+            }
+        );
+
+        if (!response.ok) {
+            alert('인증 요청 중 오류가 발생했습니다.');
+            return;
+        }
+        const verified = await response.json();
+
+        if (verified) {
+            alert('이메일 인증이 완료되었습니다.');
+            closeModal('emailVerifyModal');
+        } else {
+            alert('인증번호가 올바르지 않거나 만료되었습니다.');
+        }
     });
 })();
 </script>

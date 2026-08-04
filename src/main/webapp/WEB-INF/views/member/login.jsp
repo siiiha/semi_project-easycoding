@@ -86,7 +86,7 @@
                     <input type="checkbox" name="rememberMe" value="true">
                     <span>로그인 상태 유지</span>
                 </label>
-                <a href="${pageContext.request.contextPath}/find-password" class="auth-link">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="auth-link">비밀번호 찾기</a>
             </div>
 
             <button type="submit" class="btn btn-primary auth-submit-btn">로그인</button>

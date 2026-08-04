@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -31,7 +32,24 @@ public class MemberController {
     @PostMapping("/join")
     public String join(MemberDto memberDto, //email, nickname, password가 있음
                        @RequestParam String passwordConfirm, //passwordConfirm : 두 번째 비밀번호 확인
+                       HttpSession session, //EmailController 인증 결과
                        Model model) {
+
+        Boolean emailVerified = (Boolean) session.getAttribute("joinEmailVerified");
+
+        String verifiedEmail = (String) session.getAttribute("joinEmail");
+
+        if (!Boolean.TRUE.equals(emailVerified)
+            || !memberDto.getEmail().equals(verifiedEmail)) {
+            model.addAttribute(
+                    "errorMsg", "이메일 인증이 필요합니다."
+            );
+            return "member/join";
+        }
+        //emailVerified : 이메일 인증 성공 여부
+        //verifiedEmail : 실제로 인증번호를 받은 이메일
+        //memberDto.getEmail() : 회원가입을 눌렀을 때 입력되어 있던 이메일
+        //이메일 인증을 완료하지 않은 경우, 인증받은 이메일과 가입하려는 이메일이 다른 경우 방지
 
         //memberDto.getPassword() : 첫 번째 비밀번호
         //passwordConfirm : 두 번째 비밀번호 확인
@@ -54,7 +72,21 @@ public class MemberController {
         //회원이 추가되면 1, 추가되지 않으면 0
         int result = memberService.join(memberDto);
         //회원가입 처리 숫자를 담는다.
-        return "redirect:/member/login";
+
+        if (result > 0) {
+            session.removeAttribute("joinEmail");
+            session.removeAttribute("joinEmailCode");
+            session.removeAttribute("joinEmailVerified");
+            session.removeAttribute("joinEmailCodeExpiresAt");
+            //인증 정보를 지우는 이유
+            //회원가입이 끝났는데 인증 정보가 남아 있다면 이전 인증 결과를 다시 사용할 수 있기 때문이다.
+            //seesion.incalidate()는 사용하지 않는다. : 이메일 인증값뿐만아니라 세션의 모든 값을 지우기 때문.
+            return "redirect:/member/login";
+        }
+
+        model.addAttribute("errorMsg", "회원가입에 실패했습니다.");
+        return "member/join";
+
     }
 
 
@@ -135,27 +167,20 @@ public class MemberController {
         if (loginUser == null) {
             return "redirect:/member/login";
         }
-
         return "mypage/withdraw";
-
     }
 
     @PostMapping("/withdraw")
     public String withdraw(@RequestParam String password, HttpSession session, Model model) {
-
-
-
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
         }
 
-
         boolean result = memberService.withdraw(
                 loginUser.getMemberId(), password
         );
-
 
         if (!result) {
             model.addAttribute(
@@ -163,8 +188,49 @@ public class MemberController {
             );
             return "mypage/withdraw";
         }
-
         session.invalidate();
         return "redirect:/";
     }
+
+    //비밀번호 찾기
+    @GetMapping("/find-password")
+    public String findPasswordPage() {
+        return "member/find_password";
+    }
+
+    @PostMapping("/reset-password")
+    @ResponseBody
+    public boolean resetPassword(
+            @RequestParam String newPassword,
+            HttpSession session
+    ) {
+        Boolean emailVerified = (Boolean) session.getAttribute("resetEmailVerified");
+        String resetEmail = (String) session.getAttribute("resetEmail");
+
+        if (!Boolean.TRUE.equals(emailVerified) || resetEmail == null) {
+            return false;
+        }
+
+        if (newPassword.isBlank()) {
+            return false;
+        }
+
+        boolean result = memberService.resetPassword(
+                resetEmail,
+                newPassword
+        );
+
+        if (result) {
+            session.removeAttribute("resetEmail");
+            session.removeAttribute("resetEmailCode");
+            session.removeAttribute("resetEmailVerified");
+            session.removeAttribute("resetEmailCodeExpiresAt");
+            //삭제하는 이유는 같은 이메일 인증 결과를 재사용하지 못하게 하기 위해서.
+        }
+
+        return result;
+    }
+
+
+
 }

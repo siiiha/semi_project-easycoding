@@ -98,4 +98,18 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
     }
+
+    @Override
+    public boolean resetPassword(
+            String email,
+            String newPassword
+    ){
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        int result = memberMapper.updatePasswordByEmail(
+                email,
+                encodedPassword
+        );
+        return result > 0;
+    }
 }

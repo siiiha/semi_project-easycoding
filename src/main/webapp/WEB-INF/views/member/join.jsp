@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
+
+    <script defer src="${pageContext.request.contextPath}/js/modal.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
           rel="stylesheet">
 </head>
@@ -82,6 +86,11 @@
                             <button type="button" id="check-email-button" class="btn btn-outline">
                                 중복확인
                             </button>
+
+                            <button type="button" id="send-email-code-button" class="btn btn-outline">
+                                이메일 인증
+                            </button>
+
                         </div>
                         <p id="check-email-result"></p>
                     </div>
@@ -163,6 +172,12 @@
 
 </main>
 
+<jsp:include page="/WEB-INF/views/common/modal_email_verify.jsp"/>
+
+
+
+
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
@@ -172,6 +187,46 @@
     //이메일 중복 확인 버튼 요소
     const checkEmailResult = document.getElementById('check-email-result');
     //이메일 체크 결과를 표시할 요소
+
+    const sendEmailCodeButton = document.getElementById('send-email-code-button');
+
+    sendEmailCodeButton.addEventListener('click', async function () {
+        const email = emailInput.value.trim();
+
+        if (email === '') {
+            alert('이메일을 입력해주세요.');
+            emailInput.focus();
+            return;
+        }
+
+        try{
+            const response = await  fetch(
+                '${pageContext.request.contextPath}/email/join/send',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':
+                        'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        email: email
+                    })
+                }
+            );
+
+            if (!response.ok) {
+            throw new Error('인증번호 발송 실패')
+            }
+
+            const message = await response.text();
+            alert(message);
+
+            document.getElementById('emailVerifyModal')
+                .classList.add('active');
+        } catch (error) {
+             alert ('인증번호 발송 중 오류가 발생했습니다.');
+        }
+    });
 
     let checkedEmail = null;
     //중복 확인을 통과한 이메일을 기억할 변수 (이메일 문자열을 저장할 예정이다.)
