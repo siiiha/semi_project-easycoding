@@ -186,7 +186,26 @@ function createEditForm(commentArea, comment) {
 
     const editContentInput = document.createElement('textarea');
     editContentInput.classList.add('edit-content-input');
+    editContentInput.maxLength = 300;
+    editContentInput.onfocus = (ev) => {
+        ev.target.style.borderColor = '#4CAF50';
+    }
+    editContentInput.onblur = (ev) => {
+        ev.target.style.borderColor = '#D9D9D9';
+    }
+    editContentInput.oninput = (ev) => {
+        checkLength(ev.target, charCount);
+    }
     editContentInput.textContent = comment.content;
+
+    const charCountArea = document.createElement('div');
+    charCountArea.classList.add('char-count-area');
+    const charCount = document.createElement('span');
+    charCount.id = 'charCount';
+    charCount.textContent = comment.content.length; // 기존 댓글의 글자수로 초기값 설정
+
+    charCountArea.appendChild(charCount);
+    charCountArea.appendChild(document.createTextNode(' / 300자'));
 
     const editBtnArea = document.createElement('div');
     editBtnArea.classList.add('edit-btn-area');
@@ -205,6 +224,7 @@ function createEditForm(commentArea, comment) {
     cancelBtn.textContent = '취소';
 
     editForm.appendChild(editContentInput);
+    editForm.appendChild(charCountArea);
     btns.appendChild(editCommentBtn);
     btns.appendChild(cancelBtn);
     editBtnArea.appendChild(btns);
@@ -250,6 +270,20 @@ function createEditForm(commentArea, comment) {
         commentArea.style.display = 'flex';
     })
 
+
+}
+
+// 글자 수 제한 및 보여주는 함수 'oninput' 이벤트로 호출함.
+function checkLength(textArea, countSpan) {
+    // 300자가 넘는 경우에는 0부터 300개만 값을 가져와서 강제로 제한
+    if (textArea.value.length > 300) {
+        textArea.value = textArea.value.slice(0, 300);
+    }
+
+    // 글자 수 업데이트
+    if (countSpan) {
+        countSpan.textContent = textArea.value.length;
+    }
 
 }
 
