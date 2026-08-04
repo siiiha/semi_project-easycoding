@@ -11,7 +11,7 @@
 ```jsp
 <%-- 공통 CSS: head 영역에 추가합니다. --%>
 <link rel="stylesheet"
-      href="${pageContext.request.contextPath}/resources/css/modal/modal.css">
+      href="${pageContext.request.contextPath}/css/modal/modal.css">
 
 <%-- 모달 HTML: body 하단에 추가합니다. --%>
 <jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp" />
@@ -20,7 +20,7 @@
 <jsp:include page="/WEB-INF/views/common/modal/customModal.jsp" />
 
 <%-- 공통 동작 JS: 모달 JSP보다 뒤에 추가합니다. --%>
-<script src="${pageContext.request.contextPath}/resources/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
 ```
 
 > `modal.css`가 사용하는 `--color-primary`, `--color-primary-hover`, `--color-bg-main`, `--transition-fast` 변수는 프로젝트의 공통 CSS에 정의되어 있어야 합니다.
