@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/community.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +21,7 @@
     <div class="comm-inner">
 
         <div class="comm-title-block">
-            <h1 class="comm-title">커뮤니티</h1>
+            <a href="${pageContext.request.contextPath}/community/modal" class="comm-title">커뮤니티</a>
             <p class="comm-subtitle">함께 나누고, 함께 성장해요!</p>
         </div>
 
