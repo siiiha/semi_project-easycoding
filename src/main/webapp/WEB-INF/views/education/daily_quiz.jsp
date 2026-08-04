@@ -17,7 +17,7 @@
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<c:set var="totalCount"/>
+<c:set var="totalCount" value="${fn:length(todayEducation)}" />
 
 <main class="daily-quiz-page">
     <div class="daily-quiz-wrap">
@@ -25,52 +25,35 @@
             <a class="quiz-back-link" href="${pageContext.request.contextPath}/education/daily">← 일일학습으로</a>
 
             <div class="quiz-step-dots" aria-label="퀴즈 진행도">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
+                <c:if test="${totalCount > 0}">
+                    <c:forEach begin="1" end="${totalCount}" var="idx">
+                        <span class="dot ${idx == 1 ? 'active' : ''}"></span>
+                    </c:forEach>
+                </c:if>
             </div>
 
-            <p class="quiz-step-text">${currentIndex} / <span>${totalCount == 0 ? 1 : totalCount}</span></p>
+            <p class="quiz-step-text">
+                <span id="quiz-current-index">${totalCount > 0 ? 1 : 0}</span> /
+                <span id="quiz-total-count">${totalCount}</span>
+            </p>
         </div>
 
         <section class="quiz-card">
             <div class="quiz-card-head">
                 <div class="quiz-badges">
-                    <span class="badge-level">변수 ◆</span>
-                    <span class="badge-level-num">초급</span>
-                    <span class="badge-type">객관식</span>
+                    <span class="badge-level" id="quiz-category-name">테스트</span>
+                    <span class="badge-level-num" id="quiz-level-text">초급</span>
+                    <span class="badge-type" id="quiz-type-text">객관식</span>
                 </div>
-                <span class="badge-lang">Java 개념</span>
+                <span class="badge-lang" id="quiz-topic-text">Java 개념</span>
             </div>
 
             <div class="quiz-divider"></div>
 
-            <h1 class="quiz-question">Java에서 정수형 변수를 선언하는 올바른 방법은?</h1>
+            <h1 class="quiz-question" id="quiz-question">테스트 문제 텍스트</h1>
 
-            <form class="quiz-form" action="#" method="post">
-                <label class="quiz-option is-correct">
-                    <input type="radio" name="answer" value="A" checked>
-                    <span class="option-label">A.</span>
-                    <span class="option-text">테스트 선택지 텍스트</span>
-                </label>
-
-                <label class="quiz-option is-wrong">
-                    <input type="radio" name="answer" value="B">
-                    <span class="option-label">B.</span>
-                    <span class="option-text">테스트 선택지 텍스트</span>
-                </label>
-
-                <label class="quiz-option">
-                    <input type="radio" name="answer" value="C">
-                    <span class="option-label">C.</span>
-                    <span class="option-text">테스트 선택지 텍스트</span>
-                </label>
-
-                <label class="quiz-option">
-                    <input type="radio" name="answer" value="D">
-                    <span class="option-label">D.</span>
-                    <span class="option-text">테스트 선택지 텍스트</span>
-                </label>
+            <form class="quiz-form" id="quiz-form" action="#" method="post">
+                <div id="quiz-options"></div>
 
                 <div class="quiz-feedback quiz-feedback-correct is-hidden">
                     <span class="feedback-icon">✓</span>
@@ -80,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="quiz-feedback quiz-feedback-wrong">
+                <div class="quiz-feedback quiz-feedback-wrong is-hidden">
                     <span class="feedback-icon">✕</span>
                     <div>
                         <p class="feedback-title">테스트 오답 안내 텍스트</p>
@@ -88,13 +71,34 @@
                     </div>
                 </div>
 
-                <button type="submit" class="quiz-submit-btn">테스트 버튼 텍스트</button>
+                <button type="submit" class="quiz-submit-btn" id="quiz-next-btn">다음 문제 →</button>
             </form>
+        </section>
+
+        <section id="today-education-data" class="is-hidden">
+            <c:forEach var="edu" items="${todayEducation}">
+                <article class="quiz-data-item">
+                    <p class="quiz-data-id"><c:out value="${edu.educationId}" /></p>
+                    <p class="quiz-data-type"><c:out value="${edu.educationType}" /></p>
+                    <p class="quiz-data-category-id"><c:out value="${edu.educationCategoryID}" /></p>
+                    <p class="quiz-data-category-name"><c:out value="${edu.educationCategoryName}" /></p>
+                    <p class="quiz-data-title"><c:out value="${edu.educationTitle}" /></p>
+                    <p class="quiz-data-content"><c:out value="${edu.educationContent}" /></p>
+                    <p class="quiz-data-explanation"><c:out value="${edu.educationExplanation}" /></p>
+                    <div class="quiz-data-options">
+                        <c:forEach var="opt" items="${edu.options}">
+                            <p class="quiz-data-option-item" data-order="${opt.orderingNumber}">
+                                <c:out value="${opt.optionContents}" />
+                            </p>
+                        </c:forEach>
+                    </div>
+                </article>
+            </c:forEach>
         </section>
     </div>
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script src="${pageContext.request.contextPath}/js/daily.js"></script>
+<script src="${pageContext.request.contextPath}/js/daily_quiz.js"></script>
 </body>
 </html>
