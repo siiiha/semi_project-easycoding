@@ -32,10 +32,6 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
-        // 금일 할당된 학습을 조회한 다음, isEmpty() 여부에 따라서 분기
-        // isEmpty() == true    : 신규 학습을 할당받도록 요청 후, 그 학습을 보여준다
-        // isEmpty() == false   : 이미 할당받은 학습이 존재하므로, 그 학습을 그대로 보여준다
-
         // 비로그인시, 로그인쪽으로 리다이렉팅
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if(loginUser == null){
@@ -44,10 +40,8 @@ public class EducationController {
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = Long.valueOf(loginUser.getMemberId());
-
-
+        
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
-
         model.addAttribute("todayEducationHistory", todayEducationHistory);
 
         return "education/daily";
