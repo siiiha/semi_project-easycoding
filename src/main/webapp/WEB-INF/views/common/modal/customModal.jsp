@@ -1,17 +1,32 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%-- StudyModal.open({ type:'custom', theme:'info', title:'이메일 인증', message:'이메일로 전송한 6자리 인증번호를 입력해 주세요.', onConfirm:function(code){ ... }, onResend:function(){ ... } }); --%>
-<div id="studyCustomModal" class="study-modal" aria-hidden="true">
-    <div class="study-modal__backdrop" data-cancel></div>
-    <section class="study-modal__card" role="dialog" aria-modal="true" aria-labelledby="studyCustomTitle">
-        <div class="study-modal__icon" aria-hidden="true">✉</div><h2 id="studyCustomTitle" class="study-modal__title"></h2><p class="study-modal__message"></p>
-        <div class="study-modal__code" aria-label="인증번호 입력"><input maxlength="1" inputmode="numeric" aria-label="인증번호 1자리"><input maxlength="1" inputmode="numeric" aria-label="인증번호 2자리"><input maxlength="1" inputmode="numeric" aria-label="인증번호 3자리"><input maxlength="1" inputmode="numeric" aria-label="인증번호 4자리"><input maxlength="1" inputmode="numeric" aria-label="인증번호 5자리"><input maxlength="1" inputmode="numeric" aria-label="인증번호 6자리"></div>
-        <p class="study-modal__error" aria-live="polite"></p><button type="button" class="study-modal__link" data-resend>인증번호 재발송</button>
-        <div class="study-modal__actions"><button type="button" class="study-modal__button study-modal__button--secondary" data-cancel>취소</button><button type="button" class="study-modal__button study-modal__button--primary" data-confirm>인증 확인</button></div>
+<%--
+    이메일 인증번호 입력 모달입니다.
+    onConfirm 콜백의 첫 번째 인자로 6자리 인증번호 문자열이 전달됩니다.
+    onResend 콜백을 전달하면 인증번호 재발송 버튼에서 실행됩니다.
+--%>
+<div class="modal" data-modal-root data-modal-type="custom" aria-hidden="true">
+    <button type="button" class="modal__backdrop" data-modal-close aria-label="모달 닫기"></button>
+
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="customModalTitle">
+        <div class="modal__icon" data-modal-icon aria-hidden="true"></div>
+        <h2 id="customModalTitle" class="modal__title" data-modal-title></h2>
+        <p class="modal__message" data-modal-message></p>
+
+        <%-- 인증번호는 숫자 한 자리씩 입력합니다. --%>
+        <div class="modal__code-inputs" aria-label="6자리 이메일 인증번호">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 1자리">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 2자리">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 3자리">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 4자리">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 5자리">
+            <input type="text" data-modal-code maxlength="1" inputmode="numeric" aria-label="인증번호 6자리">
+        </div>
+        <p class="modal__error" data-modal-error aria-live="polite"></p>
+        <button type="button" class="modal__link" data-modal-resend>인증번호 재발송</button>
+
+        <div class="modal__actions">
+            <button type="button" class="modal__button modal__button--secondary" data-modal-close data-modal-cancel>취소</button>
+            <button type="button" class="modal__button modal__button--primary" data-modal-confirm>인증 확인</button>
+        </div>
     </section>
 </div>
-<style>
-.study-modal{display:none;position:fixed;z-index:1050;inset:0;align-items:center;justify-content:center;font-family:inherit}.study-modal.is-open{display:flex}.study-modal__backdrop{position:absolute;inset:0;background:rgba(17,24,39,.5)}.study-modal__card{position:relative;box-sizing:border-box;width:min(440px,calc(100% - 32px));padding:28px;border-radius:16px;background:#fff;box-shadow:0 20px 45px rgba(0,0,0,.2);text-align:center}.study-modal__icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin:0 auto 14px;border-radius:50%;background:#e8f5e9;color:#2e7d32;font-size:23px}.study-modal__title{margin:0;color:#1f2937;font-size:20px}.study-modal__message{margin:10px 0 18px;color:#6b7280;line-height:1.55;white-space:pre-line}.study-modal__code{display:flex;gap:7px;justify-content:center}.study-modal__code input{width:38px;height:46px;border:1px solid #d1d5db;border-radius:8px;text-align:center;font-size:20px;outline:none}.study-modal__code input:focus{border-color:#4caf50;box-shadow:0 0 0 3px rgba(76,175,80,.15)}.study-modal__error{min-height:20px;margin:6px 0 0;color:#d32f2f;font-size:13px}.study-modal__link{margin:2px 0 16px;border:0;background:none;color:#1976d2;text-decoration:underline;cursor:pointer;font:inherit;font-size:14px}.study-modal__actions{display:flex;gap:8px;justify-content:center}.study-modal__button{min-width:110px;border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:600;cursor:pointer}.study-modal__button--primary{background:#4caf50;color:#fff}.study-modal__button--secondary{background:#f3f4f6;color:#374151}.study-modal[data-theme="danger"] .study-modal__button--primary{background:#e53935}.study-modal[data-theme="warning"] .study-modal__button--primary{background:#f59e0b}.study-modal[data-theme="info"] .study-modal__button--primary{background:#1976d2}
-</style>
-<script>
-(function(){var root=document.getElementById('studyCustomModal'),title=root.querySelector('.study-modal__title'),message=root.querySelector('.study-modal__message'),digits=[].slice.call(root.querySelectorAll('.study-modal__code input')),error=root.querySelector('.study-modal__error'),current={};function close(cancelled){root.classList.remove('is-open');root.setAttribute('aria-hidden','true');if(cancelled&&typeof current.onCancel==='function')current.onCancel();}function open(options){current=options||{};root.dataset.theme=current.theme||'info';title.textContent=current.title||'이메일 인증';message.textContent=current.message||'';digits.forEach(function(input){input.value='';});error.textContent='';root.classList.add('is-open');root.setAttribute('aria-hidden','false');digits[0].focus();}function submit(){var code=digits.map(function(input){return input.value;}).join('');if(code.length!==digits.length){error.textContent=current.requiredMessage||'6자리 인증번호를 모두 입력해 주세요.';return;}var callback=current.onConfirm;close(false);if(typeof callback==='function')callback(code);}digits.forEach(function(input,index){input.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(-1);if(this.value&&index<digits.length-1)digits[index+1].focus();});input.addEventListener('keydown',function(event){if(event.key==='Backspace'&&!this.value&&index>0)digits[index-1].focus();if(event.key==='Enter')submit();});});root.querySelector('[data-confirm]').addEventListener('click',submit);root.querySelector('[data-resend]').addEventListener('click',function(){if(typeof current.onResend==='function')current.onResend();});root.querySelectorAll('[data-cancel]').forEach(function(button){button.addEventListener('click',function(){close(true);});});document.addEventListener('keydown',function(event){if(event.key==='Escape'&&root.classList.contains('is-open'))close(true);});window.StudyModal=window.StudyModal||{registry:{}};window.StudyModal.registry.custom={open:open,close:close};window.StudyModal.open=function(options){var modal=this.registry[options&&options.type];if(!modal)throw new Error('등록되지 않은 modal type입니다.');modal.open(options);};})();
-</script>
