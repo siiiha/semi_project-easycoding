@@ -17,14 +17,7 @@
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<c:set var="totalCount" value="${fn:length(todayEducationHistory)}" />
-<c:set var="completedCount" value="0" />
-<c:forEach var="history" items="${todayEducationHistory}">
-    <c:if test="${history.answered}">
-        <c:set var="completedCount" value="${completedCount + 1}" />
-    </c:if>
-</c:forEach>
-<c:set var="currentIndex" value="${totalCount == 0 ? 1 : (completedCount + 1 > totalCount ? totalCount : completedCount + 1)}" />
+<c:set var="totalCount"/>
 
 <main class="daily-quiz-page">
     <div class="daily-quiz-wrap">
@@ -102,5 +95,6 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<script src="${pageContext.request.contextPath}/js/daily.js"></script>
 </body>
 </html>
