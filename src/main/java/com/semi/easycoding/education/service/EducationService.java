@@ -20,6 +20,10 @@ public interface EducationService {
     // 특정 사용자가 오늘 할당받은 학습에대한 현황을 조회하여 반환
     // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
 
+    List<EducationDto> getTodayEducations(Long memberId);
+    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
+    // 특정 사용자가 오늘 할당받은 학습문제들을 조회하여 반환
+
     boolean memberTodayEducationIsEmpty(Long memberId);
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
 
