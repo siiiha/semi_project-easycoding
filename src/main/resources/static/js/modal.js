@@ -192,7 +192,7 @@
     });
 
     // 페이지에서 사용할 전역 객체입니다.
-    window.StudyModal = {
+    window.CommonModal = {
         open: open,
         close: function () { close(false); }
     };
