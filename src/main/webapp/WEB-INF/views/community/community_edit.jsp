@@ -71,13 +71,13 @@
                         <div class="comm-form-row">
                             <label class="comm-form-label" for="title">제목</label>
                             <input type="text" id="title" name="title" class="comm-form-input-real"
-                                   value="${postDetail.title}" maxlength="200" required>
+                                   value="${postDetail.title}" maxlength="85" required>
                         </div>
 
                         <!-- 내용 -->
                         <div class="comm-form-row top">
                             <label class="comm-form-label" for="content">내용</label>
-                            <textarea id="content" name="content" class="comm-form-textarea" required>${postDetail.content}</textarea>
+                            <textarea id="content" name="content" class="comm-form-textarea" maxlength="10000" required>${postDetail.content}</textarea>
                         </div>
 
                         <div class="comm-form-divider"></div>
