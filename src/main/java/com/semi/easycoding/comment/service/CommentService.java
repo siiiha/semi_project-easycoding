@@ -8,4 +8,6 @@ public interface CommentService {
     List<CommentDto> selectCommentByPostId(Long postId);
 
     List<CommentDto> insertComment(Long postId, String content, String memberId);
+
+    List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId);
 }

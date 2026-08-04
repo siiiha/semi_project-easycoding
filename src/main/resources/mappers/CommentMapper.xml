@@ -19,8 +19,20 @@
         FROM comment c
             LEFT JOIN member m USING (member_id)
         WHERE c.post_id = #{postId}
+            AND c.deleted_at IS NULL
         ORDER BY c.comment_id DESC
     </select>
 
+    <select id="selectCommentWriter" parameterType="Long">
+        SELECT member_id
+        FROM comment
+        WHERE comment_id = #{commentId}
+    </select>
+
+    <update id="updateComment" parameterType="CommentDto">
+        UPDATE comment
+        SET content = #{content}
+        WHERE comment_id = #{commentId}
+    </update>
 
 </mapper>

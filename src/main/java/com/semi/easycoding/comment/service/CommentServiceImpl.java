@@ -47,4 +47,34 @@ public class CommentServiceImpl implements CommentService {
         }
         return commentMapper.selectCommentList(comment.getPostId());
     }
+
+    /**
+     * 수정하려는 댓글의 회원이 로그인한 회원이 맞는지 확인 후 DB에 댓글 수정하는 메소드
+     * @param commentId
+     * @param content
+     * @param memberId
+     * @return
+     */
+    @Override
+    public List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId) {
+        // String인 memberId를 Long형태로 변환
+        Long longMemberId = Long.valueOf(memberId);
+
+        // 수정하려는 댓글의 작성자를 조회하는 메소드
+        Long writerId = commentMapper.selectCommentWriter(commentId);
+        if (!writerId.equals(longMemberId)) {
+            return null;    // 수정하려는 댓글의 작성자와 로그인한 회원이 다를 경우
+        }
+        CommentDto comment = new CommentDto();
+        comment.setPostId(postId);
+        comment.setCommentId(commentId);
+        comment.setContent(content);
+        int result = commentMapper.updateComment(comment);
+
+        if (result < 1) {
+            return null;    // 업데이트 실패 했을 경우
+        }
+
+        return commentMapper.selectCommentList(comment.getPostId());
+    }
 }
