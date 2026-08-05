@@ -33,6 +33,7 @@
         UPDATE comment
         SET content = #{content}
         WHERE comment_id = #{commentId}
+            AND member_id = #{memberId}
     </update>
 
     <update id="deleteComment" parameterType="Long">

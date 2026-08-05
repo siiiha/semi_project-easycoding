@@ -62,14 +62,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId) {
-        // String인 memberId를 Long형태로 변환
-        Long longMemberId = Long.valueOf(memberId);
-
-        // 수정하려는 댓글의 작성자를 조회하는 메소드
-        Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(longMemberId)) {
-            return null;    // 수정하려는 댓글의 작성자와 로그인한 회원이 다를 경우
+        if (content == null || content.equals("")) {
+            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
         }
+
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
         comment.setCommentId(commentId);
