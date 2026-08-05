@@ -1,47 +1,139 @@
-/* 모든 모달이 공유하는 기본 레이아웃 */
-.modal { display: none; position: fixed; z-index: 2000; inset: 0; align-items: center; justify-content: center; font-family: 'Pretendard', sans-serif; }
-.modal.is-open { display: flex; }
-.modal__backdrop { position: absolute; inset: 0; width: 100%; border: 0; background: rgba(0, 0, 0, .5); cursor: default; }
-.modal__card { position: relative; box-sizing: border-box; width: min(480px, calc(100% - 32px)); padding: 36px; border-radius: 16px; background: #fff; box-shadow: 0 8px 12px rgba(0, 0, 0, .25); text-align: center; animation: modal-in .2s ease; }
+/* ============================================================
+   main.css - 메인 페이지 스타일
+   ============================================================ */
 
-/* 기존 modal.css와 동일한 등장 애니메이션 */
-@keyframes modal-in { from { opacity: 0; transform: translateY(-12px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.main-page {
+    min-height: calc(100vh - 80px - 100px);
+}
 
-/* 제목, 설명, 테마 아이콘 */
-.modal__icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 28px; background: rgba(76, 175, 80, .08); color: var(--color-primary); font-size: 25px; font-weight: 700; }
-.modal__title { margin: 0; color: #1A1A1A; font-size: 20px; font-weight: 700; line-height: 1.35; }
-.modal__message { margin: 10px 0 22px; color: #5B5B5B; font-size: 14px; font-weight: 400; line-height: 22px; white-space: pre-line; }
+/* ── 히어로 섹션 ── */
+.hero-section {
+    background-color: var(--color-bg-main);
+    padding: 60px 0 0;
+}
 
-/* 버튼 */
-.modal__actions { display: flex; gap: 12px; width: 100%; justify-content: center; }
-.modal__button { flex: 1; min-width: 110px; border: 0; border-radius: 12px; padding: 14px 0; font: inherit; font-size: 18px; font-weight: 600; cursor: pointer; transition: background-color var(--transition-fast), box-shadow var(--transition-fast); }
-.modal__button--primary { background: var(--color-primary); color: #fff; }
-.modal__button--primary:hover { background: var(--color-primary-hover); }
-.modal__button--secondary { border: 1px solid #9CA3AF; background: #fff; color: #5B5B5B; }
-.modal__button--secondary:hover { background: #F5F5F5; }
+.hero-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 420px;
+}
 
-/* input 모달 */
-.modal__input { box-sizing: border-box; width: 100%; height: 64px; border: 2px solid #9CA3AF; border-radius: 12px; padding: 0 20px; background: #fff; color: #1A1A1A; font: inherit; font-size: 16px; outline: none; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
-.modal__input::placeholder { color: #9CA3AF; }
-.modal__input:focus, .modal__code-inputs input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(76, 175, 80, .15); }
-.modal__error { min-height: 20px; margin: 6px 0 10px; color: #FF4444; font-size: 13px; text-align: left; }
+.hero-text {
+    max-width: 520px;
+}
 
-/* custom 모달(이메일 인증번호) */
-.modal__code-inputs { display: flex; gap: 10px; justify-content: center; }
-.modal__code-inputs input { width: 50px; height: 56px; box-sizing: border-box; border: 2px solid #9CA3AF; border-radius: 8px; background: var(--color-bg-main); color: var(--color-primary); text-align: center; font: inherit; font-size: 20px; font-weight: 700; outline: none; transition: border-color var(--transition-fast); }
-.modal__link { margin: 0 0 16px; border: 0; background: none; color: var(--color-primary); text-decoration: underline; cursor: pointer; font: inherit; font-size: 14px; font-weight: 600; }
+.hero-title {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 54px;
+    line-height: 1.25;
+    color: #1A1A1A;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+}
 
-/* type마다 data-theme 속성만 바꾸면 색상이 적용됩니다. */
-.modal[data-theme="danger"] .modal__icon { background: rgba(244, 67, 54, .08); color: #FF4444; }
-.modal[data-theme="danger"] .modal__button--primary { background: #FF4444; }
-.modal[data-theme="danger"] .modal__button--primary:hover { background: #e03a3a; }
-.modal[data-theme="warning"] .modal__icon { background: rgba(245, 158, 11, .10); color: #d97706; }
-.modal[data-theme="warning"] .modal__button--primary { background: #d97706; }
-.modal[data-theme="warning"] .modal__button--primary:hover { background: #b45309; }
-.modal[data-theme="info"] .modal__icon { background: rgba(76, 175, 80, .08); color: var(--color-primary); }
-.modal[data-theme="info"] .modal__button--primary { background: var(--color-primary); }
+.hero-sub {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #5B5B5B;
+    margin-bottom: 36px;
+}
 
-/* 스크린 리더 전용 텍스트 */
-.modal__sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.hero-btns {
+    display: flex;
+    gap: 16px;
+}
 
-@media (max-width: 420px) { .modal__card { padding: 28px 20px; } .modal__code-inputs { gap: 4px; } .modal__code-inputs input { width: 34px; } }
+.hero-btn-start {
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.hero-btn-about {
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 10px;
+    border-color: #B3B3B3;
+    color: #1A1A1A;
+}
+.hero-btn-about:hover {
+    background-color: #F5F5F5;
+    color: #1A1A1A;
+}
+
+.hero-image {
+    width: 328px;
+    height: 328px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ── 기능 배너 ── */
+.feature-banner {
+    background-color: var(--color-border);  /* #DCEFD9 */
+    padding: 32px 0;
+    margin-top: 60px;
+}
+
+.feature-list {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-fast);
+}
+.feature-item:hover {
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    width: 56px;
+    height: 54px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.feature-name {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1A1A1A;
+}
+
+.feature-desc {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #1A1A1A;
+}
