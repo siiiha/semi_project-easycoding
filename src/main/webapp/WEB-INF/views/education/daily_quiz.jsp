@@ -41,8 +41,7 @@
         <section class="quiz-card">
             <div class="quiz-card-head">
                 <div class="quiz-badges">
-                    <span class="badge-level" id="quiz-category-name">테스트</span>
-                    <span class="badge-level-num" id="quiz-level-text">초급</span>
+                    <span class="badge-level" id="quiz-category-name">일일 문제</span>
                     <span class="badge-type" id="quiz-type-text">객관식</span>
                 </div>
                 <span class="badge-lang" id="quiz-topic-text">Java 개념</span>
@@ -87,7 +86,9 @@
                     <p class="quiz-data-explanation"><c:out value="${edu.educationExplanation}" /></p>
                     <div class="quiz-data-options">
                         <c:forEach var="opt" items="${edu.options}">
-                            <p class="quiz-data-option-item" data-order="${opt.orderingNumber}">
+                            <p class="quiz-data-option-item"
+                               data-order="${opt.orderingNumber}"
+                               data-correct="${opt.correct}">
                                 <c:out value="${opt.optionContents}" />
                             </p>
                         </c:forEach>
