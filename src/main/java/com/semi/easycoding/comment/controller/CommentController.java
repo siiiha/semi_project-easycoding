@@ -37,15 +37,24 @@ public class CommentController {
             @RequestBody CommentRequest request,
             HttpSession session
     ) {
-        MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
+        // session영역에 저장되어있는 요청을 보낸 사용자의 memberId를 사용하기 위함
+        MemberDto loginUser = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
 
         try {
             List<CommentDto> commentList = commentService.insertComment(postId, request.getContent(), loginUser.getMemberId());
+            if (commentList == null) {
+                // 댓글 등록 실패 시 로직
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(
+                            ApiResponse.fail("댓글 등록에 실패했습니다.")
+                        );
+            }
+            // 댓글 등록 성공 시 로직
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
         } catch (IllegalArgumentException e) {
+            // Service에서 내용이 비어있는 경우 발생시킨 예외를 잡아서 응답을 주기위해서 사용
             return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail(e.getMessage()));
         }
     }
 

@@ -2,11 +2,14 @@ package com.semi.easycoding.comment.service;
 
 import com.semi.easycoding.comment.dto.CommentDto;
 import com.semi.easycoding.comment.mapper.CommentMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -42,8 +45,10 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(content);
 
         int result = commentMapper.insertComment(comment);   // 실행 후 생성 된 commentId가 채워짐
+
         if (result != 1) {
             // DB에 추가 안된 경우 로직
+            return null;
         }
         return commentMapper.selectCommentList(comment.getPostId());
     }
