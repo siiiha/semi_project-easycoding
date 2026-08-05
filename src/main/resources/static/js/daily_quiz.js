@@ -6,7 +6,7 @@
     var state = {
         educations: [],         // educations: 문제 목록
         currentIndex: 0,        // currentIndex: 현재 보고 있는 문제의 인덱스
-        selectedByIndex: {}     // selectedByIndex: 사용자가 고른 선택지의 인덱스
+        submitted: false        // submitted: 현재 문제의 제출 완료 여부
     };
 
     // 특정 요소(item) 안에있는 요소를 요소명(select)을 이용해 꺼내오는 함수
@@ -51,7 +51,7 @@
 
         // nodes를 배열형태로 변환 후 순회하면서 배열 만들고 반환
         return Array.prototype.map.call(nodes, function (item) {
-            // 문제 타입별로 다른 테이터타입을 읽어야 하기 때문에 우선 별도로 읽어두기
+            // 문제 타입이 다르면 읽어야하는 데이터타입도 다르기 때문에 판별을 위해 별도로 읽어두기
             var typeValue = getElementText(item, ".quiz-data-type");
 
             // 공통부문 먼저채워넣고, 타입별로 달라지는 부분은 비워놓기
@@ -72,12 +72,11 @@
                 quizData.answers = Array.prototype.map.call(optionNodes, function (node) {
                     return {
                         order: Number(node.getAttribute("data-order") || 0),
+                        correct: node.getAttribute("data-correct") === "true",
                         text: node.textContent.trim()
                     };
                 }).sort(function (a, b) {
                     return a.order - b.order;
-                }).map(function (opt) {
-                    return opt.text;
                 });
             } else if (typeValue === "2") {
                 // TODO: 빈칸채우기 타입(EducationBlankTypeDto) 전용 데이터 파싱 로직 추가
@@ -106,20 +105,25 @@
     function renderOptions(quiz) {
         // 선택지 렌더링 대상 컨테이너
         var optionsWrap = document.getElementById("quiz-options");
-        if (!optionsWrap) {
-            return;
-        }
 
-        // 파싱된 선택지가 없으면 테스트용 기본 선택지 사용
+        // 파싱된 선택지가 없으면 테스트용 기본 선택지 사용하기위해 초기화
         var options = quiz.answers && quiz.answers.length > 0
             ? quiz.answers
-            : ["테스트 선택지 텍스트", "테스트 선택지 텍스트", "테스트 선택지 텍스트", "테스트 선택지 텍스트"];
+            : [
+                { text: "니가 코딩을 잘못했으면 이거 표시됨", correct: false },
+                { text: "니가 파싱을 잘못했으면 이거 표시됨", correct: true },
+                { text: "니가 코딩을 잘못했으면 이거 표시됨", correct: false },
+                { text: "니가 파싱을 잘못했으면 이거 표시됨", correct: false }
+            ];
 
+        // 테스트용 텍스트를 jsp에서 채워넣었으니 일단 비우기
         optionsWrap.innerHTML = "";
 
+        // 객관식 보기를 생성할 각종 구성요소들을 생성하고, 선택지 텍스트를 채워넣고, DOM에 추가
         for (var i = 0; i < options.length; i += 1) {
             var label = document.createElement("label");
             label.className = "quiz-option";
+            label.setAttribute("data-correct", String(options[i].correct));
 
             var input = document.createElement("input");
             input.type = "radio";
@@ -132,7 +136,7 @@
 
             var textSpan = document.createElement("span");
             textSpan.className = "option-text";
-            textSpan.textContent = options[i];
+            textSpan.textContent = options[i].text;
 
             label.appendChild(input);
             label.appendChild(labelSpan);
@@ -140,32 +144,26 @@
             optionsWrap.appendChild(label);
         }
 
-        // 이전에 고른 답이 있으면 복원
-        var selectedIndex = state.selectedByIndex[state.currentIndex];
-        if (typeof selectedIndex === "number") {
-            var selectedOption = optionsWrap.querySelector('input[value="' + selectedIndex + '"]');
-            if (selectedOption) {
-                selectedOption.checked = true;
-                selectedOption.parentElement.classList.add("selected");
-            }
-        }
-
+        // 각 선택지에 클릭 이벤트를 연결
         optionsWrap.querySelectorAll(".quiz-option").forEach(function (optionEl) {
             optionEl.addEventListener("click", function () {
+                // 이미 제출된 상태의 문제는 해당 이벤트가 작동하지 않도록 방지
+                if (state.submitted) {
+                    return;
+                }
                 optionsWrap.querySelectorAll(".quiz-option").forEach(function (node) {
                     node.classList.remove("selected");
                     node.classList.remove("is-correct");
                     node.classList.remove("is-wrong");
                 });
-                // 현재 클릭한 선택지를 선택 상태로 만들고 state에 기록
+                // 현재 클릭한 선택지를 선택 상태로 만들기
                 optionEl.classList.add("selected");
                 optionEl.querySelector('input[type="radio"]').checked = true;
-                state.selectedByIndex[state.currentIndex] = Number(optionEl.querySelector('input[type="radio"]').value);
             });
         });
     }
 
-    // 현재 인덱스(state.currentIndex)에 해당하는 문제를 화면 전체에 반영
+    // 현재 인덱스(state.currentIndex)에 해당하는 문제를 화면에 렌더링하는 오케스트레이션
     function renderCurrentQuiz() {
         // 전체 문제 수
         var totalCount = state.educations.length;
@@ -181,47 +179,124 @@
         // 제출/다음 버튼
         var nextBtn = document.getElementById("quiz-next-btn");
 
-        if (!questionEl || !currentIndexEl || !totalCountEl || !nextBtn) {
+        // 중요한거 뭐 하나라도 null이면 중지
+        if (!questionEl || !currentIndexEl || !totalCountEl || !categoryEl || !typeEl || !topicEl || !nextBtn) {
             return;
         }
 
         totalCountEl.textContent = String(totalCount);
 
-        if (totalCount === 0) {
-            questionEl.textContent = "오늘 할당된 문제가 없습니다.";
-            currentIndexEl.textContent = "0";
-            nextBtn.textContent = "문제가 없습니다";
-            nextBtn.disabled = true;
-            nextBtn.style.opacity = "0.5";
-            renderOptions({ answers: [] });
-            return;
-        }
-
         // 현재 표시할 문제 객체
         var quiz = state.educations[state.currentIndex];
+
         // 문제 본문은 educationContent를 우선 사용
         questionEl.textContent = quiz.educationContent || "테스트 문제 텍스트";
         currentIndexEl.textContent = String(state.currentIndex + 1);
         if (categoryEl) {
-            categoryEl.textContent = quiz.educationCategoryName || "테스트";
+            categoryEl.textContent = "일일 문제";
         }
         if (typeEl) {
             typeEl.textContent = getTypeText(quiz.educationType);
         }
         if (topicEl) {
-            topicEl.textContent = (quiz.educationCategoryName || "Java") + " 개념";
+            topicEl.textContent = (quiz.educationCategoryName || "알수없음");
         }
-        nextBtn.textContent = state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →";
 
+        // if문으로 지저분하게 늘어져서 AI한테 방법없냐고 물어보니까 겁나 스마트하게 삼항연산자 중첩으로 압축해줌
+        // 문제를 푼 상태가 아니라면 "제출하기" || 제출한 상태라면 마지막 문제인지 확인해서 다음문제, 아니라면 학습완료
+        nextBtn.textContent = state.submitted
+            ? (state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →")
+            : "정답확인";
+
+        // 상단 도트 갱신하고, 풀제풀이 부분 숨기고, 현 문제의 타입에 맞는 화면그리기 호출
         setActiveDot(state.currentIndex);
+        hideFeedback();
         renderByEducationType(quiz);
     }
 
-    // 정답/오답 피드백 박스를 모두 숨기기
+    // 정답/오답 피드백 박스 숨기기
     function hideFeedback() {
         document.querySelectorAll(".quiz-feedback").forEach(function (node) {
             node.classList.add("is-hidden");
         });
+    }
+
+    // 채점 결과에 따라 피드백 박스 노출
+    function showFeedback(isCorrect, quiz) {
+        hideFeedback();
+        var feedbackEl = document.querySelector(isCorrect ? ".quiz-feedback-correct" : ".quiz-feedback-wrong");
+        if (!feedbackEl) {
+            return;
+        }
+
+        var titleEl = feedbackEl.querySelector(".feedback-title");
+        var descEl = feedbackEl.querySelector(".feedback-desc");
+
+        if (isCorrect) {
+            if (titleEl) {
+                titleEl.textContent = "정답입니다!";
+            }
+        } else {
+            var correctText = "";
+            for (var i = 0; i < quiz.answers.length; i++) {
+                if (quiz.answers[i].correct) {
+                    correctText = quiz.answers[i].text;
+                    break;
+                }
+            }
+            if (titleEl) {
+                titleEl.textContent = "오답입니다. 정답: " + correctText;
+            }
+        }
+
+        if (descEl) {
+            descEl.textContent = quiz.educationExplanation || "";
+        }
+
+        feedbackEl.classList.remove("is-hidden");
+    }
+
+    // 객관식 문제를 채점하고 결과를 화면에 반영
+    function gradeMultipleChoice(quiz) {
+        var optionsWrap = document.getElementById("quiz-options");
+        var form = document.getElementById("quiz-form");
+        var nextBtn = document.getElementById("quiz-next-btn");
+
+        var selectedInput = form.querySelector('input[name="answer"]:checked');
+        if (!selectedInput) {
+            return;
+        }
+
+        var selectedIndex = Number(selectedInput.value);
+        var correctIndex = -1;
+        for (var i = 0; i < quiz.answers.length; i++) {
+            if (quiz.answers[i].correct) {
+                correctIndex = i;
+                break;
+            }
+        }
+
+        var isCorrect = selectedIndex === correctIndex;
+
+        // 정답/오답 클래스 적용 및 선택 잠금
+        var optionEls = optionsWrap.querySelectorAll(".quiz-option");
+        Array.prototype.forEach.call(optionEls, function (optEl, i) {
+            optEl.style.pointerEvents = "none";
+            optEl.classList.remove("selected");
+            if (i === correctIndex) {
+                optEl.classList.add("is-correct");
+            }
+            if (i === selectedIndex && !isCorrect) {
+                optEl.classList.add("is-wrong");
+            }
+        });
+
+        showFeedback(isCorrect, quiz);
+
+        // 제출 완료 상태로 기록 후 버튼 텍스트 변경
+        state.submitted = true;
+        var totalCount = state.educations.length;
+        nextBtn.textContent = state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →";
     }
 
     // 폼 제출 이벤트를 가로채서 페이지 리로드 없이 다음 문제로 이동
@@ -239,24 +314,30 @@
                 return;
             }
 
-            hideFeedback();
-
             var currentQuiz = state.educations[state.currentIndex];
             var typeValue = String(currentQuiz.educationType);
+            var isSubmitted = state.submitted;
 
-            if (typeValue === "1") {
-                var selected = form.querySelector('input[name="answer"]:checked');
-                if (!selected) {
-                    return;
+            if (!isSubmitted) {
+                // 1단계: 답안 제출 및 채점
+                if (typeValue === "1") {
+                    var selected = form.querySelector('input[name="answer"]:checked');
+                    if (!selected) {
+                        return;
+                    }
+                    gradeMultipleChoice(currentQuiz);
+                } else if (typeValue === "2") {
+                    // TODO: educationType=2 빈칸채우기 정답 제출/검증 로직 구현
                 }
-            } else if (typeValue === "2") {
-                // TODO: educationType=2 빈칸채우기 정답 제출/검증 로직 구현
-            }
-
-            // 마지막 문제가 아니면 다음 문제로 이동 후 다시 렌더링
-            if (state.currentIndex < state.educations.length - 1) {
-                state.currentIndex += 1;
-                renderCurrentQuiz();
+            } else {
+                // 2단계: 다음 문제로 이동
+                if (state.currentIndex < state.educations.length - 1) {
+                    state.currentIndex += 1;
+                    state.submitted = false;
+                    renderCurrentQuiz();
+                } else {
+                    // TODO: 전체 학습 완료 처리 (결과 페이지 이동 등)
+                }
             }
         });
     }
