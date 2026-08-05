@@ -41,6 +41,7 @@
         UPDATE comment
         SET deleted_at = NOW()
         WHERE comment_id = #{commentId}
+            AND member_id = #{memberId}
             AND deleted_at IS NULL
     </update>
 
