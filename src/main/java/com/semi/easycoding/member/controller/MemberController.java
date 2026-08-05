@@ -1,5 +1,8 @@
 package com.semi.easycoding.member.controller;
 
+import com.semi.easycoding.email.constant.EmailSessionKeys;
+import com.semi.easycoding.email.constant.VerificationPurpose;
+import com.semi.easycoding.email.dto.EmailVerification;
 import com.semi.easycoding.member.dto.MemberDto;
 import com.semi.easycoding.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -32,12 +35,10 @@ public class MemberController {
         return memberService.isNicknameDuplicate(nickname.trim());
     }
 
-
     //사용자가 입력한 정보를 받는다.
     @PostMapping("/join")
-    public String join(MemberDto memberDto, //email, nickname, password가 있음
-                       @RequestParam String passwordConfirm, //passwordConfirm : 두 번째 비밀번호 확인
-                       HttpSession session, //EmailController 인증 결과
+    public String join(MemberDto memberDto,
+                       HttpSession session,
                        Model model) {
 
         if (memberDto.getNickname() == null
@@ -47,29 +48,22 @@ public class MemberController {
         }
         memberDto.setNickname(memberDto.getNickname().trim());
 
-        Boolean emailVerified = (Boolean) session.getAttribute("joinEmailVerified");
+        EmailVerification verification =
+                (EmailVerification) session.getAttribute(
+                        EmailSessionKeys.EMAIL_VERIFICATION
+                );
 
-        String verifiedEmail = (String) session.getAttribute("joinEmail");
+        if (verification == null
+                || !verification.isVerified()
+                || verification.isExpired()
+                || verification.getPurpose() != VerificationPurpose.JOIN
+                || !verification.getEmail().equals(memberDto.getEmail())) {
 
-        if (!Boolean.TRUE.equals(emailVerified)
-            || !memberDto.getEmail().equals(verifiedEmail)) {
             model.addAttribute(
                     "errorMsg", "이메일 인증이 필요합니다."
             );
             return "member/join";
         }
-        //emailVerified : 이메일 인증 성공 여부
-        //verifiedEmail : 실제로 인증번호를 받은 이메일
-        //memberDto.getEmail() : 회원가입을 눌렀을 때 입력되어 있던 이메일
-        //이메일 인증을 완료하지 않은 경우, 인증받은 이메일과 가입하려는 이메일이 다른 경우 방지
-
-        //memberDto.getPassword() : 첫 번째 비밀번호
-        //passwordConfirm : 두 번째 비밀번호 확인
-        //Model : 서로 다를 때 화면에 오류 문구를 전달한다.
-//        if (!memberDto.getPassword().equals(passwordConfirm)) {
-//            model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
-//            return "member/join";
-//        }
 
         if (memberService.isEmailDuplicate(memberDto.getEmail())) {
             //메서드가 실행 될 때 값이 true면 이미 사용 중, false면 사용 가능.
@@ -88,27 +82,62 @@ public class MemberController {
             return "member/join";
         }
 
-        //위는 비밀번호가 일치하지 않을 경우. 아래는 일치할 경우.
-        //회원이 추가되면 1, 추가되지 않으면 0
         int result = memberService.join(memberDto);
-        //회원가입 처리 숫자를 담는다.
 
         if (result > 0) {
-            session.removeAttribute("joinEmail");
-            session.removeAttribute("joinEmailCode");
-            session.removeAttribute("joinEmailVerified");
-            session.removeAttribute("joinEmailCodeExpiresAt");
-            //인증 정보를 지우는 이유
-            //회원가입이 끝났는데 인증 정보가 남아 있다면 이전 인증 결과를 다시 사용할 수 있기 때문이다.
-            //seesion.incalidate()는 사용하지 않는다. : 이메일 인증값뿐만아니라 세션의 모든 값을 지우기 때문.
+            session.removeAttribute(
+                    EmailSessionKeys.EMAIL_VERIFICATION
+            );
+
             return "redirect:/member/login";
         }
 
         model.addAttribute("errorMsg", "회원가입에 실패했습니다.");
         return "member/join";
-
     }
 
+    //비밀번호 찾기
+    @GetMapping("/find-password")
+    public String findPasswordPage() {
+        return "member/find_password";
+    }
+
+    @PostMapping("/reset-password")
+    @ResponseBody
+    public boolean resetPassword(
+            @RequestParam String newPassword,
+            HttpSession session
+    ) {
+        EmailVerification verification =
+                (EmailVerification) session.getAttribute(
+                        EmailSessionKeys.EMAIL_VERIFICATION
+                );
+        if (verification == null
+                || !verification.isVerified()
+                || verification.isExpired()
+                || verification.getPurpose()
+                      != VerificationPurpose.PASSWORD_RESET) {
+            return false;
+        }
+
+        String resetEmail = verification.getEmail();
+
+        if (newPassword.isBlank()) {
+            return false;
+        }
+
+        boolean result = memberService.resetPassword(
+                resetEmail,
+                newPassword
+        );
+
+        if (result) {
+            session.removeAttribute(
+                    EmailSessionKeys.EMAIL_VERIFICATION
+            );
+        }
+        return result;
+    }
 
     @PostMapping("/login")
     public String login(MemberDto memberDto, HttpSession session, Model model) {
@@ -174,7 +203,6 @@ public class MemberController {
         return "mypage/mypage";
     }
 
-
     // 회원정보 화면-데이터를 가져옴!
     @GetMapping("/edit")
     public String memberEditPage(HttpSession session) {
@@ -189,7 +217,7 @@ public class MemberController {
     // 회원정보 수정 페이지 이동
     @PostMapping("/edit")
     public String memberEdit(
-        @RequestParam String nickname, HttpSession session, Model model) {
+            @RequestParam String nickname, HttpSession session, Model model) {
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
@@ -203,7 +231,7 @@ public class MemberController {
             return "mypage/edit";
         }
 
-        if (trimmedNickname.length() > 8){
+        if (trimmedNickname.length() > 8) {
             model.addAttribute(
                     "errorMsg", "닉네임은 8자 이하로 입력해주세요."
             );
@@ -233,7 +261,6 @@ public class MemberController {
         return "redirect:/member/mypage";
     }
 
-
     // 회원탈퇴 페이지 이동
     @GetMapping("/withdraw")
     public String memberWithdrawPage(HttpSession session) {
@@ -244,13 +271,10 @@ public class MemberController {
         }
 
         return "mypage/withdraw";
-
     }
 
     @PostMapping("/withdraw")
     public String withdraw(@RequestParam String password, HttpSession session, Model model) {
-
-
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -258,11 +282,9 @@ public class MemberController {
             return "redirect:/member/login";
         }
 
-
         boolean result = memberService.withdraw(
                 loginUser.getMemberId(), password
         );
-
 
         if (!result) {
             model.addAttribute(
@@ -274,46 +296,4 @@ public class MemberController {
         session.invalidate();
         return "redirect:/";
     }
-
-    //비밀번호 찾기
-    @GetMapping("/find-password")
-    public String findPasswordPage() {
-        return "member/find_password";
-    }
-
-    @PostMapping("/reset-password")
-    @ResponseBody
-    public boolean resetPassword(
-            @RequestParam String newPassword,
-            HttpSession session
-    ) {
-        Boolean emailVerified = (Boolean) session.getAttribute("resetEmailVerified");
-        String resetEmail = (String) session.getAttribute("resetEmail");
-
-        if (!Boolean.TRUE.equals(emailVerified) || resetEmail == null) {
-            return false;
-        }
-
-        if (newPassword.isBlank()) {
-            return false;
-        }
-
-        boolean result = memberService.resetPassword(
-                resetEmail,
-                newPassword
-        );
-
-        if (result) {
-            session.removeAttribute("resetEmail");
-            session.removeAttribute("resetEmailCode");
-            session.removeAttribute("resetEmailVerified");
-            session.removeAttribute("resetEmailCodeExpiresAt");
-            //삭제하는 이유는 같은 이메일 인증 결과를 재사용하지 못하게 하기 위해서.
-        }
-
-        return result;
-    }
-
-
-
 }

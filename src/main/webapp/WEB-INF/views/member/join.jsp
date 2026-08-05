@@ -75,6 +75,7 @@
                                    placeholder="닉네임을 입력해주세요." value="${param.nickname}"
                                    maxlength="8" required>
                         </div>
+                        <p id="check-nickname-result"></p>
                     </div>
 
                 <!-- 아이디(이메일) -->
@@ -116,6 +117,7 @@
                             <input type="password" id="password" name="password" class="form-input-inner"
                                    placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
                         </div>
+                        <p id="check-password-format-result"></p>
                     </div>
 
                 <!-- 비밀번호 확인 -->
@@ -130,10 +132,8 @@
                             </svg>
                             <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input-inner"
                                    placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password" required>
-                            <p id="check-password-result"></p>
-                            <!-- 이 부분은 패스워드 체크의 결과값이 들어간다.-->
-                            <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                         </div>
+                        <p id="check-password-result"></p>
                     </div>
 
                 <button type="submit" class="btn btn-primary auth-submit-btn">회원가입</button>
@@ -245,6 +245,7 @@
 
         if (email === '') {
             checkEmailResult.textContent = '이메일을 입력해주세요.';
+            checkEmailResult.classList.remove('is-success');
             checkedEmail = null;
             emailInput.focus();
             return;
@@ -275,15 +276,18 @@
             if (isDuplicate) {
                 checkEmailResult.textContent =
                     '이미 사용 중인 이메일입니다.';
+                checkEmailResult.classList.remove('is-success');
                 checkedEmail = null;
             } else {
                 checkEmailResult.textContent =
                     '사용 가능한 이메일입니다.';
+                checkEmailResult.classList.add('is-success');
                 checkedEmail = email;
             }
         } catch (error) {
             checkEmailResult.textContent =
                 '이메일 중복 확인 중 오류가 발생했습니다.';
+            checkEmailResult.classList.remove('is-success');
             checkedEmail = null;
         }
 
@@ -293,6 +297,7 @@
     emailInput.addEventListener('input', function () {
         checkedEmail = null;
         checkEmailResult.textContent = '';
+        checkEmailResult.classList.remove('is-success');
     });
 
     const passwordInput = document.getElementById('password');
@@ -308,6 +313,7 @@
     function validatePasswordConfirm() {
         if (passwordConfirmInput.value === '') {
             checkPasswordResult.textContent = '';
+            checkPasswordResult.classList.remove('is-success');
             isPasswordMatched = false;
             return;
             //만약에 빈 문자열이라면, 기존 결과의 문장을 지우고 패스워드 일치 여부를 실패로 변경 > return으로 함수를 종료한다.
@@ -316,6 +322,7 @@
             passwordInput.value === passwordConfirmInput.value;
         checkPasswordResult.textContent = isPasswordMatched
             ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.';
+        checkPasswordResult.classList.toggle('is-success', isPasswordMatched);
     }   //두 입력값이 동일한지 비교하고 isPasswordMatched에 결과를 저장한다.
         //그 결과 값 (true인지 false) 에 따라서 지정 문구 출력
 
@@ -341,6 +348,7 @@
         if (!isPasswordMatched) {
             event.preventDefault();
             alert('비밀번호가 일치하지 않습니다.');
+            checkPasswordResult.classList.remove('is-success');
             passwordConfirmInput.focus();
         }   //위에 있는 것과의 차이는 위는 작성할시 바로바로 비교. 아래는 버튼을 누르면 비교하여 문구가 나온다.
 
