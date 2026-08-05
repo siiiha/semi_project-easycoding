@@ -58,7 +58,7 @@ public class EducationController {
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
-        List<EducationDto> todayEducation = educationService.getTodayEducations(memberId);
+        List<EducationDto> todayEducation = educationService.getTodayEducationsNotSubmitted(memberId);
         model.addAttribute("todayEducation", todayEducation);
 
         return "education/daily_quiz";
