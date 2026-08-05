@@ -28,10 +28,10 @@
         SET content = #{content}
         WHERE comment_id = #{commentId}
             AND member_id = #{memberId}
-            AND deleted_at = IS NULL
+            AND deleted_at IS NULL
     </update>
 
-    <update id="deleteComment" parameterType="Long">
+    <update id="deleteComment">
         UPDATE comment
         SET deleted_at = NOW()
         WHERE comment_id = #{commentId}

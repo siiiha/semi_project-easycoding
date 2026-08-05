@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.stream.events.Comment;
 import java.util.List;
 
 @RestController
@@ -23,12 +21,8 @@ public class CommentController {
 
     @PostMapping("/select/{postId}")
     public ResponseEntity<ApiResponse<List<CommentDto>>> selectComment(@PathVariable Long postId) {
-        try {
-            List<CommentDto> commentList = commentService.selectCommentByPostId(postId);
-            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail(e.getMessage()));
-        }
+        List<CommentDto> commentList = commentService.selectCommentByPostId(postId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
     }
 
     @PostMapping("/insert/{postId}")
@@ -42,7 +36,7 @@ public class CommentController {
 
         try {
             List<CommentDto> commentList = commentService.insertComment(postId, request.getContent(), loginUser.getMemberId());
-            if (commentList == null) {
+            if (commentList.size() <= 0) {
                 // 댓글 등록 실패 시 로직
                 return ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -70,7 +64,7 @@ public class CommentController {
 
         try {
             List<CommentDto> commentList = commentService.updateComment(postId, commentId, request.getContent(), loginUser.getMemberId());
-            if (commentList == null) {
+            if (commentList.size() <= 0) {
                 // 댓글 수정 실패 시 로직
                 return ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -97,7 +91,7 @@ public class CommentController {
 
         try {
             List<CommentDto> commentList = commentService.deleteComment(postId, commentId, loginUser.getMemberId());
-            if (commentList == null) {
+            if (commentList.size() == 0) {
                 // 댓글 삭제 실패 시 로직
                 return ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -35,8 +35,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> insertComment(Long postId, String content, String memberId) {
-        if (content == null || content.equals("")) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+        } else if (content.length() > 300) {
+            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
         }
 
         CommentDto comment = new CommentDto();
@@ -56,18 +58,22 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 수정하려는 댓글의 회원이 로그인한 회원이 맞는지 확인 후 DB에 댓글 수정하는 메소드
      * @param commentId
+     * @param memberId
      * @param content
      * @param memberId
      * @return
      */
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId) {
-        if (content == null || content.equals("")) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+        } else if (content.length() > 300) {
+            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
         }
 
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
+        comment.setMemberId(memberId);
         comment.setCommentId(commentId);
         comment.setContent(content);
         int result = commentMapper.updateComment(comment);
