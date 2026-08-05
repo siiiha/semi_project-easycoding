@@ -1,11 +1,14 @@
 package com.semi.easycoding.email.controller;
 
+import com.semi.easycoding.common.dto.ApiResponse;
 import com.semi.easycoding.email.constant.EmailSessionKeys;
 import com.semi.easycoding.email.constant.VerificationPurpose;
 import com.semi.easycoding.email.dto.EmailVerification;
 import com.semi.easycoding.email.service.EmailService;
 import com.semi.easycoding.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,11 +34,16 @@ public class EmailController {
     }
 
     @PostMapping("/join/send")
-    public String sendJoinCode(
+    public ResponseEntity<ApiResponse<String>> sendJoinCode(
             @RequestParam String email,
             HttpSession session
     ) {
         String code = emailService.sendVerificationCode(email);
+        if (code == null || code.isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.fail("인증번호 발송에 실패했습니다."));
+        }
+
         saveVerification(
                 session,
                 email,
@@ -43,7 +51,9 @@ public class EmailController {
                 VerificationPurpose.JOIN
         );
 
-        return "인증번호를 발송했습니다.";
+        return ResponseEntity.ok(
+                ApiResponse.success("인증번호를 발송했습니다.")
+        );
     }
 
     @PostMapping("/password/send")

@@ -6,6 +6,7 @@ const currentPasswordInput = document.querySelector("#currentPassword");
 const newPasswordInput = document.querySelector("#newPassword");
 const confirmPasswordInput = document.querySelector("#confirmPassword");
 
+const currentPasswordResult = document.querySelector("#check-current-password-result");
 const newPasswordResult = document.querySelector("#check-new-password-result");
 const confirmPasswordResult = document.querySelector("#check-confirm-password-result");
 
@@ -63,8 +64,68 @@ editNicknameInput.addEventListener(
     validateEditNickname
 );
 
+function validateCurrentPassword() {
+    const isPasswordEmpty =
+        newPasswordInput.value === ""
+        && confirmPasswordInput.value === "";
+
+    if (isPasswordEmpty) {
+        currentPasswordResult.textContent = "";
+        return true;
+    }
+
+
+    if (currentPasswordInput.value === "") {
+        currentPasswordResult.textContent = "현재 비밀번호를 입력해주세요.";
+        return false;
+    }
+
+    if (currentPasswordInput.value === newPasswordInput.value) {
+        currentPasswordResult.textContent = "새 비밀번호는 현재 비밀번호와 다르게 입력해주세요.";
+        return false;
+    }
+
+    currentPasswordResult.textContent = "";
+    return true;
+}
+
+
 editForm.addEventListener("submit", async function (event) {
+    const isCurrentPasswordValid = validateCurrentPassword();
+    const isValidPasswordFormat = validateNewPassword();
+    const isPasswordMatched = validatePasswordConfirm();
+
+    if (!isCurrentPasswordValid
+        || !isValidPasswordFormat
+        || !isPasswordMatched) {
+        event.preventDefault();
+
+        if (!isCurrentPasswordValid) {
+            currentPasswordInput.focus();
+        } else if (!isValidPasswordFormat) {
+            newPasswordInput.focus();
+        } else {
+            confirmPasswordInput.focus();
+        }
+
+        return;
+    }
+
     const currentNickname = editNicknameInput.value.trim();
+    const isNicknameUnchanged =
+        currentNickname === originalNickname;
+
+    const isPasswordUnchanged =
+        newPasswordInput.value === "";
+
+    if (isNicknameUnchanged && isPasswordUnchanged) {
+        event.preventDefault();
+        editNicknameResult.textContent =
+            "변경된 회원정보가 없습니다.";
+        editNicknameInput.focus();
+        return;
+    }
+
 
     if (checkedNickname === currentNickname) {
         return;
@@ -101,7 +162,12 @@ function validateNewPassword() {
     return true;
 }
 
-newPasswordInput.addEventListener("blur", validateNewPassword);
+newPasswordInput.addEventListener("input", function () {
+    validateNewPassword();
+    validatePasswordConfirm();
+});
+
+confirmPasswordInput.addEventListener("input", validatePasswordConfirm);
 
 function validatePasswordConfirm() {
     const newPassword = newPasswordInput.value;

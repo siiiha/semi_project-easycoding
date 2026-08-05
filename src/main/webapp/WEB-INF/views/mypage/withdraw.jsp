@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 
+
 </head>
 <body>
 
@@ -75,18 +76,19 @@
                 <p class="withdraw-irreversible-text">탈퇴 완료 후에는 계정을 다시 복구하거나 데이터를 되돌릴 수 없습니다.</p>
             </div>
 
-            <!-- ── 비밀번호 확인 (1차) → modal_withdraw.jsp로 처리됨 ── -->
-            <%-- 실제 탈퇴 요청은 modal_withdraw.jsp에서 비밀번호 확인 후 진행 --%>
-
             <c:if test="${not empty errorMsg}">
                 <p class="edit-error">${errorMsg}</p>
             </c:if>
-            <jsp:include page="/WEB-INF/views/common/modal_withdraw.jsp" />
+            <jsp:include page="/WEB-INF/views/common/modal/inputModal.jsp" />
 
 
             <!-- ── 액션 버튼 ── -->
             <div class="withdraw-actions">
-                <button type="button" class="withdraw-btn-confirm" onclick="openModal('withdrawModal')">탈퇴하기</button>
+                <button type="button"
+                        id="withdraw-button"
+                        class="withdraw-btn-confirm">
+                    탈퇴하기
+                </button>
                 <a href="${pageContext.request.contextPath}/member/mypage" class="withdraw-btn-return">돌아가기</a>
             </div>
 
@@ -94,7 +96,15 @@
     </div>
 </main>
 
+<form id="withdraw-form"
+      action="${pageContext.request.contextPath}/member/withdraw"
+      method="post">
+    <input type="hidden" name="password">
+</form>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/mypage-withdraw.js"></script>
+
 </body>
 </html>

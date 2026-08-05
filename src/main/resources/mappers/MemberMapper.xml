@@ -112,7 +112,13 @@
         SET PASSWORD = #{password}
         WHERE email = #{email}
         AND DELETED_AT IS NULL
+    </update>
 
+    <update id="updatePasswordByMemberId">
+        UPDATE member
+        SET password = #{password}
+        WHERE member_id = #{memberId}
+        AND deleted_at IS NULL
     </update>
 
 

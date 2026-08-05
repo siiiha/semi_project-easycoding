@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 </head>
 <body>
 
@@ -123,5 +124,20 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+
+<c:if test="${not empty successMsg}">
+    <script>
+        CommonModal.open({
+            type: 'alert',
+            theme: 'success',
+            title: '회원정보 수정 완료',
+            message: '${successMsg}'
+        });
+    </script>
+</c:if>
+
 </body>
 </html>

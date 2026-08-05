@@ -16,10 +16,8 @@
     <script src="${pageContext.request.contextPath}/js/member.js" defer></script>
 
 
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 
-    <script defer src="${pageContext.request.contextPath}/js/modal.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
           rel="stylesheet">
@@ -180,21 +178,50 @@
 
 </main>
 
-<jsp:include page="/WEB-INF/views/common/modal_email_verify.jsp"/>
-
-
-
-
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
     const emailInput = document.getElementById('email');
-    //이메일 입력창 요소
-    const checkEmailButton = document.getElementById('check-email-button');
-    //이메일 중복 확인 버튼 요소
-    const checkEmailResult = document.getElementById('check-email-result');
-    //이메일 체크 결과를 표시할 요소
+
+    async function checkEmailVerification(code) {
+        const response = await fetch(
+            '${pageContext.request.contextPath}/email/join/verify',
+            {
+                method: 'POST',
+                body: new URLSearchParams({ code })
+                //URLSearchParams : 브라우저가 전송 형식을 자동으로 설정.
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error();
+        }
+
+        return response.json();
+    }
+    async function handleEmailVerification(code) {
+        try {
+            const isVerified = await checkEmailVerification(code);
+
+            CommonModal.open({
+                type: 'alert',
+                theme: isVerified ? 'success' : 'danger',
+                title: isVerified ? '이메일 인증 완료' : '이메일 인증 실패',
+                message: isVerified
+                    ? '이메일 인증이 완료되었습니다.'
+                    : '인증번호가 일치하지 않습니다.'
+            });
+        } catch {
+            CommonModal.open({
+                type: 'alert',
+                theme: 'danger',
+                title: '이메일 인증 실패',
+                message: '인증번호 확인 요청에 실패했습니다.'
+            });
+        }
+    }
+
+
 
     const sendEmailCodeButton = document.getElementById('send-email-code-button');
 
@@ -223,137 +250,37 @@
             );
 
             if (!response.ok) {
-            throw new Error('인증번호 발송 실패')
+                throw new Error('인증번호 발송 실패')
             }
 
-            const message = await response.text();
-            alert(message);
+            const result = await response.json();
 
-            document.getElementById('emailVerifyModal')
-                .classList.add('active');
+            CommonModal.open({
+                type: 'custom',          // 필수: alert | confirm | input | custom
+                theme: 'info',       // 선택: success | danger | warning | info
+                title: '이메일 인증',           // 선택: 기본값은 '안내'
+                message: result.data,         // 선택
+                confirmText: '확인',     // 선택: 확인 버튼 문구
+                cancelText: '취소',      // 선택: 취소 버튼 문구
+                onConfirm: handleEmailVerification //서버의 인증상태를 확인
+            });
+
+
         } catch (error) {
-             alert ('인증번호 발송 중 오류가 발생했습니다.');
+            CommonModal.open({
+                type: 'alert',
+                theme: 'danger',
+                title: '이메일 발송 실패',
+                message: '인증번호 발송 중 오류가 발생했습니다.'
+            });
         }
     });
 
-    let checkedEmail = null;
-    //중복 확인을 통과한 이메일을 기억할 변수 (이메일 문자열을 저장할 예정이다.)
-
-    //이메일이 비어있으면 안내문구를 표시하고 중복 확인을 중단한다.
-    checkEmailButton.addEventListener('click', async function () {
-        const email = emailInput.value.trim();
-
-        if (email === '') {
-            checkEmailResult.textContent = '이메일을 입력해주세요.';
-            checkEmailResult.classList.remove('is-success');
-            checkedEmail = null;
-            emailInput.focus();
-            return;
-        }
-        //이메일이 공백일 경우 실행될 코드.
-        //focus() : 이메일 입력창으로 커서 이동
-
-        try {
-            const response = await fetch('${pageContext.request.contextPath}/member/check-email?email='
-                + encodeURIComponent(email)
-            );
-            //pageContext.request.contextPath : 현제 웹 애플리케이션의 시작 경로
-            //pageContext : 현재 JSP페이지의 정보
-            //request : 현재 들어온 요청 정보
-            //contextPath : 그 요청에서 프로젝트의 시작 경로
-
-
-            if (!response.ok) {
-                throw new Error('이메일 중복 확인 요청 실패');
-            }
-
-            const isDuplicate = await response.json();
-            //response에는 서버가 보낸 응답 전체가 들어있다.
-            //response.json() : 그리고 그 응답 안에 있는 실제 데이터를 자바 스크립트에서 사용할 수 있도록 꺼내는 것
-            //현재 Controller는 boolean을 반환한다. 결과값은 true 또는 false
-            //await : 서버의 응답을 기다린 후에 실행!
-
-            if (isDuplicate) {
-                checkEmailResult.textContent =
-                    '이미 사용 중인 이메일입니다.';
-                checkEmailResult.classList.remove('is-success');
-                checkedEmail = null;
-            } else {
-                checkEmailResult.textContent =
-                    '사용 가능한 이메일입니다.';
-                checkEmailResult.classList.add('is-success');
-                checkedEmail = email;
-            }
-        } catch (error) {
-            checkEmailResult.textContent =
-                '이메일 중복 확인 중 오류가 발생했습니다.';
-            checkEmailResult.classList.remove('is-success');
-            checkedEmail = null;
-        }
-
-
-    });
-
-    emailInput.addEventListener('input', function () {
-        checkedEmail = null;
-        checkEmailResult.textContent = '';
-        checkEmailResult.classList.remove('is-success');
-    });
-
-    const passwordInput = document.getElementById('password');
-    //첫번째 비밀번호 입력요소
-    const passwordConfirmInput = document.getElementById('passwordConfirm');
-    //두번쨰 비밀번호 입력요소
-    const checkPasswordResult = document.getElementById('check-password-result');
-    //비밀번호 일치 여부 메세지를 표시할 요소
-    let isPasswordMatched = false;
-
-    //비밀번호 일치 여부를 기억하는 변수
-
-    function validatePasswordConfirm() {
-        if (passwordConfirmInput.value === '') {
-            checkPasswordResult.textContent = '';
-            checkPasswordResult.classList.remove('is-success');
-            isPasswordMatched = false;
-            return;
-            //만약에 빈 문자열이라면, 기존 결과의 문장을 지우고 패스워드 일치 여부를 실패로 변경 > return으로 함수를 종료한다.
-        }
-        isPasswordMatched =
-            passwordInput.value === passwordConfirmInput.value;
-        checkPasswordResult.textContent = isPasswordMatched
-            ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.';
-        checkPasswordResult.classList.toggle('is-success', isPasswordMatched);
-    }   //두 입력값이 동일한지 비교하고 isPasswordMatched에 결과를 저장한다.
-        //그 결과 값 (true인지 false) 에 따라서 지정 문구 출력
-
-    passwordInput.addEventListener('input', validatePasswordConfirm);
-    passwordConfirmInput.addEventListener('input', validatePasswordConfirm);
-    const joinForm = document.getElementById('joinForm');
-    //첫 번째 비밀번호 입력창에 입력이 발생하면 비교 함수(validatePasswordConfirm)를 실행
-    //두 번째 비밀번호 확인 입력창에 입력이 발생하면 비교 함수(validatePasswordConfirm)를 실행
-
-
-    joinForm.addEventListener('submit', function (event) {
-
-        const currentEmail = emailInput.value.trim();
-        //회원가입 버튼을 누르는 순간 이메일 입력칸에 들어있는 이메일의 앞뒤 공백을 제거하는 값을 currenEmail에 저장한다.
-
-        if (checkedEmail !== currentEmail) {
-            event.preventDefault();
-            alert('이메일 중복 확인을 진행해주세요.');
-            emailInput.focus();
-            return;
-        }
-
-        if (!isPasswordMatched) {
-            event.preventDefault();
-            alert('비밀번호가 일치하지 않습니다.');
-            checkPasswordResult.classList.remove('is-success');
-            passwordConfirmInput.focus();
-        }   //위에 있는 것과의 차이는 위는 작성할시 바로바로 비교. 아래는 버튼을 누르면 비교하여 문구가 나온다.
-
-
-    });
 </script>
+
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp" />
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+
 </body>
 </html>

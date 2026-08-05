@@ -45,4 +45,9 @@ public interface MemberMapper {
             @Param("email") String email,
             @Param("password") String password
     );
+
+    int updatePasswordByMemberId(
+            @Param("memberId") String memberId,
+            @Param("password") String password
+    );
 }

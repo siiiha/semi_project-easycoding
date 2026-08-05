@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/member")
@@ -39,7 +40,9 @@ public class MemberController {
     @PostMapping("/join")
     public String join(MemberDto memberDto,
                        HttpSession session,
-                       Model model) {
+                       Model model,
+                       RedirectAttributes redirectAttributes
+    ) {
 
         if (memberDto.getNickname() == null
                 || memberDto.getNickname().trim().isEmpty()) {
@@ -87,6 +90,16 @@ public class MemberController {
         if (result > 0) {
             session.removeAttribute(
                     EmailSessionKeys.EMAIL_VERIFICATION
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "successTitle",
+                    "회원가입 완료"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "successMsg",
+                    "회원가입을 완료했습니다."
             );
 
             return "redirect:/member/login";
@@ -217,7 +230,12 @@ public class MemberController {
     // 회원정보 수정 페이지 이동
     @PostMapping("/edit")
     public String memberEdit(
-            @RequestParam String nickname, HttpSession session, Model model) {
+            @RequestParam String nickname,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
@@ -244,20 +262,53 @@ public class MemberController {
             return "mypage/edit";
         }
 
-        //현재 로그인한 회원의 닉네임을 실제 DB에서 변경하고, 수정 결과를 받는 코드
-        int result = memberService.updateNickname(
-                loginUser.getMemberId(),
-                trimmedNickname
-        );
-        if (result == 0) {
-            model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
-            return "mypage/edit";
+        if (!newPassword.isBlank()) {
+
+            if (currentPassword.equals(newPassword)) {
+                model.addAttribute(
+                        "errorMsg", "새 비밀번호는 현재 비밀번호와 다르게 입력해주세요."
+                );
+                return "mypage/edit";
+            }
+
+            boolean passwordUpdated =
+                    memberService.updatePassword(
+                            loginUser.getMemberId(),
+                            currentPassword,
+                            newPassword
+                    );
+
+            if (!passwordUpdated) {
+                model.addAttribute(
+                        "errorMsg","현재 비밀번호가 일치하지 않습니다."
+                );
+                return "mypage/edit";
+            }
+
+        }
+
+        if (!loginUser.getNickname().equals(trimmedNickname)) {
+            int result = memberService.updateNickname(
+                    loginUser.getMemberId(),
+                    trimmedNickname
+            );
+
+            if (result == 0) {
+                model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
+                return "mypage/edit";
+            }
         }
 
         //DB에서 최신 회원정보 다시 조회
         MemberDto updatedMember = memberService.findByMemberId(loginUser.getMemberId());
         //세션 정보를 최신 값으로 교체
         session.setAttribute("loginUser", updatedMember);
+
+        redirectAttributes.addFlashAttribute(
+                "successMsg",
+                "회원정보 수정이 완료되었습니다."
+        );
+
         return "redirect:/member/mypage";
     }
 
@@ -274,7 +325,12 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw")
-    public String withdraw(@RequestParam String password, HttpSession session, Model model) {
+    public String withdraw(
+            @RequestParam String password,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -294,6 +350,16 @@ public class MemberController {
         }
 
         session.invalidate();
-        return "redirect:/";
+
+        redirectAttributes.addFlashAttribute(
+                "successTitle",
+                "회원탈퇴 완료"
+        );
+        redirectAttributes.addFlashAttribute(
+                "successMsg",
+                "회원탈퇴가 완료되었습니다."
+        );
+
+        return "redirect:/member/login";
     }
 }

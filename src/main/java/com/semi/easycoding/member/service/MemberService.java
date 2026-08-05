@@ -32,6 +32,11 @@ public interface MemberService {
             String newPassword
     );
 
+    boolean updatePassword(
+            String memberId,
+            String currentPassword,
+            String newPassword
+    );
 
     int updateNickname(String memberId, String nickname);
 

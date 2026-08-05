@@ -97,6 +97,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+    outline: none; /* 아웃라인 제거 통일 */
 }
 
 .modal__button--primary {
@@ -198,6 +199,11 @@
 
 .modal[data-theme="danger"] .modal__button--primary:hover {
     background: #e03a3a;
+}
+
+.modal[data-theme="danger"] .modal__input:focus {
+    border-color: #FF4444;
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, .15);
 }
 
 .modal[data-theme="warning"] .modal__icon {
