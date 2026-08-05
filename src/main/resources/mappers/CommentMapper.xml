@@ -23,12 +23,6 @@
         ORDER BY c.comment_id DESC
     </select>
 
-    <select id="selectCommentWriter" parameterType="Long">
-        SELECT member_id
-        FROM comment
-        WHERE comment_id = #{commentId}
-    </select>
-
     <update id="updateComment" parameterType="CommentDto">
         UPDATE comment
         SET content = #{content}
