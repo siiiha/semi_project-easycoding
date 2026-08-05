@@ -80,7 +80,10 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public String login(MemberDto memberDto, HttpSession session, Model model) {
+    public String login(
+            @RequestParam(required = false) String redirectURL
+            , MemberDto memberDto, HttpSession session, Model model
+        ) {
 
         MemberDto loginMember = memberService.login(memberDto);
         //호출!
