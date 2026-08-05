@@ -48,18 +48,38 @@
     </select>
 
     <select id="selectUserEducationAtDate" resultType="com.semi.easycoding.education.dto.EducationDto">
-        SELECT q.quiz_id AS educationId,
-               q.type_id AS educationType,
-               q.category_id AS educationCategoryID,
-               q.title AS educationTitle,
-               q.content AS educationContent,
-               q.explanation AS educationExplanation,
-               q.created_at AS createdAt
+        SELECT q.quiz_id        AS educationId,
+               q.type_id        AS educationType,
+               q.category_id    AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
+               q.title          AS educationTitle,
+               q.content        AS educationContent,
+               q.explanation    AS educationExplanation,
+               q.created_at     AS createdAt
         FROM member_quiz_history mqh
         INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
+        JOIN quiz_category qc ON qc.category_id = q.category_id
         WHERE mqh.member_id = #{memberId}
         AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
     </select>
+
+    <select id="selectUserEducationAtDateNotsubmitted" resultType="com.semi.easycoding.education.dto.EducationDto">
+        SELECT q.quiz_id        AS educationId,
+               q.type_id        AS educationType,
+               q.category_id    AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
+               q.title          AS educationTitle,
+               q.content        AS educationContent,
+               q.explanation    AS educationExplanation,
+               q.created_at     AS createdAt
+        FROM member_quiz_history mqh
+        INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
+        JOIN quiz_category qc ON qc.category_id = q.category_id
+        WHERE mqh.member_id = #{memberId}
+        AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
+        AND mqh.answered = false
+    </select>
+
 
     <select id="selectEducationNotAssigned" resultType="com.semi.easycoding.education.dto.EducationDto">
         SELECT q.quiz_id AS educationId,
@@ -126,5 +146,6 @@
         FROM answer_option ao
         WHERE ao.quiz_id = #{educationId}
     </select>
+
 
 </mapper>
