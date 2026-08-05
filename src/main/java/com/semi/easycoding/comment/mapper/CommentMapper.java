@@ -12,4 +12,12 @@ public interface CommentMapper {
 
     // 게시글 번호로 댓글 조회하는 메소드
     List<CommentDto> selectCommentList(Long postId);
+
+    // 특정 댓글을 작성한 회원의 Id를 조회하는 메소드
+    Long selectCommentWriter(Long commentId);
+
+    int updateComment(CommentDto comment);
+
+    // 특정 댓글의 deleted_at을 삭제하는 시점으로 수정하는 메소드 (사실상 삭제)
+    int deleteComment(Long commentId);
 }

@@ -30,7 +30,7 @@
                 </h1>
                 <p class="hero-sub">Java 학습을 쉽고 재미있게, 꾸준한 습관으로 만들어요.</p>
                 <div class="hero-btns">
-                    <a href="${pageContext.request.contextPath}/education/daily-quiz" class="btn btn-primary hero-btn-start">학습 시작하기</a>
+                    <a href="${pageContext.request.contextPath}/education/daily" class="btn btn-primary hero-btn-start">학습 시작하기</a>
                     <a href="${pageContext.request.contextPath}/service/guide" class="btn btn-outline hero-btn-about">쉽코딩 알아보기</a>
                 </div>
             </div>

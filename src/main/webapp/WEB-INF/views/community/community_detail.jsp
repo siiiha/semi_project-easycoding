@@ -100,10 +100,19 @@
                     <!-- 댓글 입력 -->
                     <form id="comment-form" action="${pageContext.request.contextPath}/comment/insert/${postDetail.postId}" method="post" style="display:flex;flex-direction:column;gap:12px;">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <div>
                         <textarea name="content" rows="4"
-                                  placeholder="답글을 입력해보세요... (커뮤니티 가이드를 준수하여 고운 말을 사용해주세요.)"
-                                  style="width:100%;border:1.5px solid #D9D9D9;border-radius:6px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1E1E1E;resize:vertical;outline:none;box-sizing:border-box;"
-                                  onfocus="this.style.borderColor='#4CAF50'" onblur="this.style.borderColor='#D9D9D9'"></textarea>
+                                  maxlength="300"
+                                  placeholder="댓글을 입력해보세요... (커뮤니티 가이드를 준수하여 고운 말을 사용해주세요.)"
+                                  style="width:100%;border:1.5px solid #D9D9D9;border-radius:6px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1E1E1E;resize:none;outline:none;box-sizing:border-box;"
+                                  onfocus="this.style.borderColor='#4CAF50'"
+                                  onblur="this.style.borderColor='#D9D9D9'"
+                                  oninput="checkLength(this, document.getElementById('charCount'))"></textarea>
+                        <!-- 사용자에게 현재 글자 수를 보여줄 UI 공간 (선택사항) -->
+                        <div style="text-align: right; font-size: 12px; color: #666; margin-right: 8px;">
+                            <span id="charCount">0</span>/300자
+                        </div>
+                        </div>
                         <div style="display:flex;justify-content:flex-end;">
                             <button type="submit"
                                     style="padding:10px 20px;background:#4CAF50;border:none;border-radius:6px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">댓글 등록</button>

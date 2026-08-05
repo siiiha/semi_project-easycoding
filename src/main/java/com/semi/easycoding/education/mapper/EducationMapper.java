@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.mapper;
 
-import com.semi.easycoding.education.dto.EducationCategoryDto;
-import com.semi.easycoding.education.dto.EducationBlankTypeDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionTypeDto;
+import com.semi.easycoding.education.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +22,7 @@ public interface EducationMapper {
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
     // 특정 기간 동안 사용자에게 할당된 문제 조회
-    List<EducationDto> selectEducationNotAssigned(Long memberId);
+    List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
     List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
                                                             @Param("categoryId") Long categoryId);
@@ -34,4 +31,10 @@ public interface EducationMapper {
                                 @Param("educationIdList") List<Long> educationIdList);
     // 사용자에게 문제를 할당, 멤버_퀴즈_히스토리 테이블에 삽입시행
 
+    List<MemberQuizHistoryDto> selectMemberQuizHistoryAtDate(@Param("memberId") Long memberId,
+                                                             @Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
+
+    List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
+    // 문제ID로 객관식 답변 조회(answer_option) 테이블
 }

@@ -49,4 +49,42 @@ public class CommentController {
         }
     }
 
+    @PostMapping("/update/{postId}/{commentId}")
+    public ResponseEntity<ApiResponse<List<CommentDto>>> updateComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @RequestBody CommentRequest request,
+            HttpSession session
+    ) {
+        System.out.println("댓글 수정 요청 들어옴");
+        MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
+
+        try {
+            List<CommentDto> commentList = commentService.updateComment(postId, commentId, request.getContent(), loginUser.getMemberId());
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/delete/{postId}/{commentId}")
+    public ResponseEntity<ApiResponse<List<CommentDto>>> deleteComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            HttpSession session
+    ) {
+        MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
+
+        try {
+            List<CommentDto> commentList = commentService.deleteComment(postId, commentId, loginUser.getMemberId());
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail(e.getMessage()));
+        }
+    }
+
 }

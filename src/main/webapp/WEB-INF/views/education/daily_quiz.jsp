@@ -12,42 +12,93 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/daily_quiz.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<c:set var="totalCount" value="${fn:length(todayEducationList)}" />
-<c:set var="completedCount" value="${empty completedCount ? 0 : completedCount}" />
-<c:set var="completedCount" value="${completedCount lt 0 ? 0 : (completedCount gt totalCount ? totalCount : completedCount)}" />
-<c:set var="progressPercent" value="${totalCount == 0 ? 0 : (completedCount * 100 / totalCount)}" />
+<c:set var="totalCount" value="${fn:length(todayEducation)}" />
 
-<main class="daily-mission-page">
-    <div class="daily-mission-wrap">
-        <h1 class="daily-mission-title">일일학습</h1>
-        <p class="daily-mission-subtitle">매일 꾸준히 학습하고 성장해요!</p>
+<main class="daily-quiz-page">
+    <div class="daily-quiz-wrap">
+        <div class="quiz-top-row">
+            <a class="quiz-back-link" href="${pageContext.request.contextPath}/education/daily">← 일일학습으로</a>
 
-        <section class="daily-mission-card">
-            <div class="daily-mission-head">
-                <span class="daily-mission-label">오늘의 일일 미션</span>
-                <span class="daily-mission-rate">🎯 ${progressPercent}% 달성</span>
+            <div class="quiz-step-dots" aria-label="퀴즈 진행도">
+                <c:if test="${totalCount > 0}">
+                    <c:forEach begin="1" end="${totalCount}" var="idx">
+                        <span class="dot ${idx == 1 ? 'active' : ''}"></span>
+                    </c:forEach>
+                </c:if>
             </div>
 
-            <p class="daily-mission-count"><strong>${completedCount}</strong> / ${totalCount}</p>
-            <p class="daily-mission-text">문제를 완료했어요</p>
+            <p class="quiz-step-text">
+                <span id="quiz-current-index">${totalCount > 0 ? 1 : 0}</span> /
+                <span id="quiz-total-count">${totalCount}</span>
+            </p>
+        </div>
 
-            <div class="daily-mission-progress-track">
-                <div class="daily-mission-progress-fill" style="width: ${progressPercent}%"></div>
+        <section class="quiz-card">
+            <div class="quiz-card-head">
+                <div class="quiz-badges">
+                    <span class="badge-level" id="quiz-category-name">테스트</span>
+                    <span class="badge-level-num" id="quiz-level-text">초급</span>
+                    <span class="badge-type" id="quiz-type-text">객관식</span>
+                </div>
+                <span class="badge-lang" id="quiz-topic-text">Java 개념</span>
             </div>
 
-            <a class="daily-mission-btn" href="${pageContext.request.contextPath}/education/daily-quiz">
-                오늘의 학습 계속하기 →
-            </a>
+            <div class="quiz-divider"></div>
+
+            <h1 class="quiz-question" id="quiz-question">테스트 문제 텍스트</h1>
+
+            <form class="quiz-form" id="quiz-form" action="#" method="post">
+                <div id="quiz-options"></div>
+
+                <div class="quiz-feedback quiz-feedback-correct is-hidden">
+                    <span class="feedback-icon">✓</span>
+                    <div>
+                        <p class="feedback-title">테스트 정답 안내 텍스트</p>
+                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-feedback quiz-feedback-wrong is-hidden">
+                    <span class="feedback-icon">✕</span>
+                    <div>
+                        <p class="feedback-title">테스트 오답 안내 텍스트</p>
+                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="quiz-submit-btn" id="quiz-next-btn">다음 문제 →</button>
+            </form>
+        </section>
+
+        <section id="today-education-data" class="is-hidden">
+            <c:forEach var="edu" items="${todayEducation}">
+                <article class="quiz-data-item">
+                    <p class="quiz-data-id"><c:out value="${edu.educationId}" /></p>
+                    <p class="quiz-data-type"><c:out value="${edu.educationType}" /></p>
+                    <p class="quiz-data-category-id"><c:out value="${edu.educationCategoryID}" /></p>
+                    <p class="quiz-data-category-name"><c:out value="${edu.educationCategoryName}" /></p>
+                    <p class="quiz-data-title"><c:out value="${edu.educationTitle}" /></p>
+                    <p class="quiz-data-content"><c:out value="${edu.educationContent}" /></p>
+                    <p class="quiz-data-explanation"><c:out value="${edu.educationExplanation}" /></p>
+                    <div class="quiz-data-options">
+                        <c:forEach var="opt" items="${edu.options}">
+                            <p class="quiz-data-option-item" data-order="${opt.orderingNumber}">
+                                <c:out value="${opt.optionContents}" />
+                            </p>
+                        </c:forEach>
+                    </div>
+                </article>
+            </c:forEach>
         </section>
     </div>
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<script src="${pageContext.request.contextPath}/js/daily_quiz.js"></script>
 </body>
 </html>
