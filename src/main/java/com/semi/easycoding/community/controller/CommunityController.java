@@ -5,18 +5,12 @@ import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
 import com.semi.easycoding.member.dto.MemberDto;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Controller
 @RequestMapping("/community")
@@ -74,10 +68,8 @@ public class CommunityController {
             Model model) {
         PostDto postDetail = communityService.selectPostDetail(postId);
         model.addAttribute("postDetail", postDetail);
-        System.out.println(postDetail.getViews());
 
-        String redirectURL = "/community?postCategory=all&page=" + condition.getPage();
-//        String redirectURL = "/community?postCategory=" + condition.getPostCategory + "&page=" + condition.getPage();
+        String redirectURL = "/community?postCategory=" + condition.getPostCategory() + "&page=" + condition.getPage();
         model.addAttribute("redirectURL", redirectURL);
 
         return "community/community_detail";
@@ -91,15 +83,33 @@ public class CommunityController {
     @PostMapping("/write")
     public String writePost(
             @ModelAttribute PostDto postDto,
+            Model model,
             HttpSession session
     ) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
-        System.out.println(loginMember != null);
-        if (loginMember == null) {
-            return "redirect:/member/login";
+        // 게시글 제목의 빈값 여부와 글자 수 제한을 통해 예외 발생
+        if (postDto.getTitle() == null || postDto.getTitle().isBlank()) {
+            model.addAttribute("errMsg", "제목을 입력하지 않았습니다.");
+            return "redirect:/community/write";
+        } else if (postDto.getTitle().length() > 85) {
+            model.addAttribute("errMsg", "제목은 85자 이내로 작성해주세요.");
         }
+
+        // 게시글 내용의 빈값 여부와 글자 수 제한을 통해 예외 발생
+        if (postDto.getContent() == null || postDto.getContent().isBlank()) {
+            model.addAttribute("errMsg", "내용을 입력해주세요.");
+        } else if (postDto.getContent().length() > 30000) {
+            model.addAttribute("errMsg", "내용은 30000자 이내로 작성해주세요.");
+        }
+
+        // 잘못된 카테고리가 온 경우에 예외 발생
+        if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
+            model.addAttribute("errMsg", "잘못된 카테고리입니다.");
+        }
+
+        MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
         postDto.setMemberId(loginMember.getMemberId());
 
+        // TODO: 추가적으로 아래에 service함수의 결과 값을 통해서 redirect detail로 하거나 에러 페이지로 redirect시키기
         Long postId = communityService.insertPost(postDto);
 
         return "redirect:/community/detail/" + postId;

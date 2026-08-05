@@ -75,7 +75,7 @@ public class CommunityServiceImpl implements CommunityService {
         postDto.setCategoryId(category_id);
         int result = communityMapper.insertPost(postDto);
         if (result != 1) {
-            return 0L;
+            throw new IllegalArgumentException("게시글 작성을 실패했습니다.");
         }
 
         return postDto.getPostId();
