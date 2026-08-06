@@ -17,7 +17,15 @@
         맨 앞에 남는 불필요한 AND/OR은 자동으로 제거해준다.
     -->
         <where>
-            p.deleted_at IS NULL
+            <!-- 전달받은 alias가 있으면 'alias.', 없으면 빈값으로 생성 -->
+            <choose>
+                <when test="alias != null and alias != ''">
+                    ${alias}.deleted_at IS NULL
+                </when>
+                <otherwise>
+                    deleted_at IS NULL
+                </otherwise>
+            </choose>
             <if test="postCategory != null
                     and postCategory != ''
                     and postCategory != 'all'">
@@ -38,7 +46,9 @@
         FROM post p
         LEFT JOIN post_category c USING (category_id)
         LEFT JOIN member m USING (member_id)
-        <include refid="searchWhere"/>
+        <include refid="searchWhere">
+            <property name="alias" value="p"/>
+        </include>
         ORDER BY p.post_id DESC
         LIMIT #{offset}, #{limit}
     </select>
