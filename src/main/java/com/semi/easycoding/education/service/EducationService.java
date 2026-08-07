@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.service;
 
-import com.semi.easycoding.education.dto.EducationCategoryDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
-import com.semi.easycoding.education.dto.OptionDto;
+import com.semi.easycoding.education.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,6 +48,15 @@ public interface EducationService {
 
     List<OptionDto> getAnswerByEducationId(Long educationId, Short educationType);
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
+
+    boolean submitDailyAnswerByOption(EducationOptionSubmitDto submitDto, Long memberId);
+    // 사용자가 제출한 답안을 저장하고, 히스토리 상태를 갱신
+
+    EducationSummaryDto makeEducationSummary(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
+    // 일정 기간동안의 학습결과 요약 데이터를 생성하여 반환
+
+    int countStreakDay(Long memberId);
+    // 특정사용자의 연속 학습일수를 계산한다
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다
