@@ -48,4 +48,15 @@ public interface EducationMapper {
 
     List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
     // 문제ID로 객관식 답변 조회(answer_option) 테이블
+
+    Long selectHistoryByMemberIdAndEducationId(@Param("memberId") Long memberId,
+                                          @Param("educationId") Long educationId);
+    // memberId 와 educationId를 이용해서 MemberQuizHistory 테이블 조회
+
+    int updateMemberQuizHistory(@Param("historyId") Long historyId,
+                                @Param("answered") boolean answered,
+                                @Param("correct") boolean correct);
+
+    int insertAnsweredOption(@Param("historyId") Long historyId,
+                            @Param("choseOption") Short choseOption);
 }
