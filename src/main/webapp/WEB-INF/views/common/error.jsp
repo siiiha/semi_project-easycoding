@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/error.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -61,6 +63,11 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script>
+    const editErrorMsg = "${errMsg}";
+</script>
+<script src="${pageContext.request.contextPath}/js/errorPage.js"></script>
 </body>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
 </html>

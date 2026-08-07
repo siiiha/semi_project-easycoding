@@ -110,7 +110,15 @@ public class CommunityController {
             }
 
             // 잘못된 카테고리가 온 경우에 예외 발생
-            if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
+            if (postDto.getCategory() == null
+                || postDto.getCategory().isBlank()
+                || !(
+                    postDto.getCategory().equals("all")
+                    || postDto.getCategory().equals("qna")
+                    || postDto.getCategory().equals("solution")
+                    || postDto.getCategory().equals("problem")
+                )
+            ) {
                 throw new IllegalArgumentException("잘못된 카테고리입니다.");
             }
 
@@ -125,7 +133,7 @@ public class CommunityController {
             return "community/community_write";
         } catch (IllegalStateException e) {
             model.addAttribute("errMsg", e.getMessage());
-            return "commnuity/community_list";
+            return "common/error";
         }
     }
 
@@ -139,7 +147,7 @@ public class CommunityController {
         MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
         Long memId = Long.valueOf(loginMember.getMemberId());
         try {
-            PostDto postDetail = communityService.selectPostDetail(postId);
+            PostDto postDetail = communityService.whenEditSelectPostDetail(postId);
             model.addAttribute("postDetail", postDetail);
             if (!postDetail.getMemberId().equals(memId)) {
                 throw new IllegalArgumentException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
@@ -150,9 +158,6 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             model.addAttribute("errMsg", e.getMessage());
             return "community/community_detail";
-        } catch (IllegalStateException e) {
-            model.addAttribute("errMsg", e.getMessage());
-            return "common/error";
         }
 
         return "community/community_edit";
@@ -190,10 +195,14 @@ public class CommunityController {
             postDto.setMemberId(memId);
 
             Long editPostId = communityService.updatePost(postDto);
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             model.addAttribute("postDetail", postDto);
             model.addAttribute("errMsg", e.getMessage());
             return "community/community_edit";
+        } catch (IllegalStateException e) {
+            model.addAttribute("postDetail", postDto);
+            model.addAttribute("errMsg", e.getMessage());
+            return "common/error";
         }
 
         return "redirect:/community/detail/" + postId;
@@ -205,12 +214,12 @@ public class CommunityController {
             Model model,
             HttpSession session
     ) {
-        MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
+        MemberDto loginMember = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
         try {
-            communityService.deletePost(postId, loginUser.getMemberId());
+            communityService.deletePost(postId, loginMember.getMemberId());
         } catch (IllegalStateException e) {
             model.addAttribute("errMsg", e.getMessage());
-            return "redirect:/community/detail/" + postId;
+            return "common/error";
         }
 
         return "redirect:/community";

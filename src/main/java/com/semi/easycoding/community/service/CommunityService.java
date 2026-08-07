@@ -12,9 +12,11 @@ public interface CommunityService {
 
     PostDto selectPostDetail(Long postId);
 
+    PostDto whenEditSelectPostDetail(Long postId);
+
     Long insertPost(PostDto postDto);
 
     Long updatePost(PostDto postDto);
-  
+
     int deletePost(Long postId, String memberId);
 }

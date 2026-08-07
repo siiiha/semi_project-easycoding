@@ -64,6 +64,22 @@ public class CommunityServiceImpl implements CommunityService {
         return postDetail;
     }
 
+    /**
+     * 게시글 수정 시 해당 게시글 조회하는 메소드
+     * @param postId
+     * @return
+     */
+    @Override
+    public PostDto whenEditSelectPostDetail(Long postId) {
+
+        PostDto postDetail = communityMapper.selectPostDetail(postId);
+        if (postDetail == null) {
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+        }
+
+        return postDetail;
+    }
+
 
      /** 게시글 작성 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
      * @return : PostDto의 postId
@@ -71,9 +87,6 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Long insertPost(PostDto postDto) {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
-        if (!(category_id >= 1 && category_id <= 3)) {
-            throw new IllegalStateException("카테고리 오류로 인해 게시글 작성을 실패했습니다.");
-        }
         postDto.setCategoryId(category_id);
 
         int result = communityMapper.insertPost(postDto);
@@ -91,9 +104,6 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Long updatePost(PostDto postDto) {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
-        if (!(category_id >= 1 && category_id <= 3)) {
-            throw new IllegalStateException("카테고리 오류로 인해 게시글 작성을 실패했습니다.");
-        }
         postDto.setCategoryId(category_id);
 
         int result = communityMapper.updatePost(postDto);

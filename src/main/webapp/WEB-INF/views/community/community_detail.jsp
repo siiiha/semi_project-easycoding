@@ -18,9 +18,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="comm-main">
-    <c:if test="errMsg">
-        <input id="editErrMsg" type="hidden" value="${errMsg}">
-    </c:if>
     <input type="hidden" name="postId" id="post-key" value="${postDetail.postId}">
     <div class="comm-inner">
 
