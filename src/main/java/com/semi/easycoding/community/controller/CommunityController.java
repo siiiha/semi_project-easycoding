@@ -31,33 +31,40 @@ public class CommunityController {
     public String communityPage(
             @ModelAttribute PostSearchCondition condition,
             Model model) {
-
-
-        if (condition.getPostCategory() == null
-        || condition.getPostCategory().isBlank()) {
-            condition.setPostCategory("all");
-        }
-
-        PostListResult result = communityService.selectPostList(condition);
-        // 이번 요청에서만 사용할 것이기 때문에 request영역에 "postList"라는 이름으로 DB에서 조회한 게시글 목록을 저장
-        model.addAttribute("postList", result.getPostList());
-        model.addAttribute("pageInfo", result.getPageInfo());
-        model.addAttribute("condition", condition);
-
-        for (PostDto postDto : result.getPostList()) {
-            switch(postDto.getCategory()) {
-                case "qna":
-                    postDto.setCategory("질문&답변");
-                    break;
-                case "solution":
-                    postDto.setCategory("풀이공유");
-                    break;
-                case "problem":
-                    postDto.setCategory("문제제작");
-                    break;
-                default:
-                    postDto.setCategory("전체");
+        try {
+            if (condition.getPage() < 1 || condition.getPageSize() > 10) {
+                throw new IllegalArgumentException("잘못된 접근입니다.");
             }
+
+            if (condition.getPostCategory() == null
+                    || condition.getPostCategory().isBlank()) {
+                condition.setPostCategory("all");
+            }
+
+            PostListResult result = communityService.selectPostList(condition);
+            // 이번 요청에서만 사용할 것이기 때문에 request영역에 "postList"라는 이름으로 DB에서 조회한 게시글 목록을 저장
+            model.addAttribute("postList", result.getPostList());
+            model.addAttribute("pageInfo", result.getPageInfo());
+            model.addAttribute("condition", condition);
+
+            for (PostDto postDto : result.getPostList()) {
+                switch (postDto.getCategory()) {
+                    case "qna":
+                        postDto.setCategory("질문&답변");
+                        break;
+                    case "solution":
+                        postDto.setCategory("풀이공유");
+                        break;
+                    case "problem":
+                        postDto.setCategory("문제제작");
+                        break;
+                    default:
+                        postDto.setCategory("전체");
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            return "common/error";
         }
 
         return "community/community_list";

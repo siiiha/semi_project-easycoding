@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    if (ErrorMsg && editErrorMsg.trim() !== "") {
+    if (ErrorMsg && ErrorMsg.trim() !== "") {
         CommonModal.open({
             type: 'alert',
             theme: 'warning',
