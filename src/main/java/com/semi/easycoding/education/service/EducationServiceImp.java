@@ -209,4 +209,99 @@ public class EducationServiceImp implements EducationService {
     }
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
 
+    @Transactional
+    @Override
+    public boolean submitDailyAnswerByOption(EducationOptionSubmitDto submitDto, Long memberId) {
+        if (submitDto == null || memberId == null || submitDto.getEducationID() == null || submitDto.getChoseOption() == null) {
+            return false;
+        }
+
+        Long historyId = educationMapper.selectHistoryByMemberIdAndEducationId(memberId, submitDto.getEducationID());
+        if (historyId == null) {
+            return false;
+        }
+
+        int updated = educationMapper.updateMemberQuizHistory(historyId, true, submitDto.isCorrect());
+        if (updated != 1) {
+            return false;
+        }
+
+        int inserted = educationMapper.insertAnsweredOption(historyId, submitDto.getChoseOption());
+        return inserted == 1;
+    }
+
+    @Override
+    public EducationSummaryDto makeEducationSummary(Long memberId,
+                                                    LocalDateTime startDate,
+                                                    LocalDateTime endDate){
+
+        EducationSummaryDto summary = new EducationSummaryDto();
+        List<MemberQuizHistoryDto> historyList = getMemberQuizHistoryAtDate(memberId, startDate, endDate);
+
+        summary.setCompletedCount((int) historyList.stream()
+                                        .filter(MemberQuizHistoryDto::isAnswered)
+                                        .count());
+        summary.setCorrectCount((int) historyList.stream()
+                                        .filter(MemberQuizHistoryDto::isCorrect)
+                                        .count());
+        summary.setAccuracyRate(summary.getCompletedCount() > 0 ?
+                (double) summary.getCorrectCount() / summary.getCompletedCount() * 100 : 0.0);
+
+        return summary;
+    }
+
+    @Override
+    public int countStreakDay(Long memberId){
+        int count = 0;
+        // 전체 학습 이력을 넉넉한 기간으로 조회 (정렬: 최신일 기준 내림차순 전제)
+        LocalDateTime startDate = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2200, 12, 31, 23, 59, 59);
+        List<MemberQuizHistoryDto> historyList = getMemberQuizHistoryAtDate(memberId, startDate, endDate);
+
+        if (historyList == null || historyList.isEmpty()) {
+            return 0;
+        }
+
+        // 가장 최근 날짜부터 연속 여부를 확인
+        LocalDate expectedDate = historyList.get(0).getEducationDate().toLocalDate();
+        // 같은 날짜 묶음에서 한 문제라도 미제출이면 false로 바뀜
+        boolean dayAllAnswered = true;
+
+        for (MemberQuizHistoryDto history : historyList) {
+            LocalDate currentDate = history.getEducationDate().toLocalDate();
+            if (currentDate.equals(expectedDate)) {
+                // 같은 날짜 데이터는 제출 여부만 누적 확인
+                if (!history.isAnswered()) {
+                    dayAllAnswered = false;
+                }
+                continue;
+            }
+
+            // 날짜가 바뀌는 시점에 이전 날짜가 미완료면 연속 카운트 종료
+            if (!dayAllAnswered) {
+                break;
+            }
+
+            // 이전 날짜가 전부 제출되었으므로 연속일수 1 증가
+            count += 1;
+
+            // 하루라도 날짜가 비면 연속이 끊긴 것으로 판단
+            LocalDate previousDate = expectedDate.minusDays(1);
+            if (!currentDate.equals(previousDate)) {
+                break;
+            }
+
+            // 다음 날짜 묶음 검사 준비
+            expectedDate = currentDate;
+            dayAllAnswered = history.isAnswered();
+        }
+
+        // 마지막으로 검사한 날짜 묶음도 전부 제출 상태면 카운트 반영
+        if (dayAllAnswered) {
+            count += 1;
+        }
+
+        return count;
+    }
+
 }
