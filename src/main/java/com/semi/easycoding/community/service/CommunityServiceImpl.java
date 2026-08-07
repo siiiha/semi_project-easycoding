@@ -51,15 +51,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public PostDto selectPostDetail(Long postId) {
 
-        // 조회하는 게시글의 조회수 1증가
-        int increseViews = communityMapper.increseViews(postId);
-        if (increseViews <= 0) {
-            return null;
-        }
-
         PostDto postDetail = communityMapper.selectPostDetail(postId);
         if (postDetail == null) {
-            return null;
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+        }
+        // 조회하는 게시글의 조회수 1증가
+        int increseViews = communityMapper.increseViews(postId);
+        if (increseViews != 1) {
+            throw new IllegalStateException("게시글 조회에 실패하였습니다.");
         }
 
         return postDetail;

@@ -30,7 +30,7 @@ public class CommunityController {
 
 
         if (condition.getPostCategory() == null
-        || condition.getPostCategory().equals("")) {
+        || condition.getPostCategory().isBlank()) {
             condition.setPostCategory("all");
         }
 
@@ -39,7 +39,6 @@ public class CommunityController {
         model.addAttribute("postList", result.getPostList());
         model.addAttribute("pageInfo", result.getPageInfo());
         model.addAttribute("condition", condition);
-        System.out.println(condition.getKeyword());
 
         for (PostDto postDto : result.getPostList()) {
             switch(postDto.getCategory()) {
@@ -66,8 +65,14 @@ public class CommunityController {
             PostSearchCondition condition,
             @PathVariable Long postId,
             Model model) {
-        PostDto postDetail = communityService.selectPostDetail(postId);
-        model.addAttribute("postDetail", postDetail);
+        try {
+            PostDto postDetail = communityService.selectPostDetail(postId);
+            model.addAttribute("postDetail", postDetail);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            // 등록되지 않은 게시글 인 경우, error페이지로 이동
+            model.addAttribute("errMsg", e.getMessage());
+            return "common/error";
+        }
 
         String redirectURL = "/community?postCategory=" + condition.getPostCategory() + "&page=" + condition.getPage();
         model.addAttribute("redirectURL", redirectURL);
