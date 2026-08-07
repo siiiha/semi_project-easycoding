@@ -91,33 +91,39 @@ public class CommunityController {
             Model model,
             HttpSession session
     ) {
-        // 게시글 제목의 빈값 여부와 글자 수 제한을 통해 예외 발생
-        if (postDto.getTitle() == null || postDto.getTitle().isBlank()) {
-            model.addAttribute("errMsg", "제목을 입력하지 않았습니다.");
-            return "redirect:/community/write";
-        } else if (postDto.getTitle().length() > 85) {
-            model.addAttribute("errMsg", "제목은 85자 이내로 작성해주세요.");
+        try {
+            // 게시글 제목의 빈값 여부와 글자 수 제한을 통해 예외 발생
+            if (postDto.getTitle() == null || postDto.getTitle().isBlank()) {
+                throw new IllegalArgumentException("제목을 입력해주세요.");
+            } else if (postDto.getTitle().length() > 85) {
+                throw new IllegalArgumentException("제목은 85자 이내로 작성해주세요.");
+            }
+
+            // 게시글 내용의 빈값 여부와 글자 수 제한을 통해 예외 발생
+            if (postDto.getContent() == null || postDto.getContent().isBlank()) {
+                throw new IllegalArgumentException("내용을 입력해주세요.");
+            } else if (postDto.getContent().length() > 30000) {
+                throw new IllegalArgumentException("내용은 30000자 이내로 작성해주세요.");
+            }
+
+            // 잘못된 카테고리가 온 경우에 예외 발생
+            if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
+                throw new IllegalArgumentException("잘못된 카테고리입니다.");
+            }
+
+            MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
+            postDto.setMemberId(loginMember.getMemberId());
+
+            Long postId = communityService.insertPost(postDto);
+            return "redirect:/community/detail/" + postId;
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            model.addAttribute("postDetail", postDto);
+            return "community/community_write";
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            return "commnuity/community_list";
         }
-
-        // 게시글 내용의 빈값 여부와 글자 수 제한을 통해 예외 발생
-        if (postDto.getContent() == null || postDto.getContent().isBlank()) {
-            model.addAttribute("errMsg", "내용을 입력해주세요.");
-        } else if (postDto.getContent().length() > 30000) {
-            model.addAttribute("errMsg", "내용은 30000자 이내로 작성해주세요.");
-        }
-
-        // 잘못된 카테고리가 온 경우에 예외 발생
-        if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
-            model.addAttribute("errMsg", "잘못된 카테고리입니다.");
-        }
-
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
-        postDto.setMemberId(loginMember.getMemberId());
-
-        // TODO: 추가적으로 아래에 service함수의 결과 값을 통해서 redirect detail로 하거나 에러 페이지로 redirect시키기
-        Long postId = communityService.insertPost(postDto);
-
-        return "redirect:/community/detail/" + postId;
     }
 
     // 게시글 번호(PK)를 가지고 게시글을 조회 및 수정페이지 이동
