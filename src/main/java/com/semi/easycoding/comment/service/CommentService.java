@@ -7,9 +7,10 @@ import java.util.List;
 public interface CommentService {
     List<CommentDto> selectCommentByPostId(Long postId);
 
-    List<CommentDto> insertComment(Long postId, String content, String memberId);
+    List<CommentDto> insertComment(Long postId, Long parentId, String content, String memberId);
 
     List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId);
 
     List<CommentDto> deleteComment(Long postId, Long commentId, String memberId);
+
 }

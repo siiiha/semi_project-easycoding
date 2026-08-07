@@ -76,6 +76,10 @@ function reloadComment(comment) {
     const commentArea = document.createElement('div');
     commentArea.classList.add('comment-area');
 
+    if (comment.parentId != null) {
+        commentArea.classList.add('comment-reply');
+    }
+
     // 댓글 영역의 상단 영역(프로필 + 수정/삭제 버튼)
     const topArea = document.createElement('div');
     topArea.classList.add('top-area');
@@ -115,13 +119,6 @@ function reloadComment(comment) {
     const content = document.createElement('p');
     content.classList.add('content');
     content.textContent = comment.content;
-
-    const replyArea = document.createElement('div');
-    replyArea.classList.add('reply-area');
-
-    const replyBtn = document.createElement('p');
-    replyBtn.classList.add('reply-btn');
-    replyBtn.textContent = '답글 달기';
 
     writerArea.appendChild(writer);
     writerArea.appendChild(createdAt);
@@ -190,9 +187,19 @@ function reloadComment(comment) {
 
     // 댓글 내용 구성
     contentArea.appendChild(content);
-    // 답글달기 버튼
-    replyArea.appendChild(replyBtn);
-    contentArea.appendChild(replyArea);
+
+    if (comment.parentId == null) {
+        const replyArea = document.createElement('div');
+        const replyBtn = document.createElement('p');
+
+        replyArea.classList.add('reply-area');
+        replyBtn.classList.add('reply-btn');
+        replyBtn.textContent = '답글 달기';
+        replyBtn.dataset.commentId = comment.commentId;
+
+        replyArea.appendChild(replyBtn);
+        contentArea.appendChild(replyArea);
+    }
 
     // 최종 조립
     commentArea.appendChild(topArea);
@@ -308,7 +315,20 @@ function checkLength(textArea, countSpan) {
         countSpan.textContent = textArea.value.length;
     }
 
+
 }
+
+// 댓글 목록을 화면에 다시 표시하는 함수
+function renderCommentList(commentList) {
+    commentsArea.innerHTML = '';
+
+    commentList.forEach(function (comment) {
+        reloadComment(comment);
+    });
+
+    commentCountArea.textContent = '댓글수 ' + commentList.length;
+}
+
 
 
 

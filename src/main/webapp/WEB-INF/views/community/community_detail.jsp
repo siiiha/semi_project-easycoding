@@ -211,5 +211,6 @@ function toggleCommentEdit(id) {
 }
 </script>
 <script src="${pageContext.request.contextPath}/js/comment.js"></script>
+<script src="${pageContext.request.contextPath}/js/comment-reply.js"></script>
 </body>
 </html>

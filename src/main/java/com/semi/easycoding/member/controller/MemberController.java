@@ -1,5 +1,6 @@
 package com.semi.easycoding.member.controller;
 
+import com.semi.easycoding.common.util.PasswordValidator;
 import com.semi.easycoding.email.constant.EmailSessionKeys;
 import com.semi.easycoding.email.constant.VerificationPurpose;
 import com.semi.easycoding.email.dto.EmailVerification;
@@ -9,12 +10,19 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+
+    private static final String PASSWORD_RULE_MESSAGE =
+            "8~20자의 영문, 숫자, 특수문자(!@#$%^&*)를 모두 포함해주세요.";
 
     @Autowired
     private MemberService memberService;
@@ -38,10 +46,11 @@ public class MemberController {
 
     //사용자가 입력한 정보를 받는다.
     @PostMapping("/join")
-    public String join(MemberDto memberDto,
-                       HttpSession session,
-                       Model model,
-                       RedirectAttributes redirectAttributes
+    public String join(
+            MemberDto memberDto,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
 
         if (memberDto.getNickname() == null
@@ -50,6 +59,14 @@ public class MemberController {
             return "member/join";
         }
         memberDto.setNickname(memberDto.getNickname().trim());
+
+        if (!PasswordValidator.isValid(memberDto.getPassword())) {
+            model.addAttribute(
+                    "errorMsg",
+                    PASSWORD_RULE_MESSAGE
+            );
+            return "member/join";
+        }
 
         EmailVerification verification =
                 (EmailVerification) session.getAttribute(
@@ -110,6 +127,11 @@ public class MemberController {
     }
 
     //비밀번호 찾기
+    @GetMapping("/find-id")
+    public String findIdPage() {
+        return "member/find_id";
+    }
+
     @GetMapping("/find-password")
     public String findPasswordPage() {
         return "member/find_password";
@@ -129,13 +151,13 @@ public class MemberController {
                 || !verification.isVerified()
                 || verification.isExpired()
                 || verification.getPurpose()
-                      != VerificationPurpose.PASSWORD_RESET) {
+                != VerificationPurpose.PASSWORD_RESET) {
             return false;
         }
 
         String resetEmail = verification.getEmail();
 
-        if (newPassword.isBlank()) {
+        if (!PasswordValidator.isValid(newPassword)) {
             return false;
         }
 
@@ -154,19 +176,27 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(
-            @RequestParam(required = false) String redirectURL
-            , MemberDto memberDto, HttpSession session, Model model
-        ) {
+            @RequestParam(required = false) String redirectURL,
+            MemberDto memberDto,
+            HttpSession session,
+            Model model
+    ) {
 
         MemberDto loginMember = memberService.login(memberDto);
         //호출!
 
         if (loginMember != null) {
             session.setAttribute("loginUser", loginMember);
+
+            if (redirectURL != null
+                    && redirectURL.startsWith("/")
+                    && !redirectURL.startsWith("//")) {
+                return "redirect:" + redirectURL;
+            }
+
             return "redirect:/";
-            //DB에서 일치하는 회원을 찾아 loginMember가 null이 아니라면,
-            //그 회원정보를 loginUser라는 이름으로 세션에 저장하고 메인 주소로 이동
         }
+
         model.addAttribute("errorMsg", "이메일 또는 비밀번호가 올바르지 않습니다.");
         return "member/login";  //이메일과 비밀번호가 올바르지 않을 때는 로그인 화면으로 다시 이동
 
@@ -238,7 +268,8 @@ public class MemberController {
             @RequestParam String newPassword,
             HttpSession session,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
@@ -266,6 +297,13 @@ public class MemberController {
         }
 
         if (!newPassword.isBlank()) {
+            if (!PasswordValidator.isValid(newPassword)) {
+                model.addAttribute(
+                        "errorMsg",
+                        PASSWORD_RULE_MESSAGE
+                );
+                return "mypage/edit";
+            }
 
             if (currentPassword.equals(newPassword)) {
                 model.addAttribute(
@@ -283,11 +321,10 @@ public class MemberController {
 
             if (!passwordUpdated) {
                 model.addAttribute(
-                        "errorMsg","현재 비밀번호가 일치하지 않습니다."
+                        "errorMsg", "현재 비밀번호가 일치하지 않습니다."
                 );
                 return "mypage/edit";
             }
-
         }
 
         if (!loginUser.getNickname().equals(trimmedNickname)) {
@@ -303,7 +340,8 @@ public class MemberController {
         }
 
         //DB에서 최신 회원정보 다시 조회
-        MemberDto updatedMember = memberService.findByMemberId(loginUser.getMemberId());
+        MemberDto updatedMember =
+                memberService.findByMemberId(loginUser.getMemberId());
         //세션 정보를 최신 값으로 교체
         session.setAttribute("loginUser", updatedMember);
 
@@ -334,7 +372,6 @@ public class MemberController {
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {

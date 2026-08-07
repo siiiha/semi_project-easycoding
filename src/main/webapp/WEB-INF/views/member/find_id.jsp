@@ -16,13 +16,13 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<main class="find-page">
+<main class="find-page find-page-compact">
 
     <!-- 히어로 -->
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">계정 정보를</span><br>잊어버리셨나요?
+                <span class="text-primary">쉽코딩과 함께 오늘의 한 문제로</span><br>내일의 실력을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
         </div>
@@ -42,12 +42,12 @@
 
             <!-- 탭 -->
             <div class="find-tabs">
-                <a href="${pageContext.request.contextPath}/find-id" class="find-tab active">아이디 찾기</a>
-                <a href="${pageContext.request.contextPath}/find-password" class="find-tab">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-id" class="find-tab active">아이디 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="find-tab">비밀번호 찾기</a>
             </div>
 
             <!-- 폼 -->
-            <form action="${pageContext.request.contextPath}/find-id" method="post" class="find-form">
+            <form action="${pageContext.request.contextPath}/member/find-id" method="post" class="find-form">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                     <label class="find-field-label" for="nickname">닉네임</label>
@@ -81,7 +81,7 @@
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
-                <a href="${pageContext.request.contextPath}/login">로그인하러 가기</a>
+                <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
 
         </div>

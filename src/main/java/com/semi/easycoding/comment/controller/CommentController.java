@@ -40,7 +40,7 @@ public class CommentController {
         MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
 
         try {
-            List<CommentDto> commentList = commentService.insertComment(postId, request.getContent(), loginUser.getMemberId());
+            List<CommentDto> commentList = commentService.insertComment(postId, request.getParentId(), request.getContent(), loginUser.getMemberId());
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));

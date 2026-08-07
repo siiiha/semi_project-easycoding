@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long commentId;     // 댓글 번호(PK)
     private Long postId;        // 게시글 번호(FK)
+    private Long parentId;      //부모 댓글 번호(FK)
     private String memberId;    // 작성자 번호(FK)
     private String profileId;       // 이미지 번호
     private String content;     // 댓글 내용

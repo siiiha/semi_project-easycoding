@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,20 +9,21 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+
+<body data-context-path="${pageContext.request.contextPath}">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<main class="find-page">
+<main class="find-page find-page-compact">
 
     <!-- 히어로 -->
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">계정 정보를</span><br>잊어버리셨나요?
+                <span class="text-primary">쉽코딩과 함께 오늘의 한 문제로</span><br>내일의 실력을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
         </div>
@@ -75,234 +75,66 @@
 
             <p id="password-email-result"></p>
 
-            <div id="password-code-section" hidden>
-                <label for="password-code">인증번호</label>
-                <input type="text"
-                       id="password-code"
-                       maxlength="6"
-                       inputmode="numeric"
-                       placeholder="6자리 인증번호를 입력해주세요.">
-                <button type="button"
-                        id="verify-password-code-button"
-                        class="btn btn-outline">
-                    인증번호 확인
-                </button>
-                <p id="password-code-result"></p>
-            </div>
-
             <div id="password-reset-section" hidden>
-                <label for="new-password">
-                    새 비밀번호
-                </label>
+                <div class="password-reset-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="new-password">새 비밀번호</label>
+                        <div class="input-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                 stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password"
+                                   id="new-password"
+                                   class="form-input-inner"
+                                   autocomplete="new-password"
+                                   placeholder="새 비밀번호를 입력해주세요.">
+                        </div>
+                    </div>
 
-                <input type="password"
-                       id="new-password"
-                       autocomplete="new-password"
-                       placeholder="새 비밀번호를 입력해주세요.">
-
-                <label for="new-password-confirm">
-                    새 비밀번호 확인
-                </label>
-
-                <input type="password"
-                       id="new-password-confirm"
-                       autocomplete="new-password"
-                       placeholder="새 비밀번호를 다시 입력해주세요.">
+                    <div class="form-group">
+                        <label class="form-label" for="new-password-confirm">새 비밀번호 확인</label>
+                        <div class="input-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                 stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password"
+                                   id="new-password-confirm"
+                                   class="form-input-inner"
+                                   autocomplete="new-password"
+                                   placeholder="새 비밀번호를 다시 입력해주세요.">
+                        </div>
+                    </div>
+                </div>
 
                 <button type="button"
                         id="reset-password-button"
-                        class="btn btn-primary">
+                        class="btn btn-primary find-submit-btn">
                     비밀번호 변경
                 </button>
-
-                <p id = "reset-password-result"></p>
-
-
+                <p id="reset-password-result"></p>
             </div>
-
-
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
                 <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
-
         </div>
     </div>
-
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
-<script>
-    const passwordEmailForm =
-        document.getElementById('passwordEmailForm');
-
-    const passwordEmailInput =
-        document.getElementById('email');
-
-    const passwordEmailResult =
-        document.getElementById('password-email-result');
-    //각각 폼, 이메일 입력창, 결과 문구 표시 영역
-
-    const passwordCodeSection =
-        document.getElementById('password-code-section');
-
-    const passwordCodeInput = document.getElementById('password-code');
-    const verifyPasswordCodeButton = document.getElementById('verify-password-code-button');
-    const passwordCodeResult = document.getElementById('password-code-result');
-
-    const passwordResetSection = document.getElementById('password-reset-section');
-
-    const newPasswordInput = document.getElementById('new-password');
-    const newPasswordConfirmInput = document.getElementById('new-password-confirm');
-    const resetPasswordButton = document.getElementById('reset-password-button');
-    const resetPasswordResult = document.getElementById('reset-password-result');
-
-    resetPasswordButton.addEventListener(
-        'click',
-        async function () {
-            const newPassword = newPasswordInput.value;
-            const newPasswordConfirm = newPasswordConfirmInput.value;
-
-            if (newPassword === '' || newPasswordConfirm === '') {
-                resetPasswordResult.textContent =
-                    '새 비밀번호를 모두 입력해주세요.';
-                return;
-            }
-
-            if (newPassword !== newPasswordConfirm) {
-                resetPasswordResult.textContent =
-                    '두 비밀번호가 일치하지 않습니다.';
-                return;
-            }
-
-            const response = await fetch(
-                '${pageContext.request.contextPath}/member/reset-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                        'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        newPassword: newPassword
-                    })
-                });
-                if (!response.ok) {
-                    resetPasswordResult.textContent =
-                        '비밀번호 변경 요청 중 오류가 발생했습니다.';
-                    return;
-                }
-                const changed =
-                    await response.json();
-
-                if(changed) {
-                    resetPasswordResult.textContent =
-                        '비밀번호가 변경되었습니다.';
-
-                    setTimeout(function () {
-                        window.location.href =
-                            '${pageContext.request.contextPath}/member/login';
-                    }, 1000);
-
-                } else {
-                    resetPasswordResult.textContent =
-                        '비밀번호 변경에 실패했습니다.';
-                }
-
-
-        }
-    );
-
-    verifyPasswordCodeButton.addEventListener(
-        'click',
-        async function () {
-            const code = passwordCodeInput.value.trim();
-            if (code.length !== 6) {
-                passwordCodeResult.textContent = '6자리 인증번호를 입력해주세요.';
-                return;
-            }
-            const response = await fetch(
-                '${pageContext.request.contextPath}/email/password/verify',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/x-www-form-urlencoded'
-                        //application: 애플리케이션 데이터
-                        // x-: 과거에 비표준 형식임을 표시하던 접두사
-                        // www-form: 웹 폼
-                        // urlencoded: URL 방식으로 변환됨
-                    },
-                    body: new URLSearchParams({
-                        code: code
-                    })
-                }
-            );
-            if (!response.ok) {
-                passwordCodeResult.textContent =
-                    '인증 요청 중 오류가 발생했습니다.';
-                return;
-            }
-            const verified =
-                await response.json();
-
-            if (verified) {
-                passwordCodeResult.textContent =
-                    '이메일 인증이 완료되었습니다.';
-
-                passwordResetSection.hidden = false;
-
-            } else {
-                passwordCodeResult.textContent =
-                    '인증번호가 올바르지 않거나 만료되었습니다.';
-            }
-        }
-    );
-
-
-    passwordEmailForm.addEventListener(
-        'submit',
-        async function (event) {
-            event.preventDefault();
-
-            const email =
-                passwordEmailInput.value.trim();
-
-            try {
-                const response = await fetch(
-                    '${pageContext.request.contextPath}/email/password/send',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type':
-                                'application/x-www-form-urlencoded'
-                        },
-                        body: new URLSearchParams({
-                            email: email
-                        })
-                    }
-                );
-                if (!response.ok) {
-                    throw new Error('인증번호 발송 요청 실패');
-                }
-
-                const sent = await response.json();
-
-                if (sent) {
-                    passwordEmailResult.textContent = '인증번호를 발송했습니다.';
-                    // 성공 문구
-                    passwordCodeSection.hidden = false;
-                } else {
-                    passwordEmailResult.textContent = '가입되지 않은 이메일입니다.';
-                    // 가입되지 않은 이메일 문구
-                }
-            } catch (error) {
-                passwordEmailResult.textContent = '인증번호 발송 중 오류가 발생했습니다.';
-            }
-        }
-    );
-</script>
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp"/>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/password-validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/find-password.js"></script>
 
 
 </body>
