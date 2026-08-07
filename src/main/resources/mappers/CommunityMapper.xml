@@ -18,14 +18,8 @@
     -->
         <where>
             <!-- 전달받은 alias가 있으면 'alias.', 없으면 빈값으로 생성 -->
-            <choose>
-                <when test="alias != null and alias != ''">
-                    ${alias}.deleted_at IS NULL
-                </when>
-                <otherwise>
-                    deleted_at IS NULL
-                </otherwise>
-            </choose>
+            ${alias}.deleted_at IS NULL
+
             <if test="postCategory != null
                     and postCategory != ''
                     and postCategory != 'all'">
@@ -58,7 +52,9 @@
         SELECT COUNT(*)
         FROM post p
             LEFT JOIN post_category c USING (category_id)
-        <include refid="searchWhere"/>
+        <include refid="searchWhere">
+            <property name="alias" value="p"/>
+        </include>
     </select>
 
     <!-- 게시글 상세 조회 -->
@@ -77,7 +73,7 @@
         UPDATE post
         SET views = views + 1
         WHERE post_id = #{postId}
-            AND p.deleted_at IS NULL
+            AND deleted_at IS NULL
     </update>
 
   

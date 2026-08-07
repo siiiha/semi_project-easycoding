@@ -99,8 +99,7 @@
                         <span>작성일</span>
                     </div>
                     <c:forEach var="post" items="${postList}" varStatus="st">
-<%--                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">--%>
-                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?page=${condition.page}" class="post-table-row">
+                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">
                             <span class="post-table-num">${(pageInfo.page - 1) * pageInfo.pageSize + st.count}</span>
                             <span>
                                 <c:choose>
