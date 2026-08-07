@@ -56,7 +56,9 @@ public interface EducationMapper {
     int updateMemberQuizHistory(@Param("historyId") Long historyId,
                                 @Param("answered") boolean answered,
                                 @Param("correct") boolean correct);
+    // MemberQuizHistory 테이블에서 historyId를 이용해서 answered와 correct를 업데이트
 
     int insertAnsweredOption(@Param("historyId") Long historyId,
                             @Param("choseOption") Short choseOption);
+    // AnsweredOption 테이블 삽입
 }
