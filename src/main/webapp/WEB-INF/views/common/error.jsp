@@ -65,7 +65,7 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>
 <script>
-    const editErrorMsg = "${errMsg}";
+    const ErrorMsg = "${errMsg}";
 </script>
 <script src="${pageContext.request.contextPath}/js/errorPage.js"></script>
 </body>

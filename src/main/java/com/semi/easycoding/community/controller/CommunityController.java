@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Member;
 
@@ -91,6 +92,7 @@ public class CommunityController {
     @PostMapping("/write")
     public String writePost(
             @ModelAttribute PostDto postDto,
+            RedirectAttributes redirectAttributes,
             Model model,
             HttpSession session
     ) {
@@ -126,6 +128,7 @@ public class CommunityController {
             postDto.setMemberId(Long.valueOf( loginMember.getMemberId()));
 
             Long postId = communityService.insertPost(postDto);
+            redirectAttributes.addFlashAttribute("successMsg", "게시글 작성 성공");
             return "redirect:/community/detail/" + postId;
         } catch (IllegalArgumentException e) {
             model.addAttribute("errMsg", e.getMessage());
@@ -167,6 +170,7 @@ public class CommunityController {
     public String editPost(
             @ModelAttribute PostDto postDto,
             @PathVariable Long postId,
+            RedirectAttributes redirectAttributes,
             Model model,
             HttpSession session
     ) {
@@ -205,12 +209,14 @@ public class CommunityController {
             return "common/error";
         }
 
+        redirectAttributes.addFlashAttribute("successMsg", "게시글 수정 성공");
         return "redirect:/community/detail/" + postId;
     }
   
     @PostMapping("/{postId}/delete")
     public String deletePost(
             @PathVariable Long postId,
+            RedirectAttributes redirectAttributes,
             Model model,
             HttpSession session
     ) {
@@ -222,6 +228,7 @@ public class CommunityController {
             return "common/error";
         }
 
+        redirectAttributes.addFlashAttribute("successMsg", "게시글 삭제 성공");
         return "redirect:/community";
     }
 

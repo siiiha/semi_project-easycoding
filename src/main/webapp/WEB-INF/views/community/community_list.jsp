@@ -171,5 +171,12 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script>
+    const ErrorMsg = "${errMsg}";
+    const successMsg = "${successMsg}";
+</script>
+<script src="${pageContext.request.contextPath}/js/post.js"></script>
 </body>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
 </html>
