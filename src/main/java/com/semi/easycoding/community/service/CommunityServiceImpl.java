@@ -91,10 +91,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Long updatePost(PostDto postDto) {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
+        if (!(category_id >= 1 && category_id <= 3)) {
+            throw new IllegalStateException("카테고리 오류로 인해 게시글 작성을 실패했습니다.");
+        }
         postDto.setCategoryId(category_id);
+
         int result = communityMapper.updatePost(postDto);
         if (result != 1) {
-            return 0L;
+            throw new IllegalStateException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
         }
         return postDto.getPostId();
     }

@@ -1,5 +1,6 @@
 package com.semi.easycoding.community.controller;
 
+import com.semi.easycoding.common.util.SessionConst;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -111,8 +112,8 @@ public class CommunityController {
                 throw new IllegalArgumentException("잘못된 카테고리입니다.");
             }
 
-            MemberDto loginMember = (MemberDto) session.getAttribute("loginUser");
-            postDto.setMemberId(loginMember.getMemberId());
+            MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
+            postDto.setMemberId(Long.valueOf( loginMember.getMemberId()));
 
             Long postId = communityService.insertPost(postDto);
             return "redirect:/community/detail/" + postId;
@@ -130,10 +131,24 @@ public class CommunityController {
     @GetMapping("/{postId}/edit")
     public String editPage(
             @PathVariable Long postId,
+            HttpSession session,
             Model model
     ) {
-        PostDto postDetail = communityService.selectPostDetail(postId);
-        model.addAttribute("postDetail", postDetail);
+        MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
+        Long memId = Long.valueOf(loginMember.getMemberId());
+        try {
+            PostDto postDetail = communityService.selectPostDetail(postId);
+            model.addAttribute("postDetail", postDetail);
+            if (!postDetail.getMemberId().equals(memId)) {
+                throw new IllegalArgumentException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
+            }
+//            if (postDetail.getMemberId().equals(loginMember.getMemberId())) {
+//                throw new IllegalArgumentException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
+//            }
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            return "community/community_detail";
+        }
 
         return "community/community_edit";
     }
@@ -141,12 +156,17 @@ public class CommunityController {
     @PostMapping("/{postId}/edit")
     public String editPost(
             @ModelAttribute PostDto postDto,
-            @PathVariable Long postId
+            @PathVariable Long postId,
+            Model model
     ) {
         postDto.setPostId(postId);
-        Long editPostId = communityService.updatePost(postDto);
+        try {
+            Long editPostId = communityService.updatePost(postDto);
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMsg", e.getMessage());
+        }
 
-        return "redirect:/community/detail/" + editPostId ;
+        return "redirect:/community/detail/"     ;
     }
   
     @PostMapping("/{postId}/delete")
