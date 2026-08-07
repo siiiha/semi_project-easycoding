@@ -6,7 +6,8 @@
     var state = {
         educations: [],         // educations: 문제 목록
         currentIndex: 0,        // currentIndex: 현재 보고 있는 문제의 인덱스
-        submitted: false        // submitted: 현재 문제의 제출 완료 여부
+        submitted: false,       // submitted: 현재 문제의 제출 완료 여부
+        submitting: false       // submitting: 서버 제출 요청 진행 여부
     };
 
     // 특정 요소(item) 안에있는 요소를 요소명(select)을 이용해 꺼내오는 함수
@@ -256,15 +257,13 @@
         feedbackEl.classList.remove("is-hidden");
     }
 
-    // 객관식 문제를 채점하고 결과를 화면에 반영
+    // 객관식 문제를 채점하고 결과값을 반환
     function gradeMultipleChoice(quiz) {
-        var optionsWrap = document.getElementById("quiz-options");
         var form = document.getElementById("quiz-form");
-        var nextBtn = document.getElementById("quiz-next-btn");
 
         var selectedInput = form.querySelector('input[name="answer"]:checked');
         if (!selectedInput) {
-            return;
+            return null;
         }
 
         var selectedIndex = Number(selectedInput.value);
@@ -277,26 +276,75 @@
         }
 
         var isCorrect = selectedIndex === correctIndex;
+        return {
+            selectedIndex: selectedIndex,
+            correctIndex: correctIndex,
+            isCorrect: isCorrect
+        };
+    }
+
+    // 채점 결과를 화면에 반영
+    function applyMultipleChoiceResult(quiz, gradeResult) {
+        var optionsWrap = document.getElementById("quiz-options");
+        var nextBtn = document.getElementById("quiz-next-btn");
 
         // 정답/오답 클래스 적용 및 선택 잠금
         var optionEls = optionsWrap.querySelectorAll(".quiz-option");
         Array.prototype.forEach.call(optionEls, function (optEl, i) {
             optEl.style.pointerEvents = "none";
             optEl.classList.remove("selected");
-            if (i === correctIndex) {
+            if (i === gradeResult.correctIndex) {
                 optEl.classList.add("is-correct");
             }
-            if (i === selectedIndex && !isCorrect) {
+            if (i === gradeResult.selectedIndex && !gradeResult.isCorrect) {
                 optEl.classList.add("is-wrong");
             }
         });
 
-        showFeedback(isCorrect, quiz);
+        showFeedback(gradeResult.isCorrect, quiz);
 
         // 제출 완료 상태로 기록 후 버튼 텍스트 변경
         state.submitted = true;
         var totalCount = state.educations.length;
         nextBtn.textContent = state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →";
+    }
+
+    // 객관식 답안을 서버에 제출하고 성공 시에만 화면 반영
+    async function submitMultipleChoiceAnswer(quiz) {
+        var gradeResult = gradeMultipleChoice(quiz);
+        if (!gradeResult) {
+            return false;
+        }
+
+        var submitvalue = {
+            educationID: Number(quiz.educationId),
+            correct: gradeResult.isCorrect,
+            choseOption: gradeResult.selectedIndex + 1
+        };
+
+        try {
+            var response = await fetch("answer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(submitvalue)
+            });
+
+            if (!response.ok) {
+                return false;
+            }
+
+            var resultText = (await response.text()).trim();
+            if (resultText !== "성공") {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+
+        applyMultipleChoiceResult(quiz, gradeResult);
+        return true;
     }
 
     // 폼 제출 이벤트를 가로채서 페이지 리로드 없이 다음 문제로 이동
@@ -307,16 +355,20 @@
             return;
         }
 
-        form.addEventListener("submit", function (event) {
+        form.addEventListener("submit", async function (event) {
             event.preventDefault();
 
             if (state.educations.length === 0) {
+                return;
+            }
+            if (state.submitting) {
                 return;
             }
 
             var currentQuiz = state.educations[state.currentIndex];
             var typeValue = String(currentQuiz.educationType);
             var isSubmitted = state.submitted;
+            var nextBtn = document.getElementById("quiz-next-btn");
 
             if (!isSubmitted) {
                 // 1단계: 답안 제출 및 채점
@@ -325,7 +377,18 @@
                     if (!selected) {
                         return;
                     }
-                    gradeMultipleChoice(currentQuiz);
+                    state.submitting = true;
+                    if (nextBtn) {
+                        nextBtn.disabled = true;
+                    }
+                    try {
+                        await submitMultipleChoiceAnswer(currentQuiz);
+                    } finally {
+                        state.submitting = false;
+                        if (nextBtn) {
+                            nextBtn.disabled = false;
+                        }
+                    }
                 } else if (typeValue === "2") {
                     // TODO: educationType=2 빈칸채우기 정답 제출/검증 로직 구현
                 }
@@ -336,7 +399,7 @@
                     state.submitted = false;
                     renderCurrentQuiz();
                 } else {
-                    // TODO: 전체 학습 완료 처리 (결과 페이지 이동 등)
+                    window.location.href = "complete";
                 }
             }
         });
