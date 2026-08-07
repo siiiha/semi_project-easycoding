@@ -50,6 +50,7 @@ public interface EducationService {
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
 
     boolean submitDailyAnswerByOption(EducationOptionSubmitDto submitDto, Long memberId);
+    // 컨트롤러의 "/daily/answer" 요청을 받는 서비스 오케스트레이션 메서드
     // 사용자가 제출한 답안을 저장하고, 히스토리 상태를 갱신
 
     EducationSummaryDto makeEducationSummary(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
