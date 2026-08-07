@@ -229,6 +229,8 @@ public class EducationServiceImp implements EducationService {
         int inserted = educationMapper.insertAnsweredOption(historyId, submitDto.getChoseOption());
         return inserted == 1;
     }
+    // 컨트롤러의 "/daily/answer" 요청을 받는 서비스 오케스트레이션 메서드
+    // 사용자가 제출한 답안을 저장하고, 히스토리 상태를 갱신
 
     @Override
     public EducationSummaryDto makeEducationSummary(Long memberId,
@@ -249,6 +251,7 @@ public class EducationServiceImp implements EducationService {
 
         return summary;
     }
+    // 일정 기간동안의 학습결과 요약 데이터를 생성하여 반환
 
     @Override
     public int countStreakDay(Long memberId){
@@ -262,13 +265,14 @@ public class EducationServiceImp implements EducationService {
             return 0;
         }
 
-        // 가장 최근 날짜부터 연속 여부를 확인
+        // 가장 최근 날짜부터 연속 여부를 확인하기위한 초기화
         LocalDate expectedDate = historyList.get(0).getEducationDate().toLocalDate();
-        // 같은 날짜 묶음에서 한 문제라도 미제출이면 false로 바뀜
+        // 같은 날짜 묶음에서 한 문제라도 미제출이면 false로 바뀌는 플래그
         boolean dayAllAnswered = true;
 
         for (MemberQuizHistoryDto history : historyList) {
             LocalDate currentDate = history.getEducationDate().toLocalDate();
+
             if (currentDate.equals(expectedDate)) {
                 // 같은 날짜 데이터는 제출 여부만 누적 확인
                 if (!history.isAnswered()) {
@@ -277,21 +281,23 @@ public class EducationServiceImp implements EducationService {
                 continue;
             }
 
-            // 날짜가 바뀌는 시점에 이전 날짜가 미완료면 연속 카운트 종료
+            // continue를 만나지 않고 넘어왔다면 날짜가 바뀌었다는 의미
+
+            // 이전 히스토리중에서 제출되지 않은 문제가하나라도 있으면 연속일수 카운트 중단
             if (!dayAllAnswered) {
                 break;
             }
 
-            // 이전 날짜가 전부 제출되었으므로 연속일수 1 증가
+            // 이전 날짜의 히스토리는 전부 제출되었다는 의미이므로 카운트 +1
             count += 1;
 
-            // 하루라도 날짜가 비면 연속이 끊긴 것으로 판단
+            // 바뀐 날짜의 연속성을 판별
             LocalDate previousDate = expectedDate.minusDays(1);
             if (!currentDate.equals(previousDate)) {
                 break;
             }
 
-            // 다음 날짜 묶음 검사 준비
+            // expectedDate 갱신 및 dayAllAnswered 초기화
             expectedDate = currentDate;
             dayAllAnswered = history.isAnswered();
         }
@@ -303,5 +309,6 @@ public class EducationServiceImp implements EducationService {
 
         return count;
     }
+    // 특정사용자의 연속 학습일수를 계산한다
 
 }
