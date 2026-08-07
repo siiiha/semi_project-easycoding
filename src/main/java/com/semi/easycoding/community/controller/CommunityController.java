@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
+
 
 @Controller
 @RequestMapping("/community")
@@ -148,6 +150,9 @@ public class CommunityController {
         } catch (IllegalArgumentException e) {
             model.addAttribute("errMsg", e.getMessage());
             return "community/community_detail";
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            return "common/error";
         }
 
         return "community/community_edit";
@@ -157,25 +162,56 @@ public class CommunityController {
     public String editPost(
             @ModelAttribute PostDto postDto,
             @PathVariable Long postId,
-            Model model
+            Model model,
+            HttpSession session
     ) {
-        postDto.setPostId(postId);
         try {
+            // 게시글 제목의 빈값 여부와 글자 수 제한을 통해 예외 발생
+            if (postDto.getTitle() == null || postDto.getTitle().isBlank()) {
+                throw new IllegalArgumentException("제목을 입력해주세요.");
+            } else if (postDto.getTitle().length() > 85) {
+                throw new IllegalArgumentException("제목은 85자 이내로 작성해주세요.");
+            }
+
+            // 게시글 내용의 빈값 여부와 글자 수 제한을 통해 예외 발생
+            if (postDto.getContent() == null || postDto.getContent().isBlank()) {
+                throw new IllegalArgumentException("내용을 입력해주세요.");
+            } else if (postDto.getContent().length() > 30000) {
+                throw new IllegalArgumentException("내용은 30000자 이내로 작성해주세요.");
+            }
+
+            // 잘못된 카테고리가 온 경우에 예외 발생
+            if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
+                throw new IllegalArgumentException("잘못된 카테고리입니다.");
+            }
+            MemberDto loginMember = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
+            Long memId = Long.valueOf(loginMember.getMemberId());
+            postDto.setPostId(postId);
+            postDto.setMemberId(memId);
+
             Long editPostId = communityService.updatePost(postDto);
         } catch (IllegalStateException e) {
+            model.addAttribute("postDetail", postDto);
             model.addAttribute("errMsg", e.getMessage());
+            return "community/community_edit";
         }
 
-        return "redirect:/community/detail/"     ;
+        return "redirect:/community/detail/" + postId;
     }
   
     @PostMapping("/{postId}/delete")
     public String deletePost(
             @PathVariable Long postId,
+            Model model,
             HttpSession session
     ) {
         MemberDto loginUser = (MemberDto)session.getAttribute("loginUser");
-        communityService.deletePost(postId, loginUser.getMemberId());
+        try {
+            communityService.deletePost(postId, loginUser.getMemberId());
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMsg", e.getMessage());
+            return "redirect:/community/detail/" + postId;
+        }
 
         return "redirect:/community";
     }

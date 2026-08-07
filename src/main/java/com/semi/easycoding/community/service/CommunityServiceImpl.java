@@ -109,10 +109,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public int deletePost(Long postId, String  memberId) {
 
-
         int result = communityMapper.deletePost(postId, memberId);
-        if (result <= 0) {
+        if (result != 1) {
             // 실패 시 로직
+            throw new IllegalStateException("삭제 권한이 없거나 게시글이 존재하지 않습니다.");
         }
         // 성공 시 로직
         return result;
