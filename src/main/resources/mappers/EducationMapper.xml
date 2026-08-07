@@ -98,7 +98,7 @@
         )
     </select>
 
-    <insert id="insertMemberQuizHistory" parameterType="map">
+    <insert id="insertMemberQuizHistory" parameterType="java.util.Map">
         INSERT INTO member_quiz_history
             (member_id,
              quiz_id)
@@ -136,6 +136,7 @@
         FROM member_quiz_history mqh
         WHERE mqh.member_id = #{memberId}
         AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
+        ORDER BY mqh.exam_at DESC
     </select>
 
     <select id="selectOptionsByEducationId" resultType="com.semi.easycoding.education.dto.OptionDto">
@@ -147,5 +148,28 @@
         WHERE ao.quiz_id = #{educationId}
     </select>
 
+    <select id="selectHistoryByMemberIdAndEducationId" resultType="java.lang.Long">
+        SELECT mqh.history_id
+        FROM member_quiz_history mqh
+        WHERE mqh.member_id = #{memberId}
+        AND mqh.quiz_id = #{educationId}
+    </select>
+
+    <update id="updateMemberQuizHistory" parameterType="java.util.Map">
+        UPDATE member_quiz_history
+        SET answered = #{answered},
+            correct = #{correct}
+        WHERE history_id = #{historyId}
+          AND answered = false
+    </update>
+
+    <insert id="insertAnsweredOption" parameterType="java.util.Map">
+        INSERT INTO answered_option
+            (history_id,
+             chose_option)
+        VALUES
+            (#{historyId},
+             #{choseOption})
+    </insert>
 
 </mapper>
