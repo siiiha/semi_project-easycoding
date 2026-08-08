@@ -28,14 +28,16 @@
         SET content = #{content}
         WHERE comment_id = #{commentId}
             AND member_id = #{memberId}
+            AND post_id = #{postId}
             AND deleted_at IS NULL
     </update>
 
-    <update id="deleteComment">
+    <update id="deleteComment" parameterType="CommentDto">
         UPDATE comment
         SET deleted_at = NOW()
         WHERE comment_id = #{commentId}
             AND member_id = #{memberId}
+            AND post_id = #{postId}
             AND deleted_at IS NULL
     </update>
 
