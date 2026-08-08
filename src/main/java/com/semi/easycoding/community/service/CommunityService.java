@@ -17,4 +17,8 @@ public interface CommunityService {
     Long updatePost(PostDto postDto);
   
     int deletePost(Long postId, String memberId);
+
+    List<PostDto> selectTemporaryPost(String memberId);
+
+    Long insertTemporaryPost(PostDto postDto);
 }

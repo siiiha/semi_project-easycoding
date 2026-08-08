@@ -1,5 +1,8 @@
 package com.semi.easycoding.community.controller;
 
+import com.semi.easycoding.comment.dto.CommentDto;
+import com.semi.easycoding.common.dto.ApiResponse;
+import com.semi.easycoding.common.util.SessionConst;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -9,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +105,12 @@ public class CommunityController {
         }
         postDto.setMemberId(loginMember.getMemberId());
 
+        // 임시 저장 불러온 후에 게시글 등록 하는 경우 : postDto의 postId가 있음
+        System.out.println("게시글 작성 시 postId있는지 : " + postDto.getPostId() );
+        if (postDto.getPostId() != null) {
+            Long postId = communityService.insertTemporaryPost(postDto);
+        }
+
         Long postId = communityService.insertPost(postDto);
 
         return "redirect:/community/detail/" + postId;
@@ -138,5 +149,20 @@ public class CommunityController {
 
         return "redirect:/community";
     }
+
+    @ResponseBody
+    @GetMapping("/temporary/post")
+    public ResponseEntity<ApiResponse<List<PostDto>>> temporaryPost(
+            Model model,
+            HttpSession session
+    ) {
+        MemberDto loginMember = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
+        List<PostDto> temporaryPostList = communityService.selectTemporaryPost(loginMember.getMemberId());
+        model.addAttribute("temporaryPostList", temporaryPostList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(temporaryPostList));
+    }
+
+
 
 }

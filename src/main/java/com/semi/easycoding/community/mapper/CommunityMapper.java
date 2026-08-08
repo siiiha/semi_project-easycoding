@@ -30,4 +30,9 @@ public interface CommunityMapper {
   
     int deletePost(Long postId, String memberId);
 
+    // 회원의 임시저장 게시물 정보를 조회
+    List<PostDto> selectTemporaryPost(String memberId);
+
+    // 임시저장한 게시글을 등록 (실제로는 update)
+    int insertTemporaryPost(PostDto postDto);
 }

@@ -79,7 +79,8 @@
         UPDATE post
         SET title = #{title},
             content = #{content},
-            category_id = #{categoryId}
+            category_id = #{categoryId},
+            updated_at = NOW()
         WHERE post_id = #{postId}
     </update>
 
@@ -94,5 +95,28 @@
         WHERE post_id = #{postId}
             AND member_id = #{memberId}
     </delete>
+
+    <!-- 회원 번호로 임시저장한 게시글 조회 -->
+    <select id="selectTemporaryPost" parameterType="Long" resultType="PostDto">
+        SELECT post_id, member_id, category_id, title, content, createAt,
+            DATE_FORMAT (create_at, '%Y-%m-%D %H:%i') AS create_at_str
+        FROM post
+        WHERE member_id #{memberId}
+            AND status = 1
+            AND deleted_at IS NULL
+    </select>
+
+    <!-- 임시저장한 게시글 저장 (사실 상 게시글 상태 update) -->
+    <update id="insertTemporaryPost" parameterType="PostDto">
+        UPDATE post
+        SET title = #{title},
+            content = #{content},
+            status = 0,
+            category_id = #{categoryId},
+            updated_at = NOW(),
+        WHERE post_id = #{postId}
+            AND member_id = #{memberId}
+            AND deleted_at IS NULL
+    </update>
 
 </mapper>
