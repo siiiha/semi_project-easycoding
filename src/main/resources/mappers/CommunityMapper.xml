@@ -17,6 +17,9 @@
         맨 앞에 남는 불필요한 AND/OR은 자동으로 제거해준다.
     -->
         <where>
+            <!-- 전달받은 alias가 있으면 'alias.', 없으면 빈값으로 생성 -->
+            ${alias}.deleted_at IS NULL
+
             <if test="postCategory != null
                     and postCategory != ''
                     and postCategory != 'all'">
@@ -37,27 +40,32 @@
         FROM post p
         LEFT JOIN post_category c USING (category_id)
         LEFT JOIN member m USING (member_id)
-        <include refid="searchWhere"/>
+        <include refid="searchWhere">
+            <property name="alias" value="p"/>
+        </include>
         ORDER BY p.post_id DESC
         LIMIT #{offset}, #{limit}
     </select>
 
-    <!--  -->
+    <!-- 조회수 확인 -->
     <select id="selectPostCount" parameterType="PostSearchCondition" resultType="int">
         SELECT COUNT(*)
         FROM post p
             LEFT JOIN post_category c USING (category_id)
-        <include refid="searchWhere"/>
+        <include refid="searchWhere">
+            <property name="alias" value="p"/>
+        </include>
     </select>
 
     <!-- 게시글 상세 조회 -->
     <select id="selectPostDetail" parameterType="Long" resultType="PostDto">
-        SELECT p.post_id, c.category, p.title, p.content, m.nickname, p.views, p.created_at,
+        SELECT p.post_id, p.member_id, c.category, p.title, p.content, m.nickname, p.views, p.created_at,
             DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS created_at_str
         FROM post p
             LEFT JOIN member m USING (member_id)
             LEFT JOIN post_category c USING (category_id)
         WHERE p.post_id = #{postId}
+            AND p.deleted_at IS NULL
     </select>
 
 
@@ -65,6 +73,7 @@
         UPDATE post
         SET views = views + 1
         WHERE post_id = #{postId}
+            AND deleted_at IS NULL
     </update>
 
   
@@ -75,24 +84,30 @@
         WHERE category = #{category}
     </select>
 
-    <update id="updatePost" parameterType="PostDto">
-        UPDATE post
-        SET title = #{title},
-            content = #{content},
-            category_id = #{categoryId}
-        WHERE post_id = #{postId}
-    </update>
-
     <!-- 게시글 작성/추가 -->
     <insert id="insertPost" parameterType="PostDto" useGeneratedKeys="true" keyProperty="postId">
         INSERT INTO post (member_id, category_id, title, content)
-            VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
+        VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
     </insert>
-  
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="PostDto">
+        UPDATE post
+        SET title = #{title},
+        content = #{content},
+        category_id = #{categoryId}
+        WHERE post_id = #{postId}
+        AND member_id = #{memberId}
+        AND deleted_at IS NULL
+    </update>
+
+    <!-- 게시글 삭제 (실제는 수정) -->
     <delete id="deletePost">
-        DELETE FROM post
+        UPDATE post
+        SET deleted_at = NOW()
         WHERE post_id = #{postId}
             AND member_id = #{memberId}
+            AND deleted_at IS NULL
     </delete>
 
 </mapper>
