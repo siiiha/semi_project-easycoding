@@ -181,9 +181,8 @@
                 </div>
 
                 <!-- 목록으로 -->
-                <div>
-                    <a href="${pageContext.request.contextPath}${redirectURL}"
-                       style="display:inline-flex;padding:10px 24px;border:1.5px solid #9CA3AF;border-radius:8px;font-size:14px;font-weight:600;color:#5B5B5B;text-decoration:none;">
+                <div class="back-to-list-btn">
+                    <a href="${pageContext.request.contextPath}${redirectURL}">
                         ← 목록으로
                     </a>
                 </div>
