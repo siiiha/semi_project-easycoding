@@ -84,10 +84,12 @@
 
             <!-- 로그인 유지 / 비밀번호 찾기 -->
             <div class="auth-options">
+                <%-- 로그인 상태 유지 기능은 추후 사용을 위해 임시로 숨김
                 <label class="checkbox-label">
                     <input type="checkbox" name="rememberMe" value="true">
                     <span>로그인 상태 유지</span>
                 </label>
+                --%>
                 <a href="${pageContext.request.contextPath}/member/find-id" class="auth-link">로그인 정보 찾기</a>
             </div>
 

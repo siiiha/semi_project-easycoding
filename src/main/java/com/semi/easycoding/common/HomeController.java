@@ -38,8 +38,19 @@ public class HomeController {
                     homeDashboardService.getTodayProgress(memberId)
             );
 
+            model.addAttribute(
+                    "grassCells",
+                    homeDashboardService.getGrassCells(memberId)
+            );
+
+            model.addAttribute(
+                    "learningStats",
+                    homeDashboardService.getLearningStats(memberId)
+            );
+
             return "home/main_user";
         }
+
         return "home/main";
     }
 

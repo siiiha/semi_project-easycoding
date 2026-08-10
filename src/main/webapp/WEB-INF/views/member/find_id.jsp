@@ -22,7 +22,8 @@
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">쉽코딩과 함께 오늘의 한 문제로</span><br>내일의 실력을 키워요.
+                쉽코딩과 함께 <span class="text-primary">오늘의 한 문제</span>로<br>
+                <span class="text-primary">내일의 실력</span>을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
         </div>

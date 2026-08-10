@@ -4,11 +4,10 @@ import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.service.EducationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
-import com.semi.easycoding.education.dto.TodayProgressDto;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import com.semi.easycoding.home.dto.TodayProgressDto;
+import com.semi.easycoding.home.mapper.HomeDashboardMapper;
+import com.semi.easycoding.home.dto.GrassCellDto;
+import com.semi.easycoding.home.dto.LearningStatsDto;
 
 import java.util.List;
 import java.util.Set;
@@ -20,11 +19,16 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
             Set.of(3, 5, 10, 20);
 
     private final EducationService educationService;
-    //문제 조회·배정 기능을 사용하기 위해 보관하는 필드
+    private final HomeDashboardMapper homeDashboardMapper;
 
-    public HomeDashboardServiceImpl(EducationService educationService) {
+
+    public HomeDashboardServiceImpl(
+            EducationService educationService,
+            HomeDashboardMapper homeDashboardMapper) {
         this.educationService = educationService;
+        this.homeDashboardMapper = homeDashboardMapper;
     }
+
 
     @Transactional
     @Override
@@ -60,24 +64,28 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
     }
 
     //오늘 배정된 문제를 조회한 뒤, 전체 문제 수와 답변 완료 수를 계산하여 반환
+    // 오늘 배정된 전체 문제 수와 완료 문제 수를 조회한다
     @Override
     public TodayProgressDto getTodayProgress(Long memberId) {
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-        LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
-
-        List<MemberQuizHistoryDto> histories =
-                educationService.getMemberQuizHistoryAtDate(
-                        memberId,
-                        startOfToday,
-                        endOfToday
-                );
-
-        int done = (int) histories.stream()
-                .filter(MemberQuizHistoryDto::isAnswered)
-                .count();
-
-        return new TodayProgressDto(done, histories.size());
+        return homeDashboardMapper.selectTodayProgress(memberId);
     }
 
+    // 최근 105일의 날짜별 학습 잔디 상태를 조회한다
+    @Override
+    public List<GrassCellDto> getGrassCells(Long memberId) {
+        return homeDashboardMapper.selectGrassCells(memberId);
+    }
 
+    // 지금까지의 연속 학습 일수, 총 완료 문제 수, 정답률을 조회한다
+    @Override
+    public LearningStatsDto getLearningStats(Long memberId) {
+        LearningStatsDto learningStats =
+                homeDashboardMapper.selectLearningStats(memberId);
+
+        learningStats.setStreak(
+                educationService.countStreakDay(memberId)
+        );
+
+        return learningStats;
+    }
 }

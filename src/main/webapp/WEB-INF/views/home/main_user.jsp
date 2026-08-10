@@ -125,7 +125,7 @@
                     <div class="stat-card streak-card">
                         <p class="stat-card-label">연속학습</p>
                         <p class="stat-card-value">
-                            <span class="stat-big">${streak != null ? streak : 0}</span>
+                            <span class="stat-big">${learningStats != null ? learningStats.streak : 0}</span>
                             <span class="stat-unit">일</span>
                         </p>
                     </div>
@@ -134,7 +134,7 @@
                         <div class="record-row">
                             <p class="record-sub-label">총 문제 풀이</p>
                             <p class="record-sub-value">
-                                <span class="record-big">${totalSolved != null ? totalSolved : 0}</span>
+                                <span class="record-big">${learningStats != null ? learningStats.totalSolved : 0}</span>
                                 <span class="record-unit">문제</span>
                             </p>
                         </div>
@@ -142,7 +142,7 @@
                         <div class="record-row">
                             <p class="record-sub-label">정답률</p>
                             <p class="record-sub-value">
-                                <span class="record-big">${correctRate != null ? correctRate : 0}</span>
+                                <span class="record-big">${learningStats != null ? learningStats.correctRate : 0}</span>
                                 <span class="record-unit">%</span>
                             </p>
                         </div>
