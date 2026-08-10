@@ -10,11 +10,32 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EducationServiceImp implements EducationService {
 
     private final EducationMapper educationMapper;
+
+    /* 테스트를 위해서 임시로 쓴거
+    private final Map<Short, String> categoryMap = Map.ofEntries(
+            Map.entry((short)37, "Java기본"),
+            Map.entry((short)38, "객체지향"),
+            Map.entry((short)39, "클래스"),
+            Map.entry((short)40, "예외처리"),
+            Map.entry((short)41, "컬렉션"),
+            Map.entry((short)42, "제네릭"),
+            Map.entry((short)43, "JVM"),
+            Map.entry((short)44, "동시성"),
+            Map.entry((short)45, "함수형Java"),
+            Map.entry((short)46, "프론트엔드"),
+            Map.entry((short)47, "백엔드"),
+            Map.entry((short)48, "데이터베이스"),
+            Map.entry((short)49, "네트워크"),
+            Map.entry((short)50, "운영체제"),
+            Map.entry((short)51, "자료구조"),
+            Map.entry((short)52, "보안")
+    );*/
 
     public EducationServiceImp(EducationMapper educationMapper){
         this.educationMapper = educationMapper;
@@ -133,8 +154,21 @@ public class EducationServiceImp implements EducationService {
                 .map(this::educationDtoToType)
                 .toList();
     }
-    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습문제들을 조회하고, 답변까지 매핑하여 반환
+
+    public List<EducationDto> getTodayEducationsNotSubmitted(Long memberId){
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
+
+        List<EducationDto> todayEducationNotSubmitted = educationMapper.selectUserEducationAtDateNotsubmitted(memberId, startOfToday, endOfToday);
+
+        return todayEducationNotSubmitted.stream()
+                .map(this::educationDtoToType)
+                .toList();
+    }
+    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
+    // 특정 사용자가 오늘 할당받은 학습문제 중 풀지 않은 상태의 문제들을 반환
+
 
     public EducationDto educationDtoToType(EducationDto dto){
         switch(dto.getEducationType()){
@@ -174,5 +208,107 @@ public class EducationServiceImp implements EducationService {
         return null;
     }
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
+
+    @Transactional
+    @Override
+    public boolean submitDailyAnswerByOption(EducationOptionSubmitDto submitDto, Long memberId) {
+        if (submitDto == null || memberId == null || submitDto.getEducationID() == null || submitDto.getChoseOption() == null) {
+            return false;
+        }
+
+        Long historyId = educationMapper.selectHistoryByMemberIdAndEducationId(memberId, submitDto.getEducationID());
+        if (historyId == null) {
+            return false;
+        }
+
+        int updated = educationMapper.updateMemberQuizHistory(historyId, true, submitDto.isCorrect());
+        if (updated != 1) {
+            return false;
+        }
+
+        int inserted = educationMapper.insertAnsweredOption(historyId, submitDto.getChoseOption());
+        return inserted == 1;
+    }
+    // 컨트롤러의 "/daily/answer" 요청을 받는 서비스 오케스트레이션 메서드
+    // 사용자가 제출한 답안을 저장하고, 히스토리 상태를 갱신
+
+    @Override
+    public EducationSummaryDto makeEducationSummary(Long memberId,
+                                                    LocalDateTime startDate,
+                                                    LocalDateTime endDate){
+
+        EducationSummaryDto summary = new EducationSummaryDto();
+        List<MemberQuizHistoryDto> historyList = getMemberQuizHistoryAtDate(memberId, startDate, endDate);
+
+        summary.setCompletedCount((int) historyList.stream()
+                                        .filter(MemberQuizHistoryDto::isAnswered)
+                                        .count());
+        summary.setCorrectCount((int) historyList.stream()
+                                        .filter(MemberQuizHistoryDto::isCorrect)
+                                        .count());
+        summary.setAccuracyRate(summary.getCompletedCount() > 0 ?
+                (double) summary.getCorrectCount() / summary.getCompletedCount() * 100 : 0.0);
+
+        return summary;
+    }
+    // 일정 기간동안의 학습결과 요약 데이터를 생성하여 반환
+
+    @Override
+    public int countStreakDay(Long memberId){
+        int count = 0;
+        // 전체 학습 이력을 넉넉한 기간으로 조회 (정렬: 최신일 기준 내림차순 전제)
+        LocalDateTime startDate = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2200, 12, 31, 23, 59, 59);
+        List<MemberQuizHistoryDto> historyList = getMemberQuizHistoryAtDate(memberId, startDate, endDate);
+
+        if (historyList == null || historyList.isEmpty()) {
+            return 0;
+        }
+
+        // 가장 최근 날짜부터 연속 여부를 확인하기위한 초기화
+        LocalDate expectedDate = historyList.get(0).getEducationDate().toLocalDate();
+        // 같은 날짜 묶음에서 한 문제라도 미제출이면 false로 바뀌는 플래그
+        boolean dayAllAnswered = true;
+
+        for (MemberQuizHistoryDto history : historyList) {
+            LocalDate currentDate = history.getEducationDate().toLocalDate();
+
+            if (currentDate.equals(expectedDate)) {
+                // 같은 날짜 데이터는 제출 여부만 누적 확인
+                if (!history.isAnswered()) {
+                    dayAllAnswered = false;
+                }
+                continue;
+            }
+
+            // continue를 만나지 않고 넘어왔다면 날짜가 바뀌었다는 의미
+
+            // 이전 히스토리중에서 제출되지 않은 문제가하나라도 있으면 연속일수 카운트 중단
+            if (!dayAllAnswered) {
+                break;
+            }
+
+            // 이전 날짜의 히스토리는 전부 제출되었다는 의미이므로 카운트 +1
+            count += 1;
+
+            // 바뀐 날짜의 연속성을 판별
+            LocalDate previousDate = expectedDate.minusDays(1);
+            if (!currentDate.equals(previousDate)) {
+                break;
+            }
+
+            // expectedDate 갱신 및 dayAllAnswered 초기화
+            expectedDate = currentDate;
+            dayAllAnswered = history.isAnswered();
+        }
+
+        // 마지막으로 검사한 날짜 묶음도 전부 제출 상태면 카운트 반영
+        if (dayAllAnswered) {
+            count += 1;
+        }
+
+        return count;
+    }
+    // 특정사용자의 연속 학습일수를 계산한다
 
 }

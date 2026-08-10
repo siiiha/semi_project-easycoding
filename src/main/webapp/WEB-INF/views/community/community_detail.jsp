@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/community.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -83,10 +84,9 @@
                         <div style="display:flex;gap:12px;justify-content:flex-end;">
                             <a href="${pageContext.request.contextPath}/community/${postDetail.postId}/edit"
                                style="padding:6px 16px;background:#fff;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;font-weight:600;color:#5B5B5B;text-decoration:none;">수정</a>
-                            <form action="${pageContext.request.contextPath}/community/${postDetail.postId}/delete" method="post" style="display:inline;"
-                                  onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                            <form id="delete-post-form" action="${pageContext.request.contextPath}/community/${postDetail.postId}/delete" method="post" style="display:inline;">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                                <button type="submit"
+                                <button id="delete-post-btn" type="submit"
                                         style="padding:6px 16px;background:#fff;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;font-weight:600;color:#5B5B5B;cursor:pointer;">삭제</button>
                             </form>
                         </div>
@@ -195,7 +195,6 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
 <script>
     const loginNickname = "${sessionScope.loginUser.nickname}";
     const contextPath = "${pageContext.request.contextPath}";
@@ -210,7 +209,15 @@ function toggleCommentEdit(id) {
     formEl.style.display  = isHidden ? 'flex' : 'none';
 }
 </script>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script>
+const ErrorMsg = "${errMsg}";
+const successMsg = "${successMsg}";
+</script>
+<script src="${pageContext.request.contextPath}/js/post.js"></script>
 <script src="${pageContext.request.contextPath}/js/comment.js"></script>
 <script src="${pageContext.request.contextPath}/js/comment-reply.js"></script>
 </body>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<jsp:include page="/WEB-INF/views/common/modal/confirmModal.jsp"/>
 </html>

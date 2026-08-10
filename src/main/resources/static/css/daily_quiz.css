@@ -91,17 +91,6 @@
     background: #4fb34d;
 }
 
-.badge-level-num {
-    display: inline-flex;
-    align-items: center;
-    height: 30px;
-    border-radius: 999px;
-    padding: 0 12px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #2a5dc8;
-    background: #e7f1ff;
-}
 
 .badge-type {
     font-size: 16px;
@@ -286,8 +275,7 @@
         font-size: 18px;
     }
 
-    .badge-level,
-    .badge-level-num {
+    .badge-level {
         font-size: 13px;
         height: 28px;
     }

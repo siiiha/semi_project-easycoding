@@ -235,7 +235,7 @@ public class MemberController {
         if (loginUser == null) {
             return "redirect:/member/login";
         }
-        String memberId = loginUser.getMemberId();
+        Long memberId = loginUser.getMemberId();
 
         //해당 회원이 작성한 게시글과 댓글 개수 조회
         int postCount = memberService.countPostByMemberId(memberId);
