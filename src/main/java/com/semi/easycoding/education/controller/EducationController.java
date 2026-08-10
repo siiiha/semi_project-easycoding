@@ -1,23 +1,19 @@
 package com.semi.easycoding.education.controller;
 
 import com.semi.easycoding.education.dto.*;
+import com.semi.easycoding.common.util.SessionUtil;
 import com.semi.easycoding.education.service.EducationService;
 import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/education")
 public class EducationController {
 
-    EducationService educationService;
+    private final EducationService educationService;
 
     public EducationController(EducationService educationService) {
         this.educationService = educationService;
@@ -39,8 +35,7 @@ public class EducationController {
     public String dailyQuizPage(HttpSession session, Model model){
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
         
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
         model.addAttribute("todayEducationHistory", todayEducationHistory);
@@ -52,8 +47,7 @@ public class EducationController {
     public String mainQuizPage(HttpSession session, Model model){
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         // 모든 문제가 이미 제출된 상태라면 (모든 answered가 true) "/daily/complete" 페이지로 이동
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
@@ -74,8 +68,7 @@ public class EducationController {
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         boolean result = educationService.submitDailyAnswerByOption(submitDto, memberId);
 
@@ -87,8 +80,7 @@ public class EducationController {
     public String DailyCompletePage(HttpSession session, Model model){
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
@@ -112,8 +104,7 @@ public class EducationController {
                                    HttpSession session,
                                    Model model) {
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(memberId, 1, categoryId);
 
@@ -126,8 +117,7 @@ public class EducationController {
     public String reviewPage(HttpSession session,
                              Model model){
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         LocalDateTime startDate = LocalDate.now().atStartOfDay();
         LocalDateTime endDate = LocalDate.now().atTime(LocalTime.MAX);
@@ -143,9 +133,4 @@ public class EducationController {
     public String test() {
         return "test/test";
     }
-
-
-
-
-
 }

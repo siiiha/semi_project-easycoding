@@ -18,10 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/member/edit",
                         "/community/write",
                         "/community/{postId}/edit",
-                        "/education/daily",
-                        "/education/daily/quiz",
-                        "/education/category",
-                        "/education/review"
+                        "/education/**"
                         // 필요한 경로 추가 하시면 됩니다.
                         // 로그인 요청 시 redirect를 이전 화면으로 갈 수 있게 수정해주세요.
                 );
