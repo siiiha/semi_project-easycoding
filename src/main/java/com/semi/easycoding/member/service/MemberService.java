@@ -27,6 +27,16 @@ public interface MemberService {
 
     boolean withdraw(Long memberId, String password);
 
+    boolean resetPassword(
+            String email,
+            String newPassword
+    );
+
+    boolean updatePassword(
+            String memberId,
+            String currentPassword,
+            String newPassword
+    );
 
     int updateNickname(Long memberId, String nickname);
 

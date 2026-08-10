@@ -44,14 +44,17 @@ checkEmailButton.addEventListener("click", async function () {
 
         if (isDuplicate) {
             emailResult.textContent = "이미 사용 중인 이메일입니다.";
+            emailResult.classList.remove("is-success");
             checkedEmail = null;
         } else {
             emailResult.textContent = "사용 가능한 이메일입니다.";
+            emailResult.classList.add("is-success");
             checkedEmail = email;
         }
 
     } catch (error) {
         emailResult.textContent = "이메일 중복 확인 중 오류가 발생했습니다.";
+        emailResult.classList.remove("is-success");
         checkedEmail = null;
     }
 
@@ -60,6 +63,7 @@ checkEmailButton.addEventListener("click", async function () {
 memberEmailInput.addEventListener("input", function () {
     checkedEmail = null;
     emailResult.textContent = "";
+    emailResult.classList.remove("is-success");
 });
 
 function validatePasswordConfirm() {
@@ -68,6 +72,7 @@ function validatePasswordConfirm() {
 
     if (passwordConfirm === "") {
         passwordConfirmResult.textContent = "";
+        passwordConfirmResult.classList.remove("is-success");
         isPasswordMatched = false;
         return;
     }
@@ -76,6 +81,7 @@ function validatePasswordConfirm() {
     passwordConfirmResult.textContent = isPasswordMatched
         ? "비밀번호가 일치합니다."
         : "비밀번호가 일치하지 않습니다.";
+    passwordConfirmResult.classList.toggle("is-success", isPasswordMatched);
 }
 
 memberPasswordInput.addEventListener("input", validatePasswordConfirm);
@@ -88,11 +94,13 @@ function validateEmailFormat() {
 
     if (email === "") {
         emailResult.textContent = "이메일을 입력해주세요.";
+        emailResult.classList.remove("is-success");
         return false;
     }
 
     if (!emailPattern.test(email)) {
         emailResult.textContent = "올바른 이메일 형식이 아닙니다.";
+        emailResult.classList.remove("is-success");
         return false;
     }
 
@@ -104,6 +112,7 @@ function validatePasswordFormat() {
 
     if (password === "") {
         passwordFormatResult.textContent = "비밀번호를 입력해주세요.";
+        passwordFormatResult.classList.remove("is-success");
         return false;
     }
 
@@ -113,10 +122,12 @@ function validatePasswordFormat() {
     if (!isValidPassword(password)) {
         passwordFormatResult.textContent =
             "8~20자의 영문, 숫자, 특수문자(!@#$%^&*)를 모두 포함해주세요.";
+        passwordFormatResult.classList.remove("is-success");
         return false;
     }
 
     passwordFormatResult.textContent = "사용 가능한 비밀번호입니다.";
+    passwordFormatResult.classList.add("is-success");
     return true;
 }
 
@@ -126,10 +137,12 @@ async function validateNickname() {
 
     if (nickname === "") {
         nicknameResult.textContent = "닉네임을 입력해주세요.";
+        nicknameResult.classList.remove("is-success");
         return;
     }
 
     nicknameResult.textContent = "닉네임 중복 확인 중입니다.";
+    nicknameResult.classList.remove("is-success");
 
     try {
         const isDuplicate =
@@ -137,19 +150,23 @@ async function validateNickname() {
 
         if (isDuplicate) {
             nicknameResult.textContent = "이미 사용 중인 닉네임입니다.";
+            nicknameResult.classList.remove("is-success");
             return;
         }
 
         checkedNickname = nickname;
         nicknameResult.textContent = "사용 가능한 닉네임입니다.";
+        nicknameResult.classList.add("is-success");
     } catch (error) {
         nicknameResult.textContent = "닉네임 중복 확인 중 오류가 발생했습니다.";
+        nicknameResult.classList.remove("is-success");
     }
 }
 
 memberNicknameInput.addEventListener("input", function () {
     checkedNickname = null;
     nicknameResult.textContent = "";
+    nicknameResult.classList.remove("is-success");
 });
 
 //블러도되면 이벤트 발생
@@ -161,6 +178,7 @@ memberJoinForm.addEventListener("submit", function (event) {
     if (checkedNickname !== memberNicknameInput.value.trim()) {
         event.preventDefault();
         nicknameResult.textContent = "닉네임 중복 확인이 필요합니다.";
+        nicknameResult.classList.remove("is-success");
         memberNicknameInput.focus();
         return;
     }
@@ -174,6 +192,7 @@ memberJoinForm.addEventListener("submit", function (event) {
     if (checkedEmail !== memberEmailInput.value.trim()) {
         event.preventDefault();
         emailResult.textContent = "이메일 중복 확인을 진행해주세요.";
+        emailResult.classList.remove("is-success");
         memberEmailInput.focus();
         return;
     }
@@ -187,6 +206,7 @@ memberJoinForm.addEventListener("submit", function (event) {
     if (!isPasswordMatched) {
         event.preventDefault();
         passwordConfirmResult.textContent = "비밀번호가 일치하지 않습니다.";
+        passwordConfirmResult.classList.remove("is-success");
         passwordConfirmInput.focus();
     }
 });

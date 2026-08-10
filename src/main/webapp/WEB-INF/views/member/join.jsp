@@ -16,7 +16,11 @@
     <script src="${pageContext.request.contextPath}/js/member.js" defer></script>
 
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 
+
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 </head>
 <body class="auth-page">
 
@@ -89,6 +93,11 @@
                             <button type="button" id="check-email-button" class="btn btn-outline">
                                 중복확인
                             </button>
+
+                            <button type="button" id="send-email-code-button" class="btn btn-outline">
+                                이메일 인증
+                            </button>
+
                         </div>
                         <p id="check-email-result"></p>
                     </div>
@@ -123,8 +132,6 @@
                                    placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password" required>
                         </div>
                         <p id="check-password-result"></p>
-                        <!-- 이 부분은 패스워드 체크의 결과값이 들어간다.-->
-                        <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                     </div>
 
                 <button type="submit" class="btn btn-primary auth-submit-btn">회원가입</button>
@@ -172,6 +179,108 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+<script>
+    const emailInput = document.getElementById('email');
+
+    async function checkEmailVerification(code) {
+        const response = await fetch(
+            '${pageContext.request.contextPath}/email/join/verify',
+            {
+                method: 'POST',
+                body: new URLSearchParams({ code })
+                //URLSearchParams : 브라우저가 전송 형식을 자동으로 설정.
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error();
+        }
+
+        return response.json();
+    }
+    async function handleEmailVerification(code) {
+        try {
+            const isVerified = await checkEmailVerification(code);
+
+            CommonModal.open({
+                type: 'alert',
+                theme: isVerified ? 'success' : 'danger',
+                title: isVerified ? '이메일 인증 완료' : '이메일 인증 실패',
+                message: isVerified
+                    ? '이메일 인증이 완료되었습니다.'
+                    : '인증번호가 일치하지 않습니다.'
+            });
+        } catch {
+            CommonModal.open({
+                type: 'alert',
+                theme: 'danger',
+                title: '이메일 인증 실패',
+                message: '인증번호 확인 요청에 실패했습니다.'
+            });
+        }
+    }
+
+
+
+    const sendEmailCodeButton = document.getElementById('send-email-code-button');
+
+    sendEmailCodeButton.addEventListener('click', async function () {
+        const email = emailInput.value.trim();
+
+        if (email === '') {
+            alert('이메일을 입력해주세요.');
+            emailInput.focus();
+            return;
+        }
+
+        try{
+            const response = await  fetch(
+                '${pageContext.request.contextPath}/email/join/send',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':
+                        'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        email: email
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('인증번호 발송 실패')
+            }
+
+            const result = await response.json();
+
+            CommonModal.open({
+                type: 'custom',          // 필수: alert | confirm | input | custom
+                theme: 'info',       // 선택: success | danger | warning | info
+                title: '이메일 인증',           // 선택: 기본값은 '안내'
+                message: result.data,         // 선택
+                confirmText: '확인',     // 선택: 확인 버튼 문구
+                cancelText: '취소',      // 선택: 취소 버튼 문구
+                onConfirm: handleEmailVerification //서버의 인증상태를 확인
+            });
+
+
+        } catch (error) {
+            CommonModal.open({
+                type: 'alert',
+                theme: 'danger',
+                title: '이메일 발송 실패',
+                message: '인증번호 발송 중 오류가 발생했습니다.'
+            });
+        }
+    });
+
+</script>
+
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp" />
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
 
 </body>
 </html>

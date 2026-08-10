@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 </head>
 <body class="auth-page">
 
@@ -84,7 +85,7 @@
                     <input type="checkbox" name="rememberMe" value="true">
                     <span>로그인 상태 유지</span>
                 </label>
-                <a href="${pageContext.request.contextPath}/find-password" class="auth-link">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="auth-link">비밀번호 찾기</a>
             </div>
 
             <button type="submit" class="btn btn-primary auth-submit-btn">로그인</button>
@@ -132,5 +133,20 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+
+<c:if test="${not empty successMsg}">
+    <script>
+        CommonModal.open({
+            type: 'alert',
+            theme: 'success',
+            title: '${successTitle}',
+            message: '${successMsg}'
+        });
+    </script>
+</c:if>
+
 </body>
+
 </html>

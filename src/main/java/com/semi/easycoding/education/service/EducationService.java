@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.service;
 
-import com.semi.easycoding.education.dto.EducationCategoryDto;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
-import com.semi.easycoding.education.dto.OptionDto;
+import com.semi.easycoding.education.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +19,11 @@ public interface EducationService {
     // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
 
     List<EducationDto> getTodayEducations(Long memberId);
-    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습문제들을 조회하여 반환
+
+    List<EducationDto> getTodayEducationsNotSubmitted(Long memberId);
+    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
+    // 특정 사용자가 오늘 할당받은 학습문제 중 풀지 않은 상태의 문제들을 반환
 
     boolean memberTodayEducationIsEmpty(Long memberId);
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
@@ -48,6 +48,16 @@ public interface EducationService {
 
     List<OptionDto> getAnswerByEducationId(Long educationId, Short educationType);
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
+
+    boolean submitDailyAnswerByOption(EducationOptionSubmitDto submitDto, Long memberId);
+    // 컨트롤러의 "/daily/answer" 요청을 받는 서비스 오케스트레이션 메서드
+    // 사용자가 제출한 답안을 저장하고, 히스토리 상태를 갱신
+
+    EducationSummaryDto makeEducationSummary(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
+    // 일정 기간동안의 학습결과 요약 데이터를 생성하여 반환
+
+    int countStreakDay(Long memberId);
+    // 특정사용자의 연속 학습일수를 계산한다
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다
