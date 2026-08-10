@@ -215,6 +215,7 @@ const successMsg = "${successMsg}";
 </script>
 <script src="${pageContext.request.contextPath}/js/post.js"></script>
 <script src="${pageContext.request.contextPath}/js/comment.js"></script>
+<script src="${pageContext.request.contextPath}/js/comment-reply.js"></script>
 </body>
 <jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
 <jsp:include page="/WEB-INF/views/common/modal/confirmModal.jsp"/>

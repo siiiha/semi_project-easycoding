@@ -47,6 +47,9 @@
         </c:if>
 
         <form action="${pageContext.request.contextPath}/member/login" method="post" class="auth-form">
+            <input type="hidden"
+                   name="redirectURL"
+                   value="<c:out value='${param.redirectURL}'/>">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
             <!-- 이메일 -->
@@ -85,7 +88,7 @@
                     <input type="checkbox" name="rememberMe" value="true">
                     <span>로그인 상태 유지</span>
                 </label>
-                <a href="${pageContext.request.contextPath}/member/find-password" class="auth-link">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-id" class="auth-link">로그인 정보 찾기</a>
             </div>
 
             <button type="submit" class="btn btn-primary auth-submit-btn">로그인</button>

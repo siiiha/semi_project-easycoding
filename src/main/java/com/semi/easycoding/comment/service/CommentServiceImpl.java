@@ -33,15 +33,32 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDto> insertComment(Long postId, String content, Long memberId) {
+    public List<CommentDto> insertComment(Long postId, Long parentId, String content, Long memberId) {
         if (content == null || content.equals("")) {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
         } else if (content.length() > 300) {
             throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
         }
 
+        if (parentId != null) {
+            CommentDto parentComment = commentMapper.selectCommentById(parentId);
+            if (parentComment == null) {
+                throw new IllegalArgumentException("부모 댓글을 찾을 수 없습니다.");
+            }
+
+            if (!parentComment.getPostId().equals(postId)) {
+                throw new IllegalArgumentException("같은 게시글의 댓글에만 답글을 작성할 수 있습니다.");
+            }
+
+            if (parentComment.getParentId() != null) {
+                throw new IllegalArgumentException("대댓글에는 답글을 작성할 수 없습니다.");
+            }
+
+        }
+
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
+        comment.setParentId(parentId);
         comment.setMemberId(memberId);
         comment.setContent(content);
 
