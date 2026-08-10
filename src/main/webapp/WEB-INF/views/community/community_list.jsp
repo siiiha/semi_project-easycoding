@@ -154,13 +154,15 @@
                     <div class="popular-card">
                         <p class="popular-title">🏆 실시간 인기 사용자</p>
                         <div class="popular-list">
-                            <c:forEach var="user" items="${popularUsers}" varStatus="st">
-                                <div class="popular-item">
-                                    <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
-                                    <span class="popular-name">${user.nickname}</span>
-                                    <span class="popular-point">${user.point}P</span>
-                                </div>
-                            </c:forEach>
+                            <c:if test="${not empty popularMemberList}">
+                                <c:forEach var="user" items="${popularMemberList}" varStatus="st">
+                                    <div class="popular-item">
+                                        <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
+                                        <span class="popular-name">${user.nickname}</span>
+                                        <span class="popular-point">${user.postCount}개</span>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
                 </aside>

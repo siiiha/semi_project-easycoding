@@ -1,5 +1,6 @@
 package com.semi.easycoding.community.controller;
 
+import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -33,7 +34,10 @@ public class CommunityController {
     public String communityPage(
             @ModelAttribute PostSearchCondition condition,
             Model model) {
-
+        // 인기 게시글 작성자 5위 조회
+        List<PopularMemberDto> popularMemberList = communityService.selectPopularMember();
+        System.out.println(popularMemberList.size());
+        model.addAttribute("popularMemberList", popularMemberList);
 
         if (condition.getPostCategory() == null
         || condition.getPostCategory().equals("")) {
