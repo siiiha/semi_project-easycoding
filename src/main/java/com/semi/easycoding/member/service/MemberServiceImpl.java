@@ -123,7 +123,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean updatePassword(
-            String memberId,
+            Long memberId,
             String currentPassword,
             String newPassword
     ) {

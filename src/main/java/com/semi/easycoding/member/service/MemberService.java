@@ -33,7 +33,7 @@ public interface MemberService {
     );
 
     boolean updatePassword(
-            String memberId,
+            Long memberId,
             String currentPassword,
             String newPassword
     );
