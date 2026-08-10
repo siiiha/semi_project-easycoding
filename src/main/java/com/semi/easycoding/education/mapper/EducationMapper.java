@@ -37,4 +37,6 @@ public interface EducationMapper {
 
     List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
     // 문제ID로 객관식 답변 조회(answer_option) 테이블
+
+
 }

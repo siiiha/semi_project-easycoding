@@ -31,8 +31,15 @@
                         <p class="hero-greeting-sub">오늘도 꾸준한 하루를 만들어봐요.</p>
                     </div>
 
-                    <div class="mission-card">
+                    <form class="mission-card"
+                          action="${pageContext.request.contextPath}/education/daily/quiz/start"
+                          method="post">
                         <h2 class="mission-title">오늘의 미션</h2>
+                        <c:if test="${not empty missionError}">
+                            <p class="mission-error">
+                                <c:out value="${missionError}" />
+                            </p>
+                        </c:if>
                         <div class="mission-fields">
                             <div class="mission-field">
                                 <label class="mission-field-label">풀 문제 수</label>
@@ -45,15 +52,14 @@
                             </div>
                             <div class="mission-field">
                                 <label class="mission-field-label">문제 카테고리</label>
-                                <select class="mission-select" name="category">
+                                <select class="mission-select" name="categoryId">
                                     <option value="">전체</option>
-                                    <option value="variable">변수/자료형</option>
-                                    <option value="operator">연산자</option>
-                                    <option value="condition">조건문</option>
-                                    <option value="loop" selected>반복문</option>
-                                    <option value="array">배열</option>
-                                    <option value="method">메서드</option>
-                                    <option value="oop">객체지향</option>
+
+                                    <c:forEach var="category" items="${categories}">
+                                        <option value="${category.categoryId}">
+                                            <c:out value="${category.categoryName}" />
+                                        </option>
+                                    </c:forEach>
                                 </select>
                             </div>
                         </div>
@@ -72,8 +78,8 @@
                         </div>
                         </c:if>
 
-                        <a href="${pageContext.request.contextPath}/education/daily-quiz" class="btn mission-start-btn">오늘의 학습 시작하기</a>
-                    </div>
+                        <button type="submit" class="btn mission-start-btn">오늘의 학습 시작하기</button>
+                    </form>
                 </div>
 
                 <!-- 양 캐릭터 이미지 -->

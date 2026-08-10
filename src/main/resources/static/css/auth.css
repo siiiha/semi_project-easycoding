@@ -2,6 +2,10 @@
    auth.css - 로그인 / 회원가입 / 아이디·비밀번호 찾기 공통 스타일
    ============================================================ */
 
+:root {
+  --auth-content-width: 560px;
+}
+
 .auth-page {
   background-color: var(--color-bg-card);
   font-family: var(--font-body);
@@ -175,7 +179,7 @@
   color: var(--color-text-muted);
 }
 
-#check-email-button {
+#send-email-code-button {
   flex-shrink: 0;
   padding: 7px 10px;
   border-width: 1px;
@@ -192,7 +196,14 @@
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: var(--color-error);
+}
+
+#check-email-result.is-success,
+#check-nickname-result.is-success,
+#check-password-format-result.is-success,
+#check-password-result.is-success {
+  color: var(--color-success);
 }
 
 /* ── 옵션 (체크박스 + 링크) ── */
@@ -422,6 +433,70 @@
   border-radius: 12px;
   font-size: 24px;
   margin-top: 16px;
+}
+
+.password-reset-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.password-reset-fields .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.find-page-compact .find-hero {
+  width: 100%;
+  max-width: var(--auth-content-width);
+  height: auto;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
+}
+
+.find-page-compact .find-hero-title {
+  font-size: 30px;
+}
+
+.find-page-compact .find-hero-sub {
+  font-size: 14px;
+}
+
+.find-page-compact .find-card-section {
+  width: 100%;
+  max-width: var(--auth-content-width);
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.find-page-compact .find-card {
+  width: 100%;
+  padding: 28px 24px;
+  border-width: 1px;
+  gap: 20px;
+}
+
+.find-page-compact .find-tabs {
+  height: 52px;
+}
+
+.find-page-compact .find-tab {
+  font-size: 16px;
+}
+
+.find-page-compact .find-field-label {
+  font-size: 14px;
+}
+
+.find-page-compact .find-submit-btn {
+  height: 52px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.find-page-compact .find-alt-link a {
+  font-size: 14px;
 }
 
 /* 결과 박스 */

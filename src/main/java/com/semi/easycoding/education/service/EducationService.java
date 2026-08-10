@@ -4,6 +4,7 @@ import com.semi.easycoding.education.dto.EducationCategoryDto;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
 import com.semi.easycoding.education.dto.OptionDto;
+import com.semi.easycoding.education.dto.TodayProgressDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,9 @@ public interface EducationService {
     // 컨트롤러의 "/daily" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습에대한 현황을 조회하여 반환
     // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
+
+    TodayProgressDto getTodayProgress(Long memberId);
+    // 특정 사용자의 오늘 완료 문제 수, 전체 문제 수, 진행률을 계산해 반환
 
     List<EducationDto> getTodayEducations(Long memberId);
     // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
@@ -48,6 +52,18 @@ public interface EducationService {
 
     List<OptionDto> getAnswerByEducationId(Long educationId, Short educationType);
     // 문제ID와 타입번호를 입력받아 타입에 맞는 테이블에서 문제ID로 정답을 조회
+
+    void prepareDailyQuiz(Long memberId, int problemCount, Long categoryId);
+    // 전달받은 문제 수와 카테고리에 따라 오늘의 학습 문제를 선택해 사용자에게 할당한다
+    // 오늘 배정된 문제가 이미 있으면 중복으로 할당하지 않는다
+
+    boolean submitQuizAnswer(
+            Long memberId,
+            Long quizId,
+            Short selectedOptionNumber
+    );
+    // 회원의 선택 답안을 확인하고 학습 이력에 풀이 여부와 정답 여부를 저장한다
+    // 선택한 답이 정답이면 true, 오답이면 false를 반환한다
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다

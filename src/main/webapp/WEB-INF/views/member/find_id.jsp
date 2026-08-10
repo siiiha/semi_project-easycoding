@@ -16,7 +16,7 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<main class="find-page">
+<main class="find-page find-page-compact">
 
     <!-- 히어로 -->
     <div class="find-hero">
@@ -26,14 +26,6 @@
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
         </div>
-        <!-- 배경 일러스트 (SVG 장식) -->
-        <div class="find-hero-image" aria-hidden="true">
-            <svg viewBox="0 0 394 336" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="197" cy="168" rx="180" ry="148" fill="#E8F5E9" opacity="0.7"/>
-                <ellipse cx="320" cy="80" rx="60" ry="50" fill="#E8F5E9" opacity="0.5"/>
-                <ellipse cx="80" cy="260" rx="70" ry="55" fill="#E8F5E9" opacity="0.5"/>
-            </svg>
-        </div>
     </div>
 
     <!-- 카드 -->
@@ -42,12 +34,12 @@
 
             <!-- 탭 -->
             <div class="find-tabs">
-                <a href="${pageContext.request.contextPath}/find-id" class="find-tab active">아이디 찾기</a>
-                <a href="${pageContext.request.contextPath}/find-password" class="find-tab">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-id" class="find-tab active">아이디 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="find-tab">비밀번호 찾기</a>
             </div>
 
             <!-- 폼 -->
-            <form action="${pageContext.request.contextPath}/find-id" method="post" class="find-form">
+            <form action="${pageContext.request.contextPath}/member/find-id" method="post" class="find-form">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                     <label class="find-field-label" for="nickname">닉네임</label>
@@ -81,7 +73,7 @@
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
-                <a href="${pageContext.request.contextPath}/login">로그인하러 가기</a>
+                <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
 
         </div>

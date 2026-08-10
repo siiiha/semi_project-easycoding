@@ -10,9 +10,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EducationServiceImp implements EducationService {
+
+    private static final Set<Integer> ALLOWED_PROBLEM_COUNTS =
+            Set.of(3, 5, 10, 20);
 
     private final EducationMapper educationMapper;
 
@@ -112,16 +116,50 @@ public class EducationServiceImp implements EducationService {
 
         List<MemberQuizHistoryDto> todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
 
-        if (todayEducationHistory.isEmpty()) {
+       /* if (todayEducationHistory.isEmpty()) {
             List<EducationDto> newEducationList = NotAssignedEducations(memberId, 5); // 예시로 5개 할당
             assignEducation(memberId, newEducationList);
             todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
-        }
+        }*/
+        //TODO: 사용자 선택 기반 prepareDailyQuiz()이 문제 배정을 전담하므로 기존 고정 5문제 배정 로직은 삭제 예정
+
         return todayEducationHistory;
     }
     // 컨트롤러의 "/daily" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습에대한 현황을 조회하여 반환
     // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
+
+    @Override
+    public TodayProgressDto getTodayProgress(Long memberId) {
+        List<MemberQuizHistoryDto> histories = todayEducations(memberId);
+
+        int total = histories.size();
+        int done = (int) histories.stream()
+                .filter(MemberQuizHistoryDto::isAnswered)
+                .count();
+        return new TodayProgressDto(done, total);
+    }
+
+    @Transactional
+    @Override
+    public void prepareDailyQuiz(Long memberId, int problemCount, Long categoryId) {
+        if (!ALLOWED_PROBLEM_COUNTS.contains(problemCount)) {
+            throw new IllegalArgumentException("허용되지 않은 문제 수입니다.");
+        }
+
+        if (!memberTodayEducationIsEmpty(memberId)) {
+            return;
+        }
+
+        List<EducationDto> educations;
+
+        if (categoryId == null) {
+            educations = NotAssignedEducations(memberId, problemCount);
+        } else {
+            educations = NotAssignedEducations(memberId, problemCount, categoryId);
+        }
+        assignEducation(memberId, educations);
+    }
 
     public List<EducationDto> getTodayEducations(Long memberId){
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();

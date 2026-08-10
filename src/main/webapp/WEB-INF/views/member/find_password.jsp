@@ -41,12 +41,15 @@
 
             <!-- 탭 -->
             <div class="find-tabs">
-                <a href="${pageContext.request.contextPath}/find-id" class="find-tab">아이디 찾기</a>
-                <a href="${pageContext.request.contextPath}/find-password" class="find-tab active">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-id" class="find-tab">아이디 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="find-tab active">비밀번호 찾기</a>
             </div>
 
             <!-- 폼 -->
-            <form action="${pageContext.request.contextPath}/find-password" method="post" class="find-form">
+            <form action="${pageContext.request.contextPath}/member/find-password"
+                  method="post"
+                  class="find-form"
+                  id="passwordEmailForm">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                     <label class="find-field-label" for="email">아이디 (이메일)</label>
@@ -74,7 +77,7 @@
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
-                <a href="${pageContext.request.contextPath}/login">로그인하러 가기</a>
+                <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
 
         </div>
@@ -82,6 +85,14 @@
 
 </main>
 
-<jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp"/>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/password-validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/find-password.js"></script>
+
+
 </body>
 </html>
