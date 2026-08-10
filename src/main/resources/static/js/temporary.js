@@ -134,6 +134,48 @@ function toggleDraftPanel(open) {
     panel.classList.toggle('is-open', open);
 }
 
-function saveDraft() {
-    postForm.submit();
+// 임시 저장을 비동기로 하는 함수
+async function saveDraft() {
+    // 전달할 게시글을 객체로 만들어서 저장
+    const draft = {
+        title: document.querySelector('#title').value,
+        content: document.querySelector('#content').value,
+        category: document.querySelector('#postType').value,
+        status: 1
+    };
+
+    // 이미 불러온 임시 저장한 글이라면 INSERT 대신 UPDATE를 하기 위한 값
+    const postIdInput = document.querySelector('input[name="postId"]');
+    if (postIdInput) {
+        draft.postId = postIdInput.value;
+    }
+
+    const response = await fetch(`/api/insert/temporaryPost`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
+            "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+        },
+        body: JSON.stringify(draft)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+        CommonModal.open({
+            type: 'alert',
+            theme: 'warning',
+            title: '경고',
+            message: '임시저장에 실패하였습니다.'
+        });
+    }
+
+    const temporaryPostList = result.data;
+    if (temporaryPostList == null) {
+        return;
+    }
+    temporaryPostList.forEach(function(temporaryPost) {
+        renderTemporaryPosts(temporaryPost);
+    });
+
 }

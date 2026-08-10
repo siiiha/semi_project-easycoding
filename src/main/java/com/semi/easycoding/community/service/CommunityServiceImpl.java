@@ -126,15 +126,13 @@ public class CommunityServiceImpl implements CommunityService {
      * 게시글 삭제하는 메소드
      */
     @Override
-    public int deletePost(Long postId, Long memberId) {
+    public void deletePost(Long postId, Long memberId) {
 
         int result = communityMapper.deletePost(postId, memberId);
         if (result != 1) {
             // 실패 시 로직
             throw new IllegalStateException("삭제 권한이 없거나 게시글이 존재하지 않습니다.");
         }
-        // 성공 시 로직
-        return result;
     }
 
     /**
@@ -169,8 +167,4 @@ public class CommunityServiceImpl implements CommunityService {
      * @param memberId
      * @return
      */
-    @Override
-    public int deletePost(Long postId, String memberId) {
-        return 0;
-    }
 }

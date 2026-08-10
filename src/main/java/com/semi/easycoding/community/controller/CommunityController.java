@@ -152,7 +152,7 @@ public class CommunityController {
             }
 
             MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
-            postDto.setMemberId(Long.valueOf( loginMember.getMemberId()));
+            postDto.setMemberId(loginMember.getMemberId());
 
             Long postId = communityService.insertPost(postDto);
             redirectAttributes.addFlashAttribute("successMsg", "게시글 작성 성공");

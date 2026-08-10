@@ -19,6 +19,7 @@
         <where>
             <!-- 전달받은 alias가 있으면 'alias.', 없으면 빈값으로 생성 -->
             ${alias}.deleted_at IS NULL
+            AND status = 0
 
             <if test="postCategory != null
                     and postCategory != ''
@@ -100,8 +101,8 @@
 
     <!-- 게시글 작성/추가 -->
     <insert id="insertPost" parameterType="PostDto" useGeneratedKeys="true" keyProperty="postId">
-        INSERT INTO post (member_id, category_id, title, content)
-        VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
+        INSERT INTO post (member_id, category_id, title, content, status)
+        VALUES (#{memberId}, #{categoryId}, #{title}, #{content}, #{temporaryStatus})
     </insert>
 
     <!-- 게시글 수정 -->
