@@ -19,6 +19,7 @@ public class PostDto {
     private String nickname;    // 작성자 닉네임
     private int views;          // 조회수
     private LocalDateTime createAt; // 작성일
+    private int temporaryStatus = 0;    // 임시저장 여부
 
     private String createdAtStr;     // 화면에 보여줄 작성일 (문자열)
 }

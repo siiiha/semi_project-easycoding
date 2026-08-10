@@ -259,19 +259,6 @@ public class CommunityController {
         return "redirect:/community";
     }
 
-    @ResponseBody
-    @GetMapping("/temporary/post")
-    public ResponseEntity<ApiResponse<List<PostDto>>> temporaryPost(
-            Model model,
-            HttpSession session
-    ) {
-        MemberDto loginMember = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
-        List<PostDto> temporaryPostList = communityService.selectTemporaryPost(loginMember.getMemberId());
-        model.addAttribute("temporaryPostList", temporaryPostList);
-
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(temporaryPostList));
-    }
-
 
 
 }

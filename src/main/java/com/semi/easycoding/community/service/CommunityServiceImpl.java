@@ -138,12 +138,12 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     /**
-     * 현재 로그인되어있는 회원의 임시저장된 게시글을 조회하는 메소드
+     * 현재 로그인되어있는 회원의 임시저장된 게시글 목록을 조회하는 메소드
      * @param memberId
      */
     @Override
-    public List<PostDto> selectTemporaryPost(String memberId) {
-        return communityMapper.selectTemporaryPost(memberId);
+    public List<PostDto> selectTemporaryPostList(Long memberId) {
+        return communityMapper.selectTemporaryPostList(memberId);
     }
 
     /**
@@ -161,5 +161,16 @@ public class CommunityServiceImpl implements CommunityService {
             return 0L;
         }
         return postDto.getPostId();
+    }
+
+    /**
+     * 임시저장 게시글을 삭제하는 메소드
+     * @param postId
+     * @param memberId
+     * @return
+     */
+    @Override
+    public int deletePost(Long postId, String memberId) {
+        return 0;
     }
 }
