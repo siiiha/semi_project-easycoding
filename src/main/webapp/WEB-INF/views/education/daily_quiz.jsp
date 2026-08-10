@@ -41,7 +41,6 @@
         <section class="quiz-card">
             <div class="quiz-card-head">
                 <div class="quiz-badges">
-                    <span class="badge-level" id="quiz-category-name">일일 문제</span>
                     <span class="badge-type" id="quiz-type-text">객관식</span>
                 </div>
                 <span class="badge-lang" id="quiz-topic-text">Java 개념</span>
@@ -51,7 +50,8 @@
 
             <h1 class="quiz-question" id="quiz-question">테스트 문제 텍스트</h1>
 
-            <form class="quiz-form" id="quiz-form" action="#" method="post">
+            <form class="quiz-form" id="quiz-form" action="#" method="post"
+                  data-submit-url="${pageContext.request.contextPath}/education/submit">
                 <div id="quiz-options"></div>
 
                 <div class="quiz-feedback quiz-feedback-correct is-hidden">
