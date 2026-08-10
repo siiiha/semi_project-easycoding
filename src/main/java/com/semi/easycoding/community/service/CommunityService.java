@@ -17,6 +17,7 @@ public interface CommunityService {
     Long insertPost(PostDto postDto);
 
     Long updatePost(PostDto postDto);
+  
+    int deletePost(Long postId, Long memberId);
 
-    int deletePost(Long postId, String memberId);
 }
