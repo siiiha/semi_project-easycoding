@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EducationServiceImp implements EducationService {
@@ -82,7 +81,7 @@ public class EducationServiceImp implements EducationService {
     // 이거 로직 짜보니까 필요가 없는데?
 
     @Override
-    public List<EducationDto> NotAssignedEducations(Long memberId, int qty) {
+    public List<EducationDto> notAssignedEducations(Long memberId, int qty) {
         // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제들을 전부 받아옴
         List<EducationDto> educationList = educationMapper.selectEducationNotAssigned(memberId);
 
@@ -95,7 +94,7 @@ public class EducationServiceImp implements EducationService {
     // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
 
     @Override
-    public List<EducationDto> NotAssignedEducations(Long memberId, int qty, Long categoryId) {
+    public List<EducationDto> notAssignedEducations(Long memberId, int qty, Short categoryId) {
 
         List<EducationDto> educationList = educationMapper.selectEducationNotAssignedByCategory(memberId, categoryId);
         // 리스트를 무작위로 섞고 앞의 n개 꺼내옴
@@ -134,7 +133,7 @@ public class EducationServiceImp implements EducationService {
         List<MemberQuizHistoryDto> todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
 
         if (todayEducationHistory.isEmpty()) {
-            List<EducationDto> newEducationList = NotAssignedEducations(memberId, 5); // 예시로 5개 할당
+            List<EducationDto> newEducationList = notAssignedEducations(memberId, 5); // 예시로 5개 할당
             assignEducation(memberId, newEducationList);
             todayEducationHistory = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
         }
@@ -310,5 +309,20 @@ public class EducationServiceImp implements EducationService {
         return count;
     }
     // 특정사용자의 연속 학습일수를 계산한다
+
+    @Override
+    public List<EducationDto> getNotAssignedEducationsByCategoryWithAnswers(Long memberId, int qty, Short categoryId) {
+
+        List<EducationDto> educationList = notAssignedEducations(memberId, qty, categoryId);
+        assignEducation(memberId, educationList);
+
+        return educationList.stream()
+                .map(this::educationDtoToType)
+                .toList();
+    }
+    // 컨트롤러의 "/category/quiz" 요청을 받는 서비스 오케스트레이션 메서드
+    // 카테코리 id를 바탕으로 사용자에게 할당되지 않은 문제를 조회하여 할당
+    // 문제 타입에 따라 답변까지 묶어서 반환
+
 
 }
