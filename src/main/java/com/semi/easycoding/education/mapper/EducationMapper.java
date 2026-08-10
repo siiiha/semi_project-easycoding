@@ -12,20 +12,31 @@ public interface EducationMapper {
 
     int insertQuiz(EducationDto myDto);
     // 문제 삽입
+
     int insertOptions(EducationOptionTypeDto myDto);
     // 객관식 답변 삽입
+
     int insertBlank(EducationBlankTypeDto myDto);
     // 주관식 답변 삽입
+
     List<EducationCategoryDto> selectAllEduCategory();
     // 모든 문제 카테고리 조회
+
     List<EducationDto> selectUserEducationAtDate(@Param("memberId") Long memberId,
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
     // 특정 기간 동안 사용자에게 할당된 문제 조회
+
+    List<EducationDto> selectUserEducationAtDateNotsubmitted(@Param("memberId") Long memberId,
+                                                             @Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
+    // 특정 기간 동안 사용자에게 할달된 문제 중, 풀지 않은 문제 조회
+
     List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
     List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
                                                             @Param("categoryId") Long categoryId);
+
 
     int insertMemberQuizHistory(@Param("memberId") Long memberId,
                                 @Param("educationIdList") List<Long> educationIdList);
@@ -38,5 +49,16 @@ public interface EducationMapper {
     List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
     // 문제ID로 객관식 답변 조회(answer_option) 테이블
 
+    Long selectHistoryByMemberIdAndEducationId(@Param("memberId") Long memberId,
+                                          @Param("educationId") Long educationId);
+    // memberId 와 educationId를 이용해서 MemberQuizHistory 테이블 조회
 
+    int updateMemberQuizHistory(@Param("historyId") Long historyId,
+                                @Param("answered") boolean answered,
+                                @Param("correct") boolean correct);
+    // MemberQuizHistory 테이블에서 historyId를 이용해서 answered와 correct를 업데이트
+
+    int insertAnsweredOption(@Param("historyId") Long historyId,
+                            @Param("choseOption") Short choseOption);
+    // AnsweredOption 테이블 삽입
 }
