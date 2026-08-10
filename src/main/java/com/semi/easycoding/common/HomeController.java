@@ -2,12 +2,12 @@ package com.semi.easycoding.common;
 
 import com.semi.easycoding.common.util.SessionConst;
 import com.semi.easycoding.education.service.EducationService;
+import com.semi.easycoding.home.service.HomeDashboardService;
 import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.semi.easycoding.home.service.HomeDashboardService;
 
 @Controller
 public class HomeController {
@@ -22,38 +22,29 @@ public class HomeController {
         this.homeDashboardService = homeDashboardService;
     }
 
-    // 메인화면 로드
+    // 로그인 여부에 따라 메인 화면을 반환한다.
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
-        MemberDto loginUser = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
-        if (loginUser != null) {
-            Long memberId = Long.valueOf(loginUser.getMemberId());
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
 
-            model.addAttribute(
-                    "categories",
-                    educationService.getAllEduCategory()
-            );
-            model.addAttribute(
-                    "todayProgress",
-                    homeDashboardService.getTodayProgress(memberId)
-            );
-
-            model.addAttribute(
-                    "grassCells",
-                    homeDashboardService.getGrassCells(memberId)
-            );
-
-            model.addAttribute(
-                    "learningStats",
-                    homeDashboardService.getLearningStats(memberId)
-            );
-
-            return "home/main_user";
+        if (loginUser == null) {
+            return "home/main";
         }
 
-        return "home/main";
+        Long memberId = Long.valueOf(loginUser.getMemberId());
+
+        model.addAttribute("categories", educationService.getAllEduCategory());
+        model.addAttribute(
+                "todayProgress",
+                homeDashboardService.getTodayProgress(memberId));
+        model.addAttribute(
+                "grassCells",
+                homeDashboardService.getGrassCells(memberId));
+        model.addAttribute(
+                "learningStats",
+                homeDashboardService.getLearningStats(memberId));
+
+        return "home/main_user";
     }
-
-
-
 }
