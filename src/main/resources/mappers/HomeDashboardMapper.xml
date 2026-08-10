@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.easycoding.home.mapper.HomeDashboardMapper">
+
+    <select id="selectGrassCells"
+            resultType="com.semi.easycoding.home.dto.GrassCellDto">
+        <!-- 104일 전 날짜를 잔디의 시작 날짜로 정한다 -->
+        WITH RECURSIVE dates AS (
+            SELECT CURDATE() - INTERVAL 104 DAY AS study_date
+
+            UNION ALL
+
+            <!-- 시작 날짜부터 오늘까지 하루씩 증가시켜 총 105개의 날짜를 만든다 -->
+            SELECT study_date + INTERVAL 1 DAY
+            FROM dates
+            WHERE study_date &lt; CURDATE()
+        ),
+
+        <!-- 현재 회원이 완료한 문제 수를 날짜별로 계산한다 -->
+        daily_activity AS (
+            SELECT DATE(exam_at) AS study_date,
+                   COUNT(*) AS solved_count
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+              AND answered = TRUE
+              <!-- 잔디에 표시할 최근 105일의 기록만 조회한다 -->
+              AND exam_at >= CURDATE() - INTERVAL 104 DAY
+              AND exam_at &lt; CURDATE() + INTERVAL 1 DAY
+            GROUP BY DATE(exam_at)
+        )
+
+        <!-- 완료 문제 수를 CSS에서 사용하는 잔디 단계 0, 1, 2로 바꾼다 -->
+        SELECT dates.study_date AS date,
+               CASE
+                   WHEN COALESCE(daily_activity.solved_count, 0) = 0 THEN 0
+                   WHEN daily_activity.solved_count &lt; 5 THEN 1
+                   ELSE 2
+               END AS level
+        FROM dates
+
+        <!-- 학습 기록이 없는 날짜도 잔디에 포함되도록 전체 날짜와 기록을 합친다 -->
+        LEFT JOIN daily_activity
+               ON daily_activity.study_date = dates.study_date
+
+        <!-- 오래된 날짜부터 오늘까지 순서대로 정렬한다 -->
+        ORDER BY dates.study_date
+    </select>
+
+</mapper>

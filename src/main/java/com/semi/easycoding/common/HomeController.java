@@ -7,14 +7,19 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.semi.easycoding.home.service.HomeDashboardService;
 
 @Controller
 public class HomeController {
 
     private final EducationService educationService;
+    private final HomeDashboardService homeDashboardService;
 
-    public HomeController(EducationService educationService) {
+    public HomeController(
+            EducationService educationService,
+            HomeDashboardService homeDashboardService) {
         this.educationService = educationService;
+        this.homeDashboardService = homeDashboardService;
     }
 
     // 메인화면 로드
@@ -30,11 +35,14 @@ public class HomeController {
             );
             model.addAttribute(
                     "todayProgress",
-                    educationService.getTodayProgress(memberId)
+                    homeDashboardService.getTodayProgress(memberId)
             );
 
             return "home/main_user";
         }
         return "home/main";
     }
+
+
+
 }

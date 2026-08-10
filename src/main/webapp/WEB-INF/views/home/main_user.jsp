@@ -32,7 +32,7 @@
                     </div>
 
                     <form class="mission-card"
-                          action="${pageContext.request.contextPath}/education/daily/quiz/start"
+                          action="${pageContext.request.contextPath}/home/daily/quiz/start"
                           method="post">
                         <h2 class="mission-title">오늘의 미션</h2>
                         <c:if test="${not empty missionError}">
