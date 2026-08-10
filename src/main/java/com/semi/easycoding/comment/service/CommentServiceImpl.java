@@ -82,17 +82,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, Long memberId) {
 
-        // 수정하려는 댓글의 작성자를 조회하는 메소드
-        Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(memberId)) {
-            return null;    // 수정하려는 댓글의 작성자와 로그인한 회원이 다를 경우
-        }
-
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
         comment.setMemberId(memberId);
         comment.setCommentId(commentId);
-        comment.setMemberId(memberId);
         comment.setContent(content);
         int result = commentMapper.updateComment(comment);
 
@@ -112,12 +105,6 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> deleteComment(Long postId, Long commentId, Long memberId) {
-
-        // 삭제하려는 댓글의 작성자를 조회하는 메소드
-        Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(memberId)) {
-            return null;    // 삭제하려는 댓글의 작성자와 로그인한 회원이 다를 경우
-        }
         int result = commentMapper.deleteComment(commentId);
         if (result < 1) {
             // 삭제 실패한 경우

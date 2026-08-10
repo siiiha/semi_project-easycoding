@@ -70,7 +70,7 @@
 
     <!-- 회원이 작성한 게시글 개수 -->
     <select id="countPostByMemberId"
-            parameterType="String"
+            parameterType="Long"
             resultType="int">
         select count(*)
           from post
@@ -80,7 +80,7 @@
 
     <!-- 회원이 작성한 댓글 개수 -->
     <select id="countCommentByMemberId"
-            parameterType="String"
+            parameterType="Long"
             resultType="int">
         select count(*)
         from comment
