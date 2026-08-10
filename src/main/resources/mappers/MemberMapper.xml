@@ -106,5 +106,21 @@
         WHERE member_id = #{memberId}
         and deleted_at Is NULL
     </update>
+    <!-- 비밀번호 변경 SQL -->
+    <update id="updatePasswordByEmail">
+        UPDATE member
+        SET PASSWORD = #{password}
+        WHERE email = #{email}
+        AND DELETED_AT IS NULL
+    </update>
+
+    <update id="updatePasswordByMemberId">
+        UPDATE member
+        SET password = #{password}
+        WHERE member_id = #{memberId}
+        AND deleted_at IS NULL
+    </update>
+
+
 
 </mapper>

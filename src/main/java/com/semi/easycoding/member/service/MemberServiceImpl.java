@@ -14,7 +14,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberMapper memberMapper;
-    //Mapper에게 DB조회 요청!
 
     @Override
     public boolean isEmailDuplicate(String email) {
@@ -105,6 +104,47 @@ public class MemberServiceImpl implements MemberService {
         }
 
         int result = memberMapper.withdraw(memberId);
+        return result > 0;
+    }
+
+    @Override
+    public boolean resetPassword(
+            String email,
+            String newPassword
+    ){
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        int result = memberMapper.updatePasswordByEmail(
+                email,
+                encodedPassword
+        );
+        return result > 0;
+    }
+
+    @Override
+    public boolean updatePassword(
+            String memberId,
+            String currentPassword,
+            String newPassword
+    ) {
+        String savedPassword =
+                memberMapper.findPasswordByMemberId(memberId);
+
+        if (savedPassword == null) {
+            return false;
+        }
+
+        if (!passwordEncoder.matches(currentPassword, savedPassword)) {
+            return false;
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        int result = memberMapper.updatePasswordByMemberId(
+                memberId,
+                encodedPassword
+        );
+
         return result > 0;
     }
 

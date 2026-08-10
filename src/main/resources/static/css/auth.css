@@ -192,7 +192,14 @@
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: var(--color-error);
+}
+
+#check-email-result.is-success,
+#check-nickname-result.is-success,
+#check-password-format-result.is-success,
+#check-password-result.is-success {
+  color: var(--color-success);
 }
 
 /* ── 옵션 (체크박스 + 링크) ── */
