@@ -16,9 +16,13 @@
     <script src="${pageContext.request.contextPath}/js/member.js" defer></script>
 
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
 
+
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 </head>
-<body class="auth-page">
+<body class="auth-page" data-context-path="${pageContext.request.contextPath}">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -86,9 +90,10 @@
                                    placeholder="이메일을 입력해주세요." value="${param.email}"
                                    autocomplete="email" required>
 
-                            <button type="button" id="check-email-button" class="btn btn-outline">
-                                중복확인
+                            <button type="button" id="send-email-code-button" class="btn btn-outline">
+                                이메일 인증
                             </button>
+
                         </div>
                         <p id="check-email-result"></p>
                     </div>
@@ -123,8 +128,6 @@
                                    placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password" required>
                         </div>
                         <p id="check-password-result"></p>
-                        <!-- 이 부분은 패스워드 체크의 결과값이 들어간다.-->
-                        <!-- "check-password-result"는 Java변수가 아니라 HTML의 id이기 때문에 구글 자바 컨벤션의 적용 대상이 아니다.-->
                     </div>
 
                 <button type="submit" class="btn btn-primary auth-submit-btn">회원가입</button>
@@ -172,6 +175,11 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp" />
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
 
 </body>
 </html>

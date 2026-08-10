@@ -14,7 +14,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberMapper memberMapper;
-    //Mapper에게 DB조회 요청!
 
     @Override
     public boolean isEmailDuplicate(String email) {
@@ -61,32 +60,32 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDto findByMemberId(String memberId) {
+    public MemberDto findByMemberId(Long memberId) {
         return memberMapper.findByMemberId(memberId);
     }
 
     // 일반 회원정보 조회 시 비밀번호는 포함하지 않는다.
 
     @Override
-    public int updateNickname(String memberId, String nickname) {
+    public int updateNickname(Long memberId, String nickname) {
         String trimmedNickname = nickname.trim();
 
         return memberMapper.updateNickname(memberId, trimmedNickname);
     }
 
     @Override
-    public int countPostByMemberId(String memberId) {
+    public int countPostByMemberId(Long memberId) {
         return memberMapper.countPostByMemberId(memberId);
     }
 
     @Override
-    public int countCommentByMemberId(String memberId) {
+    public int countCommentByMemberId(Long memberId) {
         return memberMapper.countCommentByMemberId(memberId);
     }
 
     // 회원 탈퇴 시 암호화된 비밀번호만 별도로 조회하여 사용한다.
     @Override
-    public boolean withdraw(String memberId, String password) {
+    public boolean withdraw(Long memberId, String password) {
         String encodedPassword =
                 memberMapper.findPasswordByMemberId(memberId);
 
@@ -105,6 +104,47 @@ public class MemberServiceImpl implements MemberService {
         }
 
         int result = memberMapper.withdraw(memberId);
+        return result > 0;
+    }
+
+    @Override
+    public boolean resetPassword(
+            String email,
+            String newPassword
+    ){
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        int result = memberMapper.updatePasswordByEmail(
+                email,
+                encodedPassword
+        );
+        return result > 0;
+    }
+
+    @Override
+    public boolean updatePassword(
+            String memberId,
+            String currentPassword,
+            String newPassword
+    ) {
+        String savedPassword =
+                memberMapper.findPasswordByMemberId(memberId);
+
+        if (savedPassword == null) {
+            return false;
+        }
+
+        if (!passwordEncoder.matches(currentPassword, savedPassword)) {
+            return false;
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        int result = memberMapper.updatePasswordByMemberId(
+                memberId,
+                encodedPassword
+        );
+
         return result > 0;
     }
 

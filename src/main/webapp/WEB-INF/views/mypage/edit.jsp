@@ -108,6 +108,7 @@
                             <input type="password" id="currentPassword" name="currentPassword" class="edit-input"
                                    placeholder="현재 비밀번호를 입력해주세요.">
                         </div>
+                        <p id="check-current-password-result"></p>
                     </div>
 
                     <!-- 새 비밀번호 + 확인 -->
@@ -130,7 +131,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
-                                <input type="password" id="confirmPassword" name="confirmPassword" class="edit-input"
+                                <input type="password" id="confirmPassword" class="edit-input"
                                        placeholder="새 비밀번호를 다시 입력해주세요.">
                             </div>
                             <p id="check-confirm-password-result"></p>
@@ -155,17 +156,8 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script src="${pageContext.request.contextPath}/js/modal.js"></script>
 <script>
-/* 비밀번호 일치 확인 */
-document.getElementById('editForm').addEventListener('submit', function(e) {
-    var np = document.getElementById('newPassword').value;
-    var cp = document.getElementById('confirmPassword').value;
-    if (np && np !== cp) {
-        e.preventDefault();
-        alert('새 비밀번호가 일치하지 않습니다.');
-    }
-});
+
 /* 프로필 이미지 미리보기 */
 document.getElementById('profileImage').addEventListener('change', function(e) {
     var file = e.target.files[0];

@@ -246,15 +246,22 @@
 }
 .post-search-btn {
   padding: 0 18px;
-  background: var(--color-primary);
+  background: #FFFFFF;
+  border: 1.5px solid #EAEAEA;
   border-radius: 8px;
-  color: #fff;
+  color: #4B5563;
   font-size: 14px;
   font-weight: 600;
   height: 42px;
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.post-search-btn:hover {
+  background: #F0FDF4;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .post-table {
@@ -481,6 +488,67 @@
   gap: 6px;
 }
 
+.comment-reply {
+  position: relative;
+  margin-left: 38px;
+  padding: 10px 0;
+  background: transparent;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.comment-reply::before {
+  position: absolute;
+  top: 0;
+  left: -22px;
+  width: 14px;
+  height: 18px;
+  border-bottom: 1px solid #D1D5DB;
+  border-left: 1px solid #D1D5DB;
+  content: "";
+}
+
+.reply-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 8px 0 8px 38px;
+}
+
+.reply-form textarea {
+  width: 100%;
+  min-height: 78px;
+  padding: 10px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+  resize: none;
+}
+
+.reply-form textarea:focus {
+  border-color: #2DB34A;
+  outline: none;
+}
+
+.reply-form button {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reply-form button[type="submit"] {
+  background: #2DB34A;
+  color: #FFFFFF;
+}
+
+.reply-form button[type="button"] {
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
 .profile-area {
   display: flex;
   align-items: center;
@@ -630,5 +698,48 @@
   gap: 4px;
 }
 
+/* 게시글 상세 - 화면 고정 목록 버튼 */
+.back-to-list-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+}
 
+.back-to-list-btn a{
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: #fff;
+  border: 1.5px solid #9CA3AF;
+  border-radius: 8px;
+  color: #5B5B5B;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s, border-color 0.15s;
+}
 
+.back-to-list-btn a:hover {
+  background: #F9FBF9;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 고정 버튼이 마지막 댓글을 가리지 않도록 여백 확보 */
+.comm-content {
+  padding-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+  .comm-back-to-list {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .comm-back-to-list a {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.94);
+  }
+}

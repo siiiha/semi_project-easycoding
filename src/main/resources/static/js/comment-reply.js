@@ -1,0 +1,86 @@
+const replyCommentsArea = document.querySelector('#comments-area');
+
+// 클릭 처리
+replyCommentsArea.addEventListener('click', function (event) {
+    const replyButton = event.target.closest('.reply-btn');
+
+    if (!replyButton) {
+        return;
+    }
+    const parentId = replyButton.dataset.commentId;
+
+    createReplyForm(replyButton, parentId);
+});
+
+// 입력창 생성
+function createReplyForm(replyButton, parentId) {
+    const existingReplyForm = document.querySelector('.reply-form');
+
+    if (existingReplyForm) {
+        existingReplyForm.remove();
+    }
+
+    const commentArea = replyButton.closest('.comment-area');
+    const replyForm = document.createElement('form');
+    const replyInput = document.createElement('textarea');
+
+    replyForm.classList.add('reply-form');
+    replyInput.placeholder = '답글을 입력해주세요.';
+    replyInput.maxLength = 300;
+
+    const submitButton = document.createElement('button');
+    const cancelButton = document.createElement('button');
+
+    submitButton.type = 'submit';
+    submitButton.textContent = '등록';
+
+    cancelButton.type = 'button';
+    cancelButton.textContent = '취소';
+
+    replyForm.appendChild(replyInput);
+    replyForm.appendChild(submitButton);
+    replyForm.appendChild(cancelButton);
+
+    cancelButton.addEventListener('click', function () {
+        replyForm.remove();
+    });
+
+    replyForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const content = replyInput.value.trim();
+
+        if (!content) {
+            alert('답글 내용을 입력해주세요.');
+            return;
+        }
+
+        const postId = document.querySelector('#post-key').value;
+
+        const response = await fetch(
+            `${contextPath}/comment/insert/${postId}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    content: content,
+                    parentId: Number(parentId)
+                })
+            }
+        );
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            alert(result.message || '답글 등록에 실패했습니다.');
+            return;
+        }
+        renderCommentList(result.data);
+        replyForm.remove();
+    });
+
+    commentArea.appendChild(replyForm);
+}
+

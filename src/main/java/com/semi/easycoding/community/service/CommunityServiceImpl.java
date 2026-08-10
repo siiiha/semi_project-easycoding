@@ -1,6 +1,7 @@
 package com.semi.easycoding.community.service;
 
 import com.semi.easycoding.common.dto.PageInfo;
+import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -17,6 +18,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Autowired
     private CommunityMapper communityMapper;
 
+    /**
+     * 게시글 갯수를 통한 인기 회원 5위 조회
+     * @return
+     */
+    @Override
+    public List<PopularMemberDto> selectPopularMember() {
+        return communityMapper.selectPopularMember();
+    }
 
     /**
      * 게시판 이동 시 게시글 조회하는 메소드
@@ -51,15 +60,30 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public PostDto selectPostDetail(Long postId) {
 
+        PostDto postDetail = communityMapper.selectPostDetail(postId);
+        if (postDetail == null) {
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+        }
         // 조회하는 게시글의 조회수 1증가
         int increseViews = communityMapper.increseViews(postId);
-        if (increseViews <= 0) {
-            return null;
+        if (increseViews != 1) {
+            throw new IllegalStateException("게시글 조회에 실패하였습니다.");
         }
+
+        return postDetail;
+    }
+
+    /**
+     * 게시글 수정 시 해당 게시글 조회하는 메소드
+     * @param postId
+     * @return
+     */
+    @Override
+    public PostDto whenEditSelectPostDetail(Long postId) {
 
         PostDto postDetail = communityMapper.selectPostDetail(postId);
         if (postDetail == null) {
-            return null;
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
         }
 
         return postDetail;
@@ -73,9 +97,10 @@ public class CommunityServiceImpl implements CommunityService {
     public Long insertPost(PostDto postDto) {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
         postDto.setCategoryId(category_id);
+
         int result = communityMapper.insertPost(postDto);
         if (result != 1) {
-            return 0L;
+            throw new IllegalStateException("게시글 작성을 실패했습니다.");
         }
 
         return postDto.getPostId();
@@ -89,9 +114,10 @@ public class CommunityServiceImpl implements CommunityService {
     public Long updatePost(PostDto postDto) {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
         postDto.setCategoryId(category_id);
+
         int result = communityMapper.updatePost(postDto);
         if (result != 1) {
-            return 0L;
+            throw new IllegalStateException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
         }
         return postDto.getPostId();
     }
@@ -100,12 +126,12 @@ public class CommunityServiceImpl implements CommunityService {
      * 게시글 삭제하는 메소드
      */
     @Override
-    public int deletePost(Long postId, String  memberId) {
-
+    public int deletePost(Long postId, Long memberId) {
 
         int result = communityMapper.deletePost(postId, memberId);
-        if (result <= 0) {
+        if (result != 1) {
             // 실패 시 로직
+            throw new IllegalStateException("삭제 권한이 없거나 게시글이 존재하지 않습니다.");
         }
         // 성공 시 로직
         return result;
