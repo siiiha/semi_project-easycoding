@@ -1,6 +1,7 @@
 package com.semi.easycoding.community.service;
 
 import com.semi.easycoding.common.dto.PageInfo;
+import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -17,6 +18,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Autowired
     private CommunityMapper communityMapper;
 
+    /**
+     * 게시글 갯수를 통한 인기 회원 5위 조회
+     * @return
+     */
+    @Override
+    public List<PopularMemberDto> selectPopularMember() {
+        return communityMapper.selectPopularMember();
+    }
 
     /**
      * 게시판 이동 시 게시글 조회하는 메소드
@@ -117,7 +126,7 @@ public class CommunityServiceImpl implements CommunityService {
      * 게시글 삭제하는 메소드
      */
     @Override
-    public int deletePost(Long postId, String  memberId) {
+    public int deletePost(Long postId, Long memberId) {
 
         int result = communityMapper.deletePost(postId, memberId);
         if (result != 1) {
