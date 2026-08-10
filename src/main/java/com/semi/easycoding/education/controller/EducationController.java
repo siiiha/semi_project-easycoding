@@ -6,6 +6,7 @@ import com.semi.easycoding.education.dto.EducationOptionSubmitDto;
 import com.semi.easycoding.education.dto.EducationSummaryDto;
 import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
 import com.semi.easycoding.education.service.EducationService;
+import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -109,9 +110,8 @@ public class EducationController {
                                    HttpSession session,
                                    Model model) {
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
 
-        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(memberId, 1, categoryId);
+        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(loginUser.getMemberId(), 1, categoryId);
 
         model.addAttribute("educations", educationListByCategory);
 
