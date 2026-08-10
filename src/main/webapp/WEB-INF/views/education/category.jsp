@@ -26,146 +26,40 @@
 
         <div class="category-grid">
 
-            <!-- 변수 -->
-            <a href="${pageContext.request.contextPath}/learn/category/variable" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="8" y="20" width="48" height="28" rx="4" stroke="#4CAF50" stroke-width="3"/>
-                        <text x="14" y="40" font-size="18" font-weight="700" fill="#43A047" font-family="monospace">int a</text>
-                    </svg>
-                </div>
-                <span class="category-card-name">변수</span>
-                <span class="category-card-desc">기본적인 변수와 자료형</span>
-            </a>
-
-            <!-- 연산자 -->
-            <a href="${pageContext.request.contextPath}/learn/category/operator" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <text x="8" y="40" font-size="36" font-weight="800" fill="#4CAF50" font-family="monospace">+-×</text>
-                    </svg>
-                </div>
-                <span class="category-card-name">연산자</span>
-                <span class="category-card-desc">연산자와 표현식</span>
-            </a>
-
-            <!-- 조건문 -->
-            <a href="${pageContext.request.contextPath}/learn/category/condition" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M32 8 L56 32 L32 56 L8 32 Z" stroke="#4CAF50" stroke-width="3" fill="#EFFBEF"/>
-                        <text x="22" y="37" font-size="14" font-weight="700" fill="#4CAF50">if</text>
-                    </svg>
-                </div>
-                <span class="category-card-name">조건문</span>
-                <span class="category-card-desc">if, switch 문</span>
-            </a>
-
-            <!-- 반복문 -->
-            <a href="${pageContext.request.contextPath}/learn/category/loop" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 32 C12 20 20 12 32 12 C44 12 52 20 52 32" stroke="#4CAF50" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                        <path d="M52 32 C52 44 44 52 32 52 C20 52 12 44 12 32" stroke="#4CAF50" stroke-width="3.5" stroke-linecap="round" fill="none" stroke-dasharray="4 4"/>
-                        <polyline points="46,24 52,32 58,24" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" fill="none"/>
-                    </svg>
-                </div>
-                <span class="category-card-name">반복문</span>
-                <span class="category-card-desc">for, while 문</span>
-            </a>
-
-            <!-- 배열 -->
-            <a href="${pageContext.request.contextPath}/learn/category/array" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="6" y="22" width="16" height="20" rx="3" stroke="#4CAF50" stroke-width="3"/>
-                        <rect x="24" y="22" width="16" height="20" rx="3" stroke="#4CAF50" stroke-width="3"/>
-                        <rect x="42" y="22" width="16" height="20" rx="3" stroke="#4CAF50" stroke-width="3"/>
-                        <text x="11" y="36" font-size="11" fill="#4CAF50" font-weight="700">0</text>
-                        <text x="29" y="36" font-size="11" fill="#4CAF50" font-weight="700">1</text>
-                        <text x="47" y="36" font-size="11" fill="#4CAF50" font-weight="700">2</text>
-                    </svg>
-                </div>
-                <span class="category-card-name">배열</span>
-                <span class="category-card-desc">1차원, 다차원 배열</span>
-            </a>
-
-            <!-- 메서드 -->
-            <a href="${pageContext.request.contextPath}/learn/category/method" class="category-card">
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=37" class="category-card">
                 <div class="category-card-icon-wrap">
                     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="8" y="14" width="48" height="36" rx="6" stroke="#4CAF50" stroke-width="3"/>
-                        <text x="14" y="32" font-size="11" fill="#4CAF50" font-weight="700" font-family="monospace">void</text>
-                        <text x="14" y="45" font-size="11" fill="#43A047" font-weight="700" font-family="monospace">run()</text>
+                        <text x="14" y="38" font-size="14" font-weight="700" fill="#43A047" font-family="monospace">JAVA</text>
                     </svg>
                 </div>
-                <span class="category-card-name">메서드</span>
-                <span class="category-card-desc">메서드의 선언부와 구현부</span>
+                <span class="category-card-name">Java기본</span>
+                <span class="category-card-desc">자료형,연산자,제어문,메서드</span>
             </a>
 
-            <!-- 객체 -->
-            <a href="${pageContext.request.contextPath}/learn/category/object" class="category-card">
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=38" class="category-card">
                 <div class="category-card-icon-wrap">
                     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="32" cy="32" r="20" stroke="#4CAF50" stroke-width="3"/>
-                        <circle cx="32" cy="32" r="8" fill="#EFFBEF" stroke="#4CAF50" stroke-width="2"/>
-                        <line x1="32" y1="12" x2="32" y2="24" stroke="#4CAF50" stroke-width="2"/>
-                        <line x1="32" y1="40" x2="32" y2="52" stroke="#4CAF50" stroke-width="2"/>
-                        <line x1="12" y1="32" x2="24" y2="32" stroke="#4CAF50" stroke-width="2"/>
-                        <line x1="40" y1="32" x2="52" y2="32" stroke="#4CAF50" stroke-width="2"/>
+                        <text x="20" y="37" font-size="12" font-weight="700" fill="#43A047" font-family="monospace">OOP</text>
                     </svg>
                 </div>
-                <span class="category-card-name">객체</span>
-                <span class="category-card-desc">클래스와 객체</span>
+                <span class="category-card-name">객체지향</span>
+                <span class="category-card-desc">상속,다향성,추상화,캡슐화</span>
             </a>
 
-            <!-- 문자열 -->
-            <a href="${pageContext.request.contextPath}/learn/category/string" class="category-card">
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=39" class="category-card">
                 <div class="category-card-icon-wrap">
                     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <text x="10" y="40" font-size="28" font-weight="700" fill="#4CAF50" font-family="serif">Abc</text>
-                        <line x1="10" y1="46" x2="54" y2="46" stroke="#4CAF50" stroke-width="3" stroke-linecap="round"/>
+                        <rect x="8" y="10" width="48" height="44" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="8" y1="24" x2="56" y2="24" stroke="#4CAF50" stroke-width="2"/>
                     </svg>
                 </div>
-                <span class="category-card-name">문자열</span>
-                <span class="category-card-desc">String과 주요 메서드</span>
+                <span class="category-card-name">클래스</span>
+                <span class="category-card-desc">인터페이스,추상클래스,중첩클래스</span>
             </a>
 
-            <!-- 상속 -->
-            <a href="${pageContext.request.contextPath}/learn/category/inheritance" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="20" y="8" width="24" height="16" rx="4" stroke="#4CAF50" stroke-width="3"/>
-                        <rect x="4" y="40" width="24" height="16" rx="4" stroke="#4CAF50" stroke-width="3"/>
-                        <rect x="36" y="40" width="24" height="16" rx="4" stroke="#4CAF50" stroke-width="3"/>
-                        <line x1="32" y1="24" x2="32" y2="32" stroke="#4CAF50" stroke-width="2.5"/>
-                        <line x1="16" y1="32" x2="48" y2="32" stroke="#4CAF50" stroke-width="2.5"/>
-                        <line x1="16" y1="32" x2="16" y2="40" stroke="#4CAF50" stroke-width="2.5"/>
-                        <line x1="48" y1="32" x2="48" y2="40" stroke="#4CAF50" stroke-width="2.5"/>
-                    </svg>
-                </div>
-                <span class="category-card-name">상속</span>
-                <span class="category-card-desc">상속과 다형성</span>
-            </a>
-
-            <!-- 인터페이스 -->
-            <a href="${pageContext.request.contextPath}/learn/category/interface" class="category-card">
-                <div class="category-card-icon-wrap">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="6" y="8" width="52" height="48" rx="6" stroke="#4CAF50" stroke-width="3"/>
-                        <line x1="6" y1="22" x2="58" y2="22" stroke="#4CAF50" stroke-width="2.5"/>
-                        <line x1="6" y1="37" x2="58" y2="37" stroke="#4CAF50" stroke-width="2.5"/>
-                        <circle cx="14" cy="15" r="3" fill="#4CAF50"/>
-                        <circle cx="14" cy="29.5" r="3" fill="#4CAF50"/>
-                        <circle cx="14" cy="50" r="3" fill="#4CAF50"/>
-                    </svg>
-                </div>
-                <span class="category-card-name">인터페이스</span>
-                <span class="category-card-desc">interface와 추상 클래스</span>
-            </a>
-
-            <!-- 예외 처리 -->
-            <a href="${pageContext.request.contextPath}/learn/category/exception" class="category-card">
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=40" class="category-card">
                 <div class="category-card-icon-wrap">
                     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M32 8 L56 52 L8 52 Z" stroke="#4CAF50" stroke-width="3" stroke-linejoin="round" fill="#EFFBEF"/>
@@ -173,23 +67,153 @@
                         <circle cx="32" cy="47" r="3" fill="#4CAF50"/>
                     </svg>
                 </div>
-                <span class="category-card-name">예외 처리</span>
-                <span class="category-card-desc">try-catch와 예외 처리</span>
+                <span class="category-card-name">예외처리</span>
+                <span class="category-card-desc">try-catch-finally,throw,throws</span>
             </a>
 
-            <!-- 컬렉션 -->
-            <a href="${pageContext.request.contextPath}/learn/category/collection" class="category-card">
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=41" class="category-card">
                 <div class="category-card-icon-wrap">
                     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="8" y="8" width="48" height="48" rx="6" stroke="#4CAF50" stroke-width="3"/>
-                        <rect x="8" y="8" width="48" height="14" rx="4" fill="#EFFBEF" stroke="#4CAF50" stroke-width="0"/>
-                        <line x1="16" y1="32" x2="48" y2="32" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="16" y1="42" x2="48" y2="42" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="16" y1="52" x2="36" y2="52" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="16" y1="24" x2="48" y2="24" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="16" y1="34" x2="48" y2="34" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="16" y1="44" x2="48" y2="44" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <span class="category-card-name">컬렉션</span>
-                <span class="category-card-desc">List, Set, Map</span>
+                <span class="category-card-desc">List,Set,Map,Queue,Iterator</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=42" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="14" width="48" height="36" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <text x="16" y="38" font-size="12" font-weight="700" fill="#43A047" font-family="monospace">T&lt;?&gt;</text>
+                    </svg>
+                </div>
+                <span class="category-card-name">제네릭</span>
+                <span class="category-card-desc">타입매개변수,타입소거,와일드카드</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=43" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="12" width="44" height="40" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <text x="19" y="37" font-size="12" font-weight="700" fill="#43A047" font-family="monospace">JVM</text>
+                    </svg>
+                </div>
+                <span class="category-card-name">JVM</span>
+                <span class="category-card-desc">메모리구조,GC,클래스로딩</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=44" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="7" stroke="#4CAF50" stroke-width="3"/>
+                        <circle cx="44" cy="20" r="7" stroke="#4CAF50" stroke-width="3"/>
+                        <circle cx="32" cy="44" r="7" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="26" y1="24" x2="38" y2="24" stroke="#4CAF50" stroke-width="2"/>
+                        <line x1="24" y1="26" x2="29" y2="37" stroke="#4CAF50" stroke-width="2"/>
+                        <line x1="40" y1="26" x2="35" y2="37" stroke="#4CAF50" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">동시성</span>
+                <span class="category-card-desc">스레드,synchronized,volatile,executor</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=45" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 44 L26 20 L38 36 L54 16" stroke="#4CAF50" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">함수형Java</span>
+                <span class="category-card-desc">람다,Stream,Optional</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=46" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="12" width="48" height="40" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="8" y1="24" x2="56" y2="24" stroke="#4CAF50" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">프론트엔드</span>
+                <span class="category-card-desc">HTML,CSS,JavaScript</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=47" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="16" width="52" height="32" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <circle cx="18" cy="32" r="3" fill="#4CAF50"/>
+                        <circle cx="28" cy="32" r="3" fill="#4CAF50"/>
+                        <circle cx="38" cy="32" r="3" fill="#4CAF50"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">백엔드</span>
+                <span class="category-card-desc">Spring,SpringBoot,MyBatis,JPA</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=48" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="32" cy="16" rx="18" ry="8" stroke="#4CAF50" stroke-width="3"/>
+                        <path d="M14 16 V42 C14 46 22 50 32 50 C42 50 50 46 50 42 V16" stroke="#4CAF50" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">데이터베이스</span>
+                <span class="category-card-desc">관계형DB,트랜잭션,정규화</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=49" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="20" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="12" y1="32" x2="52" y2="32" stroke="#4CAF50" stroke-width="2"/>
+                        <line x1="32" y1="12" x2="32" y2="52" stroke="#4CAF50" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">네트워크</span>
+                <span class="category-card-desc">TCP/IP,HTTP,HTTPS,Socket</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=50" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="10" width="48" height="44" rx="6" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="8" y1="24" x2="56" y2="24" stroke="#4CAF50" stroke-width="2"/>
+                        <line x1="24" y1="24" x2="24" y2="54" stroke="#4CAF50" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">운영체제</span>
+                <span class="category-card-desc">프로세스,스레드,메모리관리</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=51" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="10" width="16" height="16" rx="3" stroke="#4CAF50" stroke-width="3"/>
+                        <rect x="24" y="10" width="16" height="16" rx="3" stroke="#4CAF50" stroke-width="3"/>
+                        <rect x="42" y="10" width="16" height="16" rx="3" stroke="#4CAF50" stroke-width="3"/>
+                        <line x1="14" y1="28" x2="32" y2="46" stroke="#4CAF50" stroke-width="2"/>
+                        <line x1="50" y1="28" x2="32" y2="46" stroke="#4CAF50" stroke-width="2"/>
+                        <circle cx="32" cy="50" r="6" stroke="#4CAF50" stroke-width="3"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">자료구조</span>
+                <span class="category-card-desc">배열,연결리스트,스택,큐,트리,그래프</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/education/category/quiz?categoryId=52" class="category-card">
+                <div class="category-card-icon-wrap">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 8 L50 14 V30 C50 42 41 51 32 56 C23 51 14 42 14 30 V14 Z" stroke="#4CAF50" stroke-width="3" fill="#EFFBEF"/>
+                        <rect x="24" y="28" width="16" height="12" rx="2" stroke="#4CAF50" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="category-card-name">보안</span>
+                <span class="category-card-desc">암호화,인증,인가,XSS,CSRF</span>
             </a>
 
         </div>

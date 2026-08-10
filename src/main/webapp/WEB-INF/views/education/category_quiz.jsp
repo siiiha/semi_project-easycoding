@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>일일 퀴즈 - 쉽코딩</title>
+    <title>카테고리 퀴즈 - 쉽코딩</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
@@ -17,12 +17,12 @@
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<c:set var="totalCount" value="${fn:length(todayEducation)}" />
+<c:set var="totalCount" value="${fn:length(educations)}" />
 
 <main class="daily-quiz-page">
     <div class="daily-quiz-wrap">
         <div class="quiz-top-row">
-            <a class="quiz-back-link" href="${pageContext.request.contextPath}/education/daily">← 일일학습으로</a>
+            <a class="quiz-back-link" href="${pageContext.request.contextPath}/education/category">← 카테고리로</a>
 
             <div class="quiz-step-dots" aria-label="퀴즈 진행도">
                 <c:if test="${totalCount > 0}">
@@ -48,7 +48,7 @@
 
             <div class="quiz-divider"></div>
 
-            <h1 class="quiz-question" id="quiz-question">테스트 문제 텍스트</h1>
+            <h1 class="quiz-question" id="quiz-question">문제 텍스트</h1>
 
             <form class="quiz-form" id="quiz-form" action="#" method="post"
                   data-submit-url="${pageContext.request.contextPath}/education/submit">
@@ -57,16 +57,16 @@
                 <div class="quiz-feedback quiz-feedback-correct is-hidden">
                     <span class="feedback-icon">✓</span>
                     <div>
-                        <p class="feedback-title">테스트 정답 안내 텍스트</p>
-                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
+                        <p class="feedback-title">정답 안내 텍스트</p>
+                        <p class="feedback-desc">설명 텍스트입니다.</p>
                     </div>
                 </div>
 
                 <div class="quiz-feedback quiz-feedback-wrong is-hidden">
                     <span class="feedback-icon">✕</span>
                     <div>
-                        <p class="feedback-title">테스트 오답 안내 텍스트</p>
-                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
+                        <p class="feedback-title">오답 안내 텍스트</p>
+                        <p class="feedback-desc">설명 텍스트입니다.</p>
                     </div>
                 </div>
 
@@ -75,7 +75,7 @@
         </section>
 
         <section id="today-education-data" class="is-hidden">
-            <c:forEach var="edu" items="${todayEducation}">
+            <c:forEach var="edu" items="${educations}">
                 <article class="quiz-data-item">
                     <p class="quiz-data-id"><c:out value="${edu.educationId}" /></p>
                     <p class="quiz-data-type"><c:out value="${edu.educationType}" /></p>
@@ -100,6 +100,6 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script src="${pageContext.request.contextPath}/js/daily_quiz.js"></script>
+<script src="${pageContext.request.contextPath}/js/category_quiz.js"></script>
 </body>
 </html>

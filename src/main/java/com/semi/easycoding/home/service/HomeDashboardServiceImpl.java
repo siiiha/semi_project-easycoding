@@ -29,7 +29,11 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
 
     @Transactional
     @Override
-    public void prepareDailyQuiz(Long memberId, int problemCount, Long categoryId) {
+    public void prepareDailyQuiz(
+            Long memberId,
+            int problemCount,
+            Short categoryId
+    ) {
         if (!ALLOWED_PROBLEM_COUNTS.contains(problemCount)) {
             throw new IllegalArgumentException("허용되지 않은 문제 수입니다.");
         }
@@ -40,29 +44,30 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
 
         List<EducationDto> educations;
         if (categoryId == null) {
-            educations =
-                    educationService.NotAssignedEducations(memberId, problemCount);
+            educations = educationService.notAssignedEducations(memberId, problemCount);
+            //전체 선택을 한 경우
         } else {
-            educations =
-                    educationService.NotAssignedEducations(
-                            memberId,
-                            problemCount,
-                            categoryId);
+            educations = educationService.notAssignedEducations(memberId, problemCount, categoryId);
         }
 
         educationService.assignEducation(memberId, educations);
+        //가져온 문제를 오늘 문제로 DB에 저장한다.
     }
 
+    //오늘 배정된 문제를 조회한 뒤, 전체 문제 수와 답변 완료 수를 계산하여 반환
+    // 오늘 배정된 전체 문제 수와 완료 문제 수를 조회한다
     @Override
     public TodayProgressDto getTodayProgress(Long memberId) {
         return homeDashboardMapper.selectTodayProgress(memberId);
     }
 
+    // 최근 105일의 날짜별 학습 잔디 상태를 조회한다
     @Override
     public List<GrassCellDto> getGrassCells(Long memberId) {
         return homeDashboardMapper.selectGrassCells(memberId);
     }
 
+    // 지금까지의 연속 학습 일수, 총 완료 문제 수, 정답률을 조회한다
     @Override
     public LearningStatsDto getLearningStats(Long memberId) {
         LearningStatsDto learningStats =

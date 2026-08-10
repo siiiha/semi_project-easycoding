@@ -21,7 +21,7 @@ public class HomeMissionController {
     @PostMapping("/home/daily/quiz/start")
     public String startDailyQuiz(
             @RequestParam int problemCount,
-            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Short categoryId,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
