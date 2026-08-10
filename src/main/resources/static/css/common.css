@@ -84,6 +84,10 @@ a:hover {
   color: var(--color-primary-hover);
 }
 
+.text-primary {
+  color: var(--color-primary);
+}
+
 img {
   max-width: 100%;
   display: block;

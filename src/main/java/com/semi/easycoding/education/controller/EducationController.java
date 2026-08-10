@@ -1,5 +1,6 @@
 package com.semi.easycoding.education.controller;
 
+import com.semi.easycoding.common.util.SessionUtil;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.EducationOptionSubmitDto;
 import com.semi.easycoding.education.dto.EducationSummaryDto;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +30,7 @@ import java.util.Map;
 @RequestMapping("/education")
 public class EducationController {
 
-    @Value("${spring.ai.openai.api-key}")
-    String apiKey;
-
-    EducationService educationService;
+    private final EducationService educationService;
 
     public EducationController(EducationService educationService) {
         this.educationService = educationService;
@@ -41,14 +41,8 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
-
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
         
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
         model.addAttribute("todayEducationHistory", todayEducationHistory);
@@ -58,14 +52,9 @@ public class EducationController {
 
     @GetMapping("/daily/quiz")
     public String mainQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         // 모든 문제가 이미 제출된 상태라면 (모든 answered가 true) "/daily/complete" 페이지로 이동
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
@@ -82,12 +71,11 @@ public class EducationController {
     }
 
     @ResponseBody
-    @PostMapping("/daily/answer")
+    @PostMapping("/submit")
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         boolean result = educationService.submitDailyAnswerByOption(submitDto, memberId);
 
@@ -98,8 +86,7 @@ public class EducationController {
     @GetMapping("/daily/complete")
     public String DailyCompletePage(HttpSession session, Model model){
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
@@ -112,20 +99,28 @@ public class EducationController {
         return "education/daily_quiz_complete";
     }
 
-
     // 카테고리 학습 페이지 이동
     @GetMapping("/category")
     public String categoryPage(){
         return "education/category";
     }
 
+    @GetMapping("/category/quiz")
+    public String categoryListPage(@RequestParam("categoryId") Short categoryId,
+                                   HttpSession session,
+                                   Model model) {
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(loginUser.getMemberId(), 1, categoryId);
+
+        model.addAttribute("educations", educationListByCategory);
+
+        return "education/category_quiz";
+    }
+
+
     @GetMapping("/test")
     public String test() {
         return "test/test";
     }
-
-
-
-
-
 }

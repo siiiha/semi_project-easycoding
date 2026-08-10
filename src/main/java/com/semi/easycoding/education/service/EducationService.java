@@ -2,6 +2,7 @@ package com.semi.easycoding.education.service;
 
 import com.semi.easycoding.education.dto.*;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface EducationService {
     // 비어있으면 새로운 학습을 할당하고, 오늘 할당받은 학습의 현황을 조회하여 반환
 
     List<EducationDto> getTodayEducations(Long memberId);
+    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습문제들을 조회하여 반환
 
     List<EducationDto> getTodayEducationsNotSubmitted(Long memberId);
@@ -28,13 +30,13 @@ public interface EducationService {
     boolean memberTodayEducationIsEmpty(Long memberId);
     // 특정 사용자가 오늘 할당받은 학습이 있는지 여부를 확인한다
 
-    List<EducationDto> NotAssignedEducations(Long memberId, int qty);
+    List<EducationDto> notAssignedEducations(Long memberId, int qty);
 
     // DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
-    List<EducationDto> NotAssignedEducations(Long memberId, int qty, Long categoryId);
+    List<EducationDto> notAssignedEducations(Long memberId, int qty, Short categoryId);
     // (카테고리별) DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
 
-    List<EducationDto> assignEducation(Long memberID, List<EducationDto> educationList);
+    List<EducationDto> assignEducation(Long memberId, List<EducationDto> educationList);
     // 사용자에게 해당문제들을 할당한다
 
     List<EducationDto> userEducationAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
@@ -58,6 +60,11 @@ public interface EducationService {
 
     int countStreakDay(Long memberId);
     // 특정사용자의 연속 학습일수를 계산한다
+
+    List<EducationDto> getNotAssignedEducationsByCategoryWithAnswers(Long memberId, int qty, Short categoryId);
+    // 컨트롤러의 "/category/quiz" 요청을 받는 서비스 오케스트레이션 메서드
+    // 카테코리 id를 바탕으로 사용자에게 할당되지 않은 문제를 조회하여 할당
+    // 문제 타입에 따라 답변까지 묶어서 반환
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다

@@ -23,16 +23,10 @@
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">쉽코딩과 함께 오늘의 한 문제로</span><br>내일의 실력을 키워요.
+                쉽코딩과 함께 <span class="text-primary">오늘의 한 문제</span>로<br>
+                <span class="text-primary">내일의 실력</span>을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
-        </div>
-        <div class="find-hero-image" aria-hidden="true">
-            <svg viewBox="0 0 394 336" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="197" cy="168" rx="180" ry="148" fill="#E8F5E9" opacity="0.7"/>
-                <ellipse cx="320" cy="80" rx="60" ry="50" fill="#E8F5E9" opacity="0.5"/>
-                <ellipse cx="80" cy="260" rx="70" ry="55" fill="#E8F5E9" opacity="0.5"/>
-            </svg>
         </div>
     </div>
 

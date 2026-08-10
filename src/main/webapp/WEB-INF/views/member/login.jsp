@@ -22,8 +22,8 @@
     <div class="auth-branding">
         <div class="branding-text">
             <h1 class="branding-title">
-                <span class="text-primary">하루하루 꾸준하게,<br>
-                    키워가는 코딩습관</span>
+                <span class="text-primary">하루하루</span> 꾸준하게,<br>
+                키워가는 <span class="text-primary">코딩습관</span>
             </h1>
             <p class="branding-sub">쉽코딩과 함께 오늘의 한 문제로 내일의 실력을 키워요.</p>
         </div>
@@ -84,10 +84,12 @@
 
             <!-- 로그인 유지 / 비밀번호 찾기 -->
             <div class="auth-options">
+                <%-- 로그인 상태 유지 기능은 추후 사용을 위해 임시로 숨김
                 <label class="checkbox-label">
                     <input type="checkbox" name="rememberMe" value="true">
                     <span>로그인 상태 유지</span>
                 </label>
+                --%>
                 <a href="${pageContext.request.contextPath}/member/find-id" class="auth-link">로그인 정보 찾기</a>
             </div>
 
