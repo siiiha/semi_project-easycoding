@@ -35,7 +35,7 @@ public interface EducationMapper {
     List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
     List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
-                                                            @Param("categoryId") Long categoryId);
+                                                            @Param("categoryId") Short categoryId);
 
 
     int insertMemberQuizHistory(@Param("memberId") Long memberId,
