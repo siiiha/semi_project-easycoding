@@ -1,4 +1,5 @@
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const contextPath = document.body.dataset.contextPath;
 const memberJoinForm = document.querySelector("#joinForm");
 //memberJoinForm은 회원가입 버튼을 눌러 폼이 제출되는 순간을 감지하기 위해 사용
 
@@ -9,21 +10,25 @@ const emailResult = document.querySelector("#check-email-result");
 const nicknameResult = document.querySelector("#check-nickname-result");
 const passwordFormatResult = document.querySelector("#check-password-format-result");
 
-const checkEmailButton = document.querySelector("#check-email-button");
 const passwordConfirmInput = document.querySelector("#passwordConfirm");
 const passwordConfirmResult = document.querySelector("#check-password-result");
+const sendEmailCodeButton = document.querySelector("#send-email-code-button");
 
 let checkedNickname = null;
 let checkedEmail = null;
 let isPasswordMatched = false;
 
-checkEmailButton.addEventListener("click", async function () {
+async function validateEmailDuplicate() {
     const email = memberEmailInput.value.trim();
     if (!validateEmailFormat()) {
         checkedEmail = null;
-        memberEmailInput.focus();
-        return;
+        return false;
     }
+
+    if (checkedEmail === email) {
+        return true;
+    }
+
     const requestUrl = new URL("check-email", memberJoinForm.action);
     requestUrl.searchParams.set("email", email);
 
@@ -42,22 +47,114 @@ checkEmailButton.addEventListener("click", async function () {
 
         const isDuplicate = await response.json();
 
+        if (memberEmailInput.value.trim() !== email) {
+            return false;
+        }
+
         if (isDuplicate) {
             emailResult.textContent = "이미 사용 중인 이메일입니다.";
             emailResult.classList.remove("is-success");
             checkedEmail = null;
-        } else {
-            emailResult.textContent = "사용 가능한 이메일입니다.";
-            emailResult.classList.add("is-success");
-            checkedEmail = email;
+            return false;
         }
 
+        emailResult.textContent = "사용 가능한 이메일입니다.";
+        emailResult.classList.add("is-success");
+        checkedEmail = email;
+        return true;
     } catch (error) {
+        if (memberEmailInput.value.trim() !== email) {
+            return false;
+        }
+
         emailResult.textContent = "이메일 중복 확인 중 오류가 발생했습니다.";
         emailResult.classList.remove("is-success");
         checkedEmail = null;
+        return false;
+    }
+}
+
+async function checkEmailVerification(code) {
+    const response = await fetch(
+        `${contextPath}/email/join/verify`,
+        {
+            method: "POST",
+            body: new URLSearchParams({code})
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("인증번호 확인 요청 실패");
     }
 
+    return response.json();
+}
+
+async function handleEmailVerification(code) {
+    try {
+        const isVerified = await checkEmailVerification(code);
+
+        CommonModal.open({
+            type: "alert",
+            theme: isVerified ? "success" : "danger",
+            title: isVerified ? "이메일 인증 완료" : "이메일 인증 실패",
+            message: isVerified
+                ? "이메일 인증이 완료되었습니다."
+                : "인증번호가 일치하지 않습니다."
+        });
+    } catch (error) {
+        CommonModal.open({
+            type: "alert",
+            theme: "danger",
+            title: "이메일 인증 실패",
+            message: "인증번호 확인 요청에 실패했습니다."
+        });
+    }
+}
+
+sendEmailCodeButton.addEventListener("click", async function () {
+    const email = memberEmailInput.value.trim();
+
+    if (!await validateEmailDuplicate()) {
+        memberEmailInput.focus();
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${contextPath}/email/join/send`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({email})
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("인증번호 발송 실패");
+        }
+
+        const result = await response.json();
+
+        CommonModal.open({
+            type: "custom",
+            theme: "info",
+            title: "이메일 인증",
+            message: result.data,
+            confirmText: "확인",
+            cancelText: "취소",
+            onConfirm: handleEmailVerification
+        });
+    } catch (error) {
+        CommonModal.open({
+            type: "alert",
+            theme: "danger",
+            title: "이메일 발송 실패",
+            message: "인증번호 발송 중 오류가 발생했습니다."
+        });
+    }
 });
 
 memberEmailInput.addEventListener("input", function () {
@@ -87,8 +184,6 @@ function validatePasswordConfirm() {
 memberPasswordInput.addEventListener("input", validatePasswordConfirm);
 passwordConfirmInput.addEventListener("input", validatePasswordConfirm);
 
-
-
 function validateEmailFormat() {
     const email = memberEmailInput.value.trim();
 
@@ -115,8 +210,6 @@ function validatePasswordFormat() {
         passwordFormatResult.classList.remove("is-success");
         return false;
     }
-
-
     //isValidPassword의 함수 결과가 true/false인지에 따라 앞에 !가 붙여지면서
     //true -> false (if실행X) false -> true (is실행)
     if (!isValidPassword(password)) {
@@ -171,7 +264,13 @@ memberNicknameInput.addEventListener("input", function () {
 
 //블러도되면 이벤트 발생
 memberNicknameInput.addEventListener("blur", validateNickname);
-memberEmailInput.addEventListener("blur", validateEmailFormat);
+memberEmailInput.addEventListener("blur", function (event) {
+    if (event.relatedTarget?.id === "send-email-code-button") {
+        return;
+    }
+
+    validateEmailDuplicate();
+});
 memberPasswordInput.addEventListener("blur", validatePasswordFormat);
 
 memberJoinForm.addEventListener("submit", function (event) {
@@ -191,7 +290,7 @@ memberJoinForm.addEventListener("submit", function (event) {
 
     if (checkedEmail !== memberEmailInput.value.trim()) {
         event.preventDefault();
-        emailResult.textContent = "이메일 중복 확인을 진행해주세요.";
+        emailResult.textContent = "이메일 중복 확인이 완료되지 않았습니다.";
         emailResult.classList.remove("is-success");
         memberEmailInput.focus();
         return;

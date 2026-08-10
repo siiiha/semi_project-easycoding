@@ -17,5 +17,8 @@ public interface CommentMapper {
     int updateComment(CommentDto comment);
 
     // 특정 댓글의 deleted_at을 삭제하는 시점으로 수정하는 메소드 (사실상 삭제)
-    int deleteComment(CommentDto comment);
+    int deleteComment(Long commentId);
+
+    //parentId로 부모 댓글 조회하는 메소드
+    CommentDto selectCommentById(Long commentId);
 }

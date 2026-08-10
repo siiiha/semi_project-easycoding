@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,20 +9,21 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+
+<body data-context-path="${pageContext.request.contextPath}">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<main class="find-page">
+<main class="find-page find-page-compact">
 
     <!-- 히어로 -->
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">계정 정보를</span><br>잊어버리셨나요?
+                <span class="text-primary">쉽코딩과 함께 오늘의 한 문제로</span><br>내일의 실력을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
         </div>
@@ -75,64 +75,65 @@
 
             <p id="password-email-result"></p>
 
-            <div id="password-code-section" hidden>
-                <label for="password-code">인증번호</label>
-                <input type="text"
-                       id="password-code"
-                       maxlength="6"
-                       inputmode="numeric"
-                       placeholder="6자리 인증번호를 입력해주세요.">
-                <button type="button"
-                        id="verify-password-code-button"
-                        class="btn btn-outline">
-                    인증번호 확인
-                </button>
-                <p id="password-code-result"></p>
-            </div>
-
             <div id="password-reset-section" hidden>
-                <label for="new-password">
-                    새 비밀번호
-                </label>
+                <div class="password-reset-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="new-password">새 비밀번호</label>
+                        <div class="input-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                 stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password"
+                                   id="new-password"
+                                   class="form-input-inner"
+                                   autocomplete="new-password"
+                                   placeholder="새 비밀번호를 입력해주세요.">
+                        </div>
+                    </div>
 
-                <input type="password"
-                       id="new-password"
-                       autocomplete="new-password"
-                       placeholder="새 비밀번호를 입력해주세요.">
-
-                <label for="new-password-confirm">
-                    새 비밀번호 확인
-                </label>
-
-                <input type="password"
-                       id="new-password-confirm"
-                       autocomplete="new-password"
-                       placeholder="새 비밀번호를 다시 입력해주세요.">
+                    <div class="form-group">
+                        <label class="form-label" for="new-password-confirm">새 비밀번호 확인</label>
+                        <div class="input-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                 stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <input type="password"
+                                   id="new-password-confirm"
+                                   class="form-input-inner"
+                                   autocomplete="new-password"
+                                   placeholder="새 비밀번호를 다시 입력해주세요.">
+                        </div>
+                    </div>
+                </div>
 
                 <button type="button"
                         id="reset-password-button"
-                        class="btn btn-primary">
+                        class="btn btn-primary find-submit-btn">
                     비밀번호 변경
                 </button>
-
-                <p id = "reset-password-result"></p>
-
-
+                <p id="reset-password-result"></p>
             </div>
-
-
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
                 <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
-
         </div>
     </div>
-
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+<jsp:include page="/WEB-INF/views/common/modal/customModal.jsp"/>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/password-validation.js"></script>
 <script src="${pageContext.request.contextPath}/js/find-password.js"></script>
 
 

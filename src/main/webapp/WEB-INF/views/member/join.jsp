@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
           rel="stylesheet">
 </head>
-<body class="auth-page">
+<body class="auth-page" data-context-path="${pageContext.request.contextPath}">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -89,10 +89,6 @@
                             <input type="email" id="email" name="email" class="form-input-inner"
                                    placeholder="이메일을 입력해주세요." value="${param.email}"
                                    autocomplete="email" required>
-
-                            <button type="button" id="check-email-button" class="btn btn-outline">
-                                중복확인
-                            </button>
 
                             <button type="button" id="send-email-code-button" class="btn btn-outline">
                                 이메일 인증
@@ -180,103 +176,6 @@
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
-<script>
-    const emailInput = document.getElementById('email');
-
-    async function checkEmailVerification(code) {
-        const response = await fetch(
-            '${pageContext.request.contextPath}/email/join/verify',
-            {
-                method: 'POST',
-                body: new URLSearchParams({ code })
-                //URLSearchParams : 브라우저가 전송 형식을 자동으로 설정.
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error();
-        }
-
-        return response.json();
-    }
-    async function handleEmailVerification(code) {
-        try {
-            const isVerified = await checkEmailVerification(code);
-
-            CommonModal.open({
-                type: 'alert',
-                theme: isVerified ? 'success' : 'danger',
-                title: isVerified ? '이메일 인증 완료' : '이메일 인증 실패',
-                message: isVerified
-                    ? '이메일 인증이 완료되었습니다.'
-                    : '인증번호가 일치하지 않습니다.'
-            });
-        } catch {
-            CommonModal.open({
-                type: 'alert',
-                theme: 'danger',
-                title: '이메일 인증 실패',
-                message: '인증번호 확인 요청에 실패했습니다.'
-            });
-        }
-    }
-
-
-
-    const sendEmailCodeButton = document.getElementById('send-email-code-button');
-
-    sendEmailCodeButton.addEventListener('click', async function () {
-        const email = emailInput.value.trim();
-
-        if (email === '') {
-            alert('이메일을 입력해주세요.');
-            emailInput.focus();
-            return;
-        }
-
-        try{
-            const response = await  fetch(
-                '${pageContext.request.contextPath}/email/join/send',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                        'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        email: email
-                    })
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error('인증번호 발송 실패')
-            }
-
-            const result = await response.json();
-
-            CommonModal.open({
-                type: 'custom',          // 필수: alert | confirm | input | custom
-                theme: 'info',       // 선택: success | danger | warning | info
-                title: '이메일 인증',           // 선택: 기본값은 '안내'
-                message: result.data,         // 선택
-                confirmText: '확인',     // 선택: 확인 버튼 문구
-                cancelText: '취소',      // 선택: 취소 버튼 문구
-                onConfirm: handleEmailVerification //서버의 인증상태를 확인
-            });
-
-
-        } catch (error) {
-            CommonModal.open({
-                type: 'alert',
-                theme: 'danger',
-                title: '이메일 발송 실패',
-                message: '인증번호 발송 중 오류가 발생했습니다.'
-            });
-        }
-    });
-
-</script>
 
 <jsp:include page="/WEB-INF/views/common/modal/customModal.jsp" />
 <jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>

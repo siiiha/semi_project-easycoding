@@ -8,19 +8,28 @@
 <mapper namespace="com.semi.easycoding.comment.mapper.CommentMapper">
 
     <insert id="insertComment" parameterType="CommentDto">
-        INSERT INTO comment (post_id, member_id, content)
-            VALUES (#{postId}, #{memberId}, #{content})
+        INSERT INTO comment (post_id, parent_id, member_id, content)
+            VALUES (#{postId}, #{parentId}, #{memberId}, #{content})
     </insert>
 
     <select id="selectCommentList" parameterType="Long" resultType="CommentDto">
-        SELECT c.comment_id, c.post_id, c.member_id, m.profile_id, c.content, c.created_at,
+        SELECT c.comment_id, c.post_id, c.parent_id, c.member_id, m.profile_id, c.content, c.created_at,
             DATE_FORMAT(c.created_at, '%Y-%m-%d %H:%i') AS created_at_str,
             m.nickname
         FROM comment c
             LEFT JOIN member m USING (member_id)
         WHERE c.post_id = #{postId}
             AND c.deleted_at IS NULL
-        ORDER BY c.comment_id DESC
+        ORDER BY COALESCE(c.parent_id, c.comment_id) DESC,
+            c.parent_id IS NOT NULL,
+            c.comment_id ASC
+    </select>
+
+    <select id="selectCommentById" parameterType="Long" resultType="CommentDto">
+        SELECT comment_id, post_id, parent_id
+        FROM comment
+        WHERE comment_id = #{commentId}
+            AND deleted_at IS NULL
     </select>
 
     <update id="updateComment" parameterType="CommentDto">

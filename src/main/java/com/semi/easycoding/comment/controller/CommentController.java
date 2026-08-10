@@ -36,8 +36,7 @@ public class CommentController {
         MemberDto loginUser = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
 
         try {
-            List<CommentDto> commentList = commentService.insertComment(postId, request.getContent(), loginUser.getMemberId());
-            // 댓글 등록 성공 시 로직
+            List<CommentDto> commentList = commentService.insertComment(postId, request.getParentId(), request.getContent(), loginUser.getMemberId());
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(commentList));
         } catch (IllegalArgumentException e) {
             // Service에서 내용이 비어있는 경우 발생시킨 예외를 잡아서 응답을 주기위해서 사용

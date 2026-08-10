@@ -47,7 +47,7 @@ public interface MemberMapper {
     );
 
     int updatePasswordByMemberId(
-            @Param("memberId") String memberId,
+            @Param("memberId") Long memberId,
             @Param("password") String password
     );
 }

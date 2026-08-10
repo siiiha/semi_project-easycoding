@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                         // 로그인을 해야만 접근이 가능한 경로
                         "/member/mypage",
                         "/member/withdraw",
+                        "/member/edit",
                         "/community/write",
                         "/community/{postId}/edit"
                         // 필요한 경로 추가 하시면 됩니다.

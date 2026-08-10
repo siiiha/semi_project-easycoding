@@ -33,15 +33,32 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDto> insertComment(Long postId, String content, Long memberId) {
+    public List<CommentDto> insertComment(Long postId, Long parentId, String content, Long memberId) {
         if (content == null || content.equals("")) {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
         } else if (content.length() > 300) {
             throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
         }
 
+        if (parentId != null) {
+            CommentDto parentComment = commentMapper.selectCommentById(parentId);
+            if (parentComment == null) {
+                throw new IllegalArgumentException("부모 댓글을 찾을 수 없습니다.");
+            }
+
+            if (!parentComment.getPostId().equals(postId)) {
+                throw new IllegalArgumentException("같은 게시글의 댓글에만 답글을 작성할 수 있습니다.");
+            }
+
+            if (parentComment.getParentId() != null) {
+                throw new IllegalArgumentException("대댓글에는 답글을 작성할 수 없습니다.");
+            }
+
+        }
+
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
+        comment.setParentId(parentId);
         comment.setMemberId(memberId);
         comment.setContent(content);
 
@@ -65,17 +82,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, Long memberId) {
 
-        // 수정하려는 댓글의 작성자를 조회하는 메소드
-        Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(memberId)) {
-            return null;    // 수정하려는 댓글의 작성자와 로그인한 회원이 다를 경우
-        }
-
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
         comment.setMemberId(memberId);
         comment.setCommentId(commentId);
-        comment.setMemberId(memberId);
         comment.setContent(content);
         int result = commentMapper.updateComment(comment);
 
@@ -95,12 +105,6 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> deleteComment(Long postId, Long commentId, Long memberId) {
-
-        // 삭제하려는 댓글의 작성자를 조회하는 메소드
-        Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(memberId)) {
-            return null;    // 삭제하려는 댓글의 작성자와 로그인한 회원이 다를 경우
-        }
         int result = commentMapper.deleteComment(commentId);
         if (result < 1) {
             // 삭제 실패한 경우
