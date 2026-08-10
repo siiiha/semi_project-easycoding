@@ -11,7 +11,7 @@
         keyProperty="EducationId" : DB에서 자동으로 생성된 PK값을 파라미터의 어떤 변수에 넣을 것인가
     -->
 
-    <insert id="insertQuiz" parameterType="com.semi.easycoding.education.dto.EducationDto"
+    <insert id="insertQuiz" parameterType="EducationDto"
             useGeneratedKeys="true" keyProperty="educationId">
         INSERT INTO quiz (type_id,
                           title,
@@ -27,7 +27,7 @@
                 #{createdAt})
     </insert>
 
-    <insert id="insertOptions" parameterType="com.semi.easycoding.education.dto.EducationOptionTypeDto">
+    <insert id="insertOptions" parameterType="EducationOptionTypeDto">
         INSERT INTO answer_option (quiz_id,
                                    content,
                                    is_correct,
@@ -41,27 +41,47 @@
         </foreach>
     </insert>
 
-    <select id="selectAllEduCategory" resultType="com.semi.easycoding.education.dto.EducationCategoryDto">
+    <select id="selectAllEduCategory" resultType="EducationCategoryDto">
         SELECT category_id AS categoryId,
                category_name AS categoryName
         FROM quiz_category
     </select>
 
-    <select id="selectUserEducationAtDate" resultType="com.semi.easycoding.education.dto.EducationDto">
-        SELECT q.quiz_id AS educationId,
-               q.type_id AS educationType,
-               q.category_id AS educationCategoryID,
-               q.title AS educationTitle,
-               q.content AS educationContent,
-               q.explanation AS educationExplanation,
-               q.created_at AS createdAt
+    <select id="selectUserEducationAtDate" resultType="EducationDto">
+        SELECT q.quiz_id        AS educationId,
+               q.type_id        AS educationType,
+               q.category_id    AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
+               q.title          AS educationTitle,
+               q.content        AS educationContent,
+               q.explanation    AS educationExplanation,
+               q.created_at     AS createdAt
         FROM member_quiz_history mqh
         INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
+        JOIN quiz_category qc ON qc.category_id = q.category_id
         WHERE mqh.member_id = #{memberId}
         AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
     </select>
 
-    <select id="selectEducationNotAssigned" resultType="com.semi.easycoding.education.dto.EducationDto">
+    <select id="selectUserEducationAtDateNotsubmitted" resultType="EducationDto">
+        SELECT q.quiz_id        AS educationId,
+               q.type_id        AS educationType,
+               q.category_id    AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
+               q.title          AS educationTitle,
+               q.content        AS educationContent,
+               q.explanation    AS educationExplanation,
+               q.created_at     AS createdAt
+        FROM member_quiz_history mqh
+        INNER JOIN quiz q ON q.quiz_id = mqh.quiz_id
+        JOIN quiz_category qc ON qc.category_id = q.category_id
+        WHERE mqh.member_id = #{memberId}
+        AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
+        AND mqh.answered = false
+    </select>
+
+
+    <select id="selectEducationNotAssigned" resultType="EducationDto">
         SELECT q.quiz_id AS educationId,
                q.type_id AS educationType,
                q.category_id AS educationCategoryID,
@@ -78,7 +98,7 @@
         )
     </select>
 
-    <insert id="insertMemberQuizHistory" parameterType="map">
+    <insert id="insertMemberQuizHistory" parameterType="java.util.Map">
         INSERT INTO member_quiz_history
             (member_id,
              quiz_id)
@@ -89,7 +109,7 @@
         </foreach>
     </insert>
 
-    <select id="selectEducationNotAssignedByCategory" resultType="com.semi.easycoding.education.dto.EducationDto">
+    <select id="selectEducationNotAssignedByCategory" resultType="EducationDto">
         SELECT q.quiz_id AS educationId,
                q.type_id AS educationType,
                q.category_id AS educationCategoryID,
@@ -107,7 +127,7 @@
         )
     </select>
 
-    <select id="selectMemberQuizHistoryAtDate" resultType="com.semi.easycoding.education.dto.MemberQuizHistoryDto">
+    <select id="selectMemberQuizHistoryAtDate" resultType="MemberQuizHistoryDto">
         SELECT mqh.history_id AS historyId,
                mqh.answered AS answered,
                mqh.quiz_id AS educationId,
@@ -116,9 +136,10 @@
         FROM member_quiz_history mqh
         WHERE mqh.member_id = #{memberId}
         AND mqh.exam_at BETWEEN #{startDate} AND #{endDate}
+        ORDER BY mqh.exam_at DESC
     </select>
 
-    <select id="selectOptionsByEducationId" resultType="com.semi.easycoding.education.dto.OptionDto">
+    <select id="selectOptionsByEducationId" resultType="OptionDto">
         SELECT ao.answer_id AS optionId,
                ao.content AS optionContents,
                ao.is_correct AS correct,
@@ -126,5 +147,29 @@
         FROM answer_option ao
         WHERE ao.quiz_id = #{educationId}
     </select>
+
+    <select id="selectHistoryByMemberIdAndEducationId" resultType="java.lang.Long">
+        SELECT mqh.history_id
+        FROM member_quiz_history mqh
+        WHERE mqh.member_id = #{memberId}
+        AND mqh.quiz_id = #{educationId}
+    </select>
+
+    <update id="updateMemberQuizHistory" parameterType="java.util.Map">
+        UPDATE member_quiz_history
+        SET answered = #{answered},
+            correct = #{correct}
+        WHERE history_id = #{historyId}
+          AND answered = false
+    </update>
+
+    <insert id="insertAnsweredOption" parameterType="java.util.Map">
+        INSERT INTO answered_option
+            (history_id,
+             chose_option)
+        VALUES
+            (#{historyId},
+             #{choseOption})
+    </insert>
 
 </mapper>
