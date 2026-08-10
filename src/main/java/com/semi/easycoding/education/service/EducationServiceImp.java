@@ -153,6 +153,7 @@ public class EducationServiceImp implements EducationService {
                 .map(this::educationDtoToType)
                 .toList();
     }
+    // 컨트롤러의 "/daily/quiz" 요청을 받는 서비스 오케스트레이션 메서드
     // 특정 사용자가 오늘 할당받은 학습문제들을 조회하고, 답변까지 매핑하여 반환
 
     public List<EducationDto> getTodayEducationsNotSubmitted(Long memberId){

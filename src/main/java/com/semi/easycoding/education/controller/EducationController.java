@@ -1,11 +1,11 @@
 package com.semi.easycoding.education.controller;
 
+import com.semi.easycoding.common.util.SessionUtil;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.EducationOptionSubmitDto;
 import com.semi.easycoding.education.dto.EducationSummaryDto;
 import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
 import com.semi.easycoding.education.service.EducationService;
-import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ import java.util.Map;
 @RequestMapping("/education")
 public class EducationController {
 
-    EducationService educationService;
+    private final EducationService educationService;
 
     public EducationController(EducationService educationService) {
         this.educationService = educationService;
@@ -40,14 +40,8 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
-
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
         
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
         model.addAttribute("todayEducationHistory", todayEducationHistory);
@@ -57,14 +51,9 @@ public class EducationController {
 
     @GetMapping("/daily/quiz")
     public String mainQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         // 모든 문제가 이미 제출된 상태라면 (모든 answered가 true) "/daily/complete" 페이지로 이동
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
@@ -85,8 +74,7 @@ public class EducationController {
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         boolean result = educationService.submitDailyAnswerByOption(submitDto, memberId);
 
@@ -97,8 +85,7 @@ public class EducationController {
     @GetMapping("/daily/complete")
     public String DailyCompletePage(HttpSession session, Model model){
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        Long memberId = Long.valueOf(loginUser.getMemberId());
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
@@ -136,9 +123,4 @@ public class EducationController {
     public String test() {
         return "test/test";
     }
-
-
-
-
-
 }
