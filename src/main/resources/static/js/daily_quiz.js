@@ -173,15 +173,14 @@
         // 좌측/우측 상단 진행 숫자 영역
         var currentIndexEl = document.getElementById("quiz-current-index");
         var totalCountEl = document.getElementById("quiz-total-count");
-        // 문제 메타정보(카테고리/유형/주제) 영역
-        var categoryEl = document.getElementById("quiz-category-name");
+        // 문제 메타정보(유형/주제) 영역
         var typeEl = document.getElementById("quiz-type-text");
         var topicEl = document.getElementById("quiz-topic-text");
         // 제출/다음 버튼
         var nextBtn = document.getElementById("quiz-next-btn");
 
         // 중요한거 뭐 하나라도 null이면 중지
-        if (!questionEl || !currentIndexEl || !totalCountEl || !categoryEl || !typeEl || !topicEl || !nextBtn) {
+        if (!questionEl || !currentIndexEl || !totalCountEl || !typeEl || !topicEl || !nextBtn) {
             return;
         }
 
@@ -189,13 +188,29 @@
 
         // 현재 표시할 문제 객체
         var quiz = state.educations[state.currentIndex];
+        if (!quiz) {
+            questionEl.textContent = "현재 풀 수 있는 문제가 없습니다.";
+            currentIndexEl.textContent = "0";
+            if (typeEl) {
+                typeEl.textContent = "-";
+            }
+            if (topicEl) {
+                topicEl.textContent = "-";
+            }
+            var optionsWrap = document.getElementById("quiz-options");
+            if (optionsWrap) {
+                optionsWrap.innerHTML = "";
+            }
+            hideFeedback();
+            nextBtn.textContent = "문제가 없습니다";
+            nextBtn.disabled = true;
+            return;
+        }
+        nextBtn.disabled = false;
 
         // 문제 본문은 educationContent를 우선 사용
         questionEl.textContent = quiz.educationContent || "테스트 문제 텍스트";
         currentIndexEl.textContent = String(state.currentIndex + 1);
-        if (categoryEl) {
-            categoryEl.textContent = "일일 문제";
-        }
         if (typeEl) {
             typeEl.textContent = getTypeText(quiz.educationType);
         }
@@ -311,6 +326,7 @@
 
     // 객관식 답안을 서버에 제출하고 성공 시에만 화면 반영
     async function submitMultipleChoiceAnswer(quiz) {
+        var form = document.getElementById("quiz-form");
         var gradeResult = gradeMultipleChoice(quiz);
         if (!gradeResult) {
             return false;
@@ -322,8 +338,16 @@
             choseOption: gradeResult.selectedIndex + 1
         };
 
+        var submitUrl = "/education/submit";
+        if (form) {
+            var formSubmitUrl = form.getAttribute("data-submit-url");
+            if (formSubmitUrl) {
+                submitUrl = formSubmitUrl;
+            }
+        }
+
         try {
-            var response = await fetch("answer", {
+            var response = await fetch(submitUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
