@@ -33,6 +33,20 @@
     </sql>
 
 
+    <!-- 게시글 갯수를 통한 인기 사용자 5위 조회 -->
+    <select id="selectPopularMember" resultType="PopularMemberDto">
+        SELECT m.member_id, m.nickname, COUNT(p.post_id) AS post_count
+        FROM post p
+            LEFT JOIN member m USING (member_id)
+        GROUP BY
+            m.member_id,
+            m.nickname
+        ORDER BY
+            post_count DESC,
+            m.member_id ASC
+        LIMIT 5
+    </select>
+
     <!-- 게시글 목록 조회 sql문 -->
     <select id="selectPostList" parameterType="PostSearchCondition" resultType="PostDto">
         SELECT p.post_id, c.category, p.title, p.content, m.nickname, p.views, p.created_at,

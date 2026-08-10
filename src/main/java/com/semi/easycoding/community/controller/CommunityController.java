@@ -1,6 +1,7 @@
 package com.semi.easycoding.community.controller;
 
 import com.semi.easycoding.common.util.SessionConst;
+import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
@@ -44,6 +45,10 @@ public class CommunityController {
                     || condition.getPostCategory().isBlank()) {
                 condition.setPostCategory("all");
             }
+        // 인기 게시글 작성자 5위 조회
+        List<PopularMemberDto> popularMemberList = communityService.selectPopularMember();
+        System.out.println(popularMemberList.size());
+        model.addAttribute("popularMemberList", popularMemberList);
 
             PostListResult result = communityService.selectPostList(condition);
             // 이번 요청에서만 사용할 것이기 때문에 request영역에 "postList"라는 이름으로 DB에서 조회한 게시글 목록을 저장
