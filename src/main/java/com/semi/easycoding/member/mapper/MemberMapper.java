@@ -9,9 +9,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberMapper {
 
-    MemberDto findByMemberId(String memberId);
+    MemberDto findByMemberId(Long memberId);
 
-    String findPasswordByMemberId(String memberId);
+    String findPasswordByMemberId(Long memberId);
 
     // 두 메서드는 조회 대상이 다르므로 반환 타입도 다르다.
     // findByMemberId: 비밀번호를 제외한 회원정보 조회용
@@ -29,14 +29,14 @@ public interface MemberMapper {
     int join(MemberDto memberDto);
     //회원정보가 담긴 memberDto를 받고, DB처리 결과를 숫자로 돌려주는 join()메서드
 
-    int countPostByMemberId(String memberId);
-    int countCommentByMemberId(String memberId);
+    int countPostByMemberId(Long memberId);
+    int countCommentByMemberId(Long memberId);
 
-    int withdraw(@Param("memberId") String memberId);
+    int withdraw(@Param("memberId") Long memberId);
     //loginUser.getMemberId() = 실제 로그인한 회원번호
 
     int updateNickname(
-            @Param("memberId") String memberId,
+            @Param("memberId") Long memberId,
             @Param("nickname") String nickname
     );
 
