@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDto> insertComment(Long postId, String content, String memberId) {
+    public List<CommentDto> insertComment(Long postId, String content, Long memberId) {
         if (content == null || content.equals("")) {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
         }
@@ -56,18 +56,17 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDto> updateComment(Long postId, Long commentId, String content, String memberId) {
-        // String인 memberId를 Long형태로 변환
-        Long longMemberId = Long.valueOf(memberId);
+    public List<CommentDto> updateComment(Long postId, Long commentId, String content, Long memberId) {
 
         // 수정하려는 댓글의 작성자를 조회하는 메소드
         Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(longMemberId)) {
+        if (!writerId.equals(memberId)) {
             return null;    // 수정하려는 댓글의 작성자와 로그인한 회원이 다를 경우
         }
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
         comment.setCommentId(commentId);
+        comment.setMemberId(memberId);
         comment.setContent(content);
         int result = commentMapper.updateComment(comment);
 
@@ -85,13 +84,11 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDto> deleteComment(Long postId, Long commentId, String memberId) {
-        // String인 memberId를 Long형태로 변환
-        Long longMemberId = Long.valueOf(memberId);
+    public List<CommentDto> deleteComment(Long postId, Long commentId, Long memberId) {
 
         // 삭제하려는 댓글의 작성자를 조회하는 메소드
         Long writerId = commentMapper.selectCommentWriter(commentId);
-        if (!writerId.equals(longMemberId)) {
+        if (!writerId.equals(memberId)) {
             return null;    // 삭제하려는 댓글의 작성자와 로그인한 회원이 다를 경우
         }
         int result = commentMapper.deleteComment(commentId);
