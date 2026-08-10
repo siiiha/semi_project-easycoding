@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +28,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/education")
 public class EducationController {
-
-    @Value("${spring.ai.openai.api-key}")
-    String apiKey;
 
     private final EducationService educationService;
 
@@ -71,7 +70,7 @@ public class EducationController {
     }
 
     @ResponseBody
-    @PostMapping("/daily/answer")
+    @PostMapping("/submit")
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
 
@@ -104,6 +103,21 @@ public class EducationController {
     public String categoryPage(){
         return "education/category";
     }
+
+    @GetMapping("/category/quiz")
+    public String categoryListPage(@RequestParam("categoryId") Short categoryId,
+                                   HttpSession session,
+                                   Model model) {
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        Long memberId = Long.valueOf(loginUser.getMemberId());
+
+        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(memberId, 1, categoryId);
+
+        model.addAttribute("educations", educationListByCategory);
+
+        return "education/category_quiz";
+    }
+
 
     @GetMapping("/test")
     public String test() {
