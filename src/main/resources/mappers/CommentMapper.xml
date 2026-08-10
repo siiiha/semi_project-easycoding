@@ -23,22 +23,21 @@
         ORDER BY c.comment_id DESC
     </select>
 
-    <select id="selectCommentWriter" parameterType="Long">
-        SELECT member_id
-        FROM comment
-        WHERE comment_id = #{commentId}
-    </select>
-
     <update id="updateComment" parameterType="CommentDto">
         UPDATE comment
         SET content = #{content}
         WHERE comment_id = #{commentId}
+            AND member_id = #{memberId}
+            AND post_id = #{postId}
+            AND deleted_at IS NULL
     </update>
 
-    <update id="deleteComment" parameterType="Long">
+    <update id="deleteComment" parameterType="CommentDto">
         UPDATE comment
         SET deleted_at = NOW()
-        WHERE comment_id = #{comemntId}
+        WHERE comment_id = #{commentId}
+            AND member_id = #{memberId}
+            AND post_id = #{postId}
             AND deleted_at IS NULL
     </update>
 

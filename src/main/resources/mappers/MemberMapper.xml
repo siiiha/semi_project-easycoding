@@ -7,7 +7,7 @@
 -->
 <mapper namespace="com.semi.easycoding.member.mapper.MemberMapper">
 
-    <select id="findByMemberId" parameterType="String" resultType="MemberDto">
+    <select id="findByMemberId" parameterType="Long" resultType="MemberDto">
         <!-- 1. id="findByMemberId"는 MemberDto findByMemberId(String memberId)와 연결
                 Mapper 인터페이스의 메서드 이름과 동일해야함.-->
         <!-- 2. parameterType="String"인 이유는 findByMemberId(String memberId)를 받기 때문-->

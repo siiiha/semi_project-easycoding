@@ -99,8 +99,7 @@
                         <span>작성일</span>
                     </div>
                     <c:forEach var="post" items="${postList}" varStatus="st">
-<%--                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">--%>
-                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?page=${condition.page}" class="post-table-row">
+                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">
                             <span class="post-table-num">${(pageInfo.page - 1) * pageInfo.pageSize + st.count}</span>
                             <span>
                                 <c:choose>
@@ -154,13 +153,15 @@
                     <div class="popular-card">
                         <p class="popular-title">🏆 실시간 인기 사용자</p>
                         <div class="popular-list">
-                            <c:forEach var="user" items="${popularUsers}" varStatus="st">
-                                <div class="popular-item">
-                                    <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
-                                    <span class="popular-name">${user.nickname}</span>
-                                    <span class="popular-point">${user.point}P</span>
-                                </div>
-                            </c:forEach>
+                            <c:if test="${not empty popularMemberList}">
+                                <c:forEach var="user" items="${popularMemberList}" varStatus="st">
+                                    <div class="popular-item">
+                                        <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
+                                        <span class="popular-name">${user.nickname}</span>
+                                        <span class="popular-point">${user.postCount}개</span>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
                 </aside>
@@ -172,5 +173,12 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script>
+    const ErrorMsg = "${errMsg}";
+    const successMsg = "${successMsg}";
+</script>
+<script src="${pageContext.request.contextPath}/js/post.js"></script>
 </body>
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
 </html>
