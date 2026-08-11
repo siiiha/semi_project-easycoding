@@ -42,7 +42,10 @@ public class CommunityController {
             @ModelAttribute PostSearchCondition condition,
             Model model) {
         try {
-            if (condition.getPage() < 1 || condition.getPageSize() > 10) {
+            if (condition.getPage() < 1
+                || condition.getPageSize() > 10
+                || condition.getPageSize() < 1
+            ) {
                 throw new IllegalArgumentException("잘못된 접근입니다.");
             }
 

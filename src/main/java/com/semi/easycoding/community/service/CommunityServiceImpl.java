@@ -65,6 +65,8 @@ public class CommunityServiceImpl implements CommunityService {
         int increaseViews = communityMapper.increaseViews(postId);
         if (increaseViews != 1) {
             throw new IllegalStateException("게시글 조회에 실패하였습니다.");
+        } else {
+            postDetail.setViews(postDetail.getViews() + 1);
         }
 
         return postDetail;
@@ -121,20 +123,26 @@ public class CommunityServiceImpl implements CommunityService {
         int category_id = communityMapper.selectCategoryId(temporaryPostDto.getCategory());
 
         PostDto temporarySavePost = new  PostDto();
+        temporarySavePost.setPostId(temporaryPostDto.getPostId());
         temporarySavePost.setCategoryId(category_id);
         temporarySavePost.setMemberId(memberId);
         temporarySavePost.setTitle(temporaryPostDto.getTitle());
         temporarySavePost.setContent(temporaryPostDto.getContent());
         temporarySavePost.setTemporaryStatus(temporaryPostDto.getTemporaryStatus());
 
-        // 해당 임시저장 게시글 정보가 있는지 확인
-        boolean isDuplicatePost = communityMapper.isDuplicatePost(temporarySavePost);
-        // 중복된 내용에 게시글이 있는 경우 수정
-        if (isDuplicatePost) {
-            throw new IllegalStateException("이미 임시저장된 게시글입니다.");
-        }
+        int result;
+        if (temporaryPostDto.getPostId() != null) {
+            result = communityMapper.updatePost(temporarySavePost);
+        } else {
+            // 해당 임시저장 게시글 정보가 있는지 확인
+            boolean isDuplicatePost = communityMapper.isDuplicatePost(temporarySavePost);
+            // 중복된 내용에 게시글이 있는 경우 수정
+            if (isDuplicatePost) {
+                throw new IllegalStateException("이미 임시저장된 게시글입니다.");
+            }
 
-        int result = communityMapper.insertPost(temporarySavePost);
+            result = communityMapper.insertPost(temporarySavePost);
+        }
         if (result != 1) {
             throw new IllegalStateException("게시글 작성을 실패했습니다.");
         }
@@ -163,7 +171,9 @@ public class CommunityServiceImpl implements CommunityService {
      */
     @Override
     public void deletePost(Long postId, Long memberId) {
-
+        PostDto postDto = new PostDto();
+        postDto.setPostId(postId);
+        postDto.setMemberId(memberId);
         int result = communityMapper.deletePost(postId, memberId);
         if (result != 1) {
             // 실패 시 로직
