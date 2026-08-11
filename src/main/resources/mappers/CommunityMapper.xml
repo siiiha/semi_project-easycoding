@@ -123,7 +123,6 @@
         SET deleted_at = NOW()
         WHERE post_id = #{postId}
             AND member_id = #{memberId}
-            AND status = #{temporaryStatus}
             AND deleted_at IS NULL
     </delete>
 
