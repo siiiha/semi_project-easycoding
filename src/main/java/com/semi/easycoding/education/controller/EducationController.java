@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -101,7 +102,16 @@ public class EducationController {
 
     // 카테고리 학습 페이지 이동
     @GetMapping("/category")
-    public String categoryPage(){
+    public String categoryPage(HttpSession session, RedirectAttributes redirectAttributes) {
+        Long memberId = SessionUtil.getLoginMemberId(session);
+
+        if (!educationService.isTodayAllClear(memberId)) {
+            redirectAttributes.addFlashAttribute("modalTitle", "안내");
+            redirectAttributes.addFlashAttribute("modalMessage", "남은 문제를 다 풀어야 추가 문제를 받을 수 있어요.");
+            redirectAttributes.addFlashAttribute("modalTheme", "warning");
+            return "redirect:/education/daily";
+        }
+
         return "education/category";
     }
 
@@ -109,9 +119,9 @@ public class EducationController {
     public String categoryListPage(@RequestParam("categoryId") Short categoryId,
                                    HttpSession session,
                                    Model model) {
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
-        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(loginUser.getMemberId(), 1, categoryId);
+        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(memberId, 1, categoryId);
 
         model.addAttribute("educations", educationListByCategory);
 

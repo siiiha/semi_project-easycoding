@@ -66,6 +66,9 @@ public interface EducationService {
     // 카테코리 id를 바탕으로 사용자에게 할당되지 않은 문제를 조회하여 할당
     // 문제 타입에 따라 답변까지 묶어서 반환
 
+    boolean isTodayAllClear(Long memberId);
+    // 오늘 할당 받은 문제를 전부 풀었는지 체크
+
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다
      * 사용자가 학습메뉴로 이동하는 분기는 총 3갈래

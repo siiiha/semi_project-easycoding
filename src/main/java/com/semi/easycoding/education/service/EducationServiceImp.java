@@ -325,5 +325,21 @@ public class EducationServiceImp implements EducationService {
     // 카테코리 id를 바탕으로 사용자에게 할당되지 않은 문제를 조회하여 할당
     // 문제 타입에 따라 답변까지 묶어서 반환
 
+    @Override
+    public boolean isTodayAllClear(Long memberId){
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.MAX);
+
+        List<MemberQuizHistoryDto> todayHistories = getMemberQuizHistoryAtDate(memberId, startOfToday, endOfToday);
+
+        // 리스트를 순회하며, answered가 하나라도 비어있으면 false 반환
+        for (MemberQuizHistoryDto history : todayHistories) {
+            if (!history.isAnswered()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    // 오늘 할당 받은 문제를 전부 풀었는지 체크
 
 }

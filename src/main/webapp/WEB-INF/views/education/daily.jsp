@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/daily.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -56,5 +57,18 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp" />
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+
+<c:if test="${not empty modalMessage}">
+    <script>
+        CommonModal.open({
+            type: 'alert',
+            theme: '${modalTheme}',
+            title: '${modalTitle}',
+            message: '${modalMessage}'
+        });
+    </script>
+</c:if>
 </body>
 </html>
