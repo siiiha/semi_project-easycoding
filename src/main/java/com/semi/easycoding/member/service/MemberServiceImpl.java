@@ -148,4 +148,12 @@ public class MemberServiceImpl implements MemberService {
         return result > 0;
     }
 
+    @Override
+    public String findMaskedEmailByNickname(String nickname) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            return null;
+        }
+        String trimmedNickname = nickname.trim();
+        return memberMapper.findMaskedEmailByNickname(trimmedNickname);
+    }
 }

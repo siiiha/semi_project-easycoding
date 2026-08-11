@@ -126,9 +126,24 @@ public class MemberController {
         return "member/join";
     }
 
-    //비밀번호 찾기
     @GetMapping("/find-id")
     public String findIdPage() {
+        return "member/find_id";
+    }
+
+    @PostMapping("/find-id")
+    public String findId(
+            @RequestParam String nickname,
+            Model model) {
+        String email = memberService.findMaskedEmailByNickname(nickname);
+
+        if (email == null || email.isEmpty()) {
+            model.addAttribute("notFoundMsg", "찾을 수 없는 닉네임입니다.");
+            return "member/find_id";
+        }
+
+        model.addAttribute("foundEmail", email);
+
         return "member/find_id";
     }
 
