@@ -1,10 +1,7 @@
 package com.semi.easycoding.community.service;
 
 import com.semi.easycoding.common.dto.PageInfo;
-import com.semi.easycoding.community.dto.PopularMemberDto;
-import com.semi.easycoding.community.dto.PostDto;
-import com.semi.easycoding.community.dto.PostListResult;
-import com.semi.easycoding.community.dto.PostSearchCondition;
+import com.semi.easycoding.community.dto.*;
 import com.semi.easycoding.community.mapper.CommunityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,8 +62,8 @@ public class CommunityServiceImpl implements CommunityService {
             throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
         }
         // 조회하는 게시글의 조회수 1증가
-        int increseViews = communityMapper.increseViews(postId);
-        if (increseViews != 1) {
+        int increaseViews = communityMapper.increaseViews(postId);
+        if (increaseViews != 1) {
             throw new IllegalStateException("게시글 조회에 실패하였습니다.");
         }
 
@@ -104,6 +101,35 @@ public class CommunityServiceImpl implements CommunityService {
         }
 
         return postDto.getPostId();
+    }
+
+    /** 게시글 임시 저장 시 DB에 추가하고, 추가한 게시글의 PK를 반환받는 메소드
+     * @return : PostDto의 postId
+     */
+    @Override
+    public Long temporarySavePost(SaveTemporaryPostDto temporaryPostDto, Long memberId) {
+        int category_id = communityMapper.selectCategoryId(temporaryPostDto.getCategory());
+
+        PostDto temporarySavePost = new  PostDto();
+        temporarySavePost.setCategoryId(category_id);
+        temporarySavePost.setMemberId(memberId);
+        temporarySavePost.setTitle(temporaryPostDto.getTitle());
+        temporarySavePost.setContent(temporaryPostDto.getContent());
+        temporarySavePost.setTemporaryStatus(temporaryPostDto.getTemporaryStatus());
+
+        // 해당 임시저장 게시글 정보가 있는지 확인
+        boolean isDuplicatePost = communityMapper.isDuplicatePost(temporarySavePost);
+        // 중복된 내용에 게시글이 있는 경우 수정
+        if (isDuplicatePost) {
+            throw new IllegalStateException("이미 임시저장된 게시글입니다.");
+        }
+
+        int result = communityMapper.insertPost(temporarySavePost);
+        if (result != 1) {
+            throw new IllegalStateException("게시글 작성을 실패했습니다.");
+        }
+
+        return temporarySavePost.getPostId();
     }
 
     /**

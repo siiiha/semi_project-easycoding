@@ -91,7 +91,7 @@
                         <button type="button" class="btn-temp-save">
                             <span onclick="saveDraft()">임시저장</span>
                             &nbsp;|&nbsp;
-                            <span onclick="selectTemporaryPost()">${temporaryPost.postCount}</span>
+                            <span onclick="toggleDraftPanel()">${temporaryPost.postCount}</span>
                         </button>
                     <div style="flex:1;"></div>
                     <button type="submit" class="btn-submit">등록</button>
@@ -108,7 +108,8 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
-    const editErrorMsg = "${errMsg}";
+    const ErrorMsg = "${errMsg}";
+    const successMsg = "${successMsg}";
 </script>
 <script src="${pageContext.request.contextPath}/js/post.js"></script>
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>

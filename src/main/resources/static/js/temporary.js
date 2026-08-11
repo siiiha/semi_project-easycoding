@@ -1,4 +1,6 @@
 const postForm = document.querySelector('#writeForm');
+// 임시저장 목록을 표시할 영역
+const draftList = document.querySelector('#draft-list');
 
 // 임시 저장 목록 불러오는 Ajax 비동기 함수
 async function selectTemporaryPost() {
@@ -24,16 +26,16 @@ async function selectTemporaryPost() {
     if (temporaryPostList == null) {
         return;
     }
+    draftList.innerHTML = '';
     temporaryPostList.forEach(function(temporaryPost) {
+        console.log("render전 temporaryPostList : " + temporaryPostList);
        renderTemporaryPosts(temporaryPost);
     });
 }
 
 // 임시저장 글을 그려주는 함수
 function renderTemporaryPosts(temporaryPost) {
-    // 임시저장 목록을 표시할 영역
-    const draftList = document.querySelector('#draft-list');
-
+    console.log("render에서 전달받은 temporaryPost : " + temporaryPost);
     // 임시저장 게시글 정보가 들어갈 요소 생성
     const item = document.createElement('div');
     item.classList.add('comm-draft-item');
@@ -57,7 +59,7 @@ function renderTemporaryPosts(temporaryPost) {
 
     const date = document.createElement('span');
     date.classList.add('comm-draft-date');
-    date.textContent = temporaryPost.createdAt;
+    date.textContent = temporaryPost.createdAtStr;
 
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
@@ -79,9 +81,10 @@ function renderTemporaryPosts(temporaryPost) {
 // 작성 폼에 임시저장한 게시글의 데이터를 채우는 함수
 function loadTemporaryPost(temporaryPost) {
     const category = temporaryPost.category;
-    const selectedCategory = document.querySelector('#postType option[value=' + category + ']');
-    document.querySelector('#selectPlaceHolder').selected(false);
-    selectedCategory.selected(true);
+    console.log("category : " + category);
+    const selectedCategory = document.querySelector('#postType');
+    // document.querySelector('#selectPlaceHolder').selected(false);
+    selectedCategory.value =temporaryPost.category;
 
     const titleEl = document.querySelector('#title');
     titleEl.value = temporaryPost.title;
@@ -89,13 +92,20 @@ function loadTemporaryPost(temporaryPost) {
     contentEl.value = temporaryPost.content
 
     // postId를 input:hidden에 넣어서 form에 넣는 작업
-    const postIdInput = document.createElement('input');
-    postIdInput.type = 'hidden';
-    postIdInput.name = 'postId';
-    postIdInput.value = temporaryPost.postId;
+    let postIdInput = postForm.querySelector('input[name="postId"]');
+    if (postIdInput) {
+        // postIdInput이 이미 있는 경우 값만 변경
+        postIdInput.value = temporaryPost.postId;
+    } else {
+        // postIdInput이 없는 경우에는 생성 후 값 변경
+        postIdInput = document.createElement('input');
+        postIdInput.type = 'hidden';
+        postIdInput.name = 'postId';
+        postIdInput.value = temporaryPost.postId;
+        // form의 첫번째 자식으로 추가
+        postForm.prepend(postIdInput);
+    }
 
-    // form의 첫번째 자식으로 추가
-    postForm.prepend(postIdInput);
 }
 
 // 임시저장한 게시글을 삭제하는 Ajax 비동기 함수
@@ -132,6 +142,7 @@ function toggleDraftPanel(open) {
     const panel = document.querySelector('#draft-panel');
 
     panel.classList.toggle('is-open', open);
+    selectTemporaryPost();
 }
 
 // 임시 저장을 비동기로 하는 함수
@@ -141,7 +152,7 @@ async function saveDraft() {
         title: document.querySelector('#title').value,
         content: document.querySelector('#content').value,
         category: document.querySelector('#postType').value,
-        status: 1
+        temporaryStatus: 1
     };
 
     // 이미 불러온 임시 저장한 글이라면 INSERT 대신 UPDATE를 하기 위한 값
@@ -149,6 +160,8 @@ async function saveDraft() {
     if (postIdInput) {
         draft.postId = postIdInput.value;
     }
+    console.log(postIdInput);
+    console.log(draft);
 
     const response = await fetch(`/api/insert/temporaryPost`, {
         method: "POST",
@@ -160,7 +173,8 @@ async function saveDraft() {
     });
 
     const result = await response.json();
-
+    console.log(response.ok);
+    console.log(result);
     if (!response.ok || !result.success) {
         CommonModal.open({
             type: 'alert',
@@ -174,6 +188,8 @@ async function saveDraft() {
     if (temporaryPostList == null) {
         return;
     }
+    toggleDraftPanel(true);
+    draftList.innerHTML = '';
     temporaryPostList.forEach(function(temporaryPost) {
         renderTemporaryPosts(temporaryPost);
     });

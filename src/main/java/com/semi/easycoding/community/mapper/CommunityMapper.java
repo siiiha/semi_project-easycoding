@@ -3,6 +3,7 @@ package com.semi.easycoding.community.mapper;
 import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostSearchCondition;
+import com.semi.easycoding.community.dto.SaveTemporaryPostDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -23,9 +24,10 @@ public interface CommunityMapper {
     PostDto selectPostDetail(Long postId);
 
     // 게시글의 조회수 변경
-    int increseViews(Long postId);
+    int increaseViews(Long postId);
 
     int insertPost(PostDto postDto);
+    int temporarySavePost(SaveTemporaryPostDto temporaryPostDto);
 
     int selectCategoryId(String category);
 
@@ -39,4 +41,7 @@ public interface CommunityMapper {
 
     // 임시저장한 게시글을 등록 (실제로는 update)
     int insertTemporaryPost(PostDto postDto);
+
+    // 임시 저장하려는 게시글의 같은 정보로 있는지 확인
+    boolean isDuplicatePost(PostDto temporarySavePost);
 }
