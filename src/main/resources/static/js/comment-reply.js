@@ -28,6 +28,19 @@ function createReplyForm(replyButton, parentId) {
     replyInput.placeholder = '답글을 입력해주세요.';
     replyInput.maxLength = 300;
 
+    const charCountArea = document.createElement('div');
+    charCountArea.classList.add('char-count-area');
+
+    const replyCharCount = document.createElement('span');
+    replyCharCount.textContent = '0';
+
+    charCountArea.appendChild(replyCharCount);
+    charCountArea.appendChild(document.createTextNode(' / 300자'));
+
+    replyInput.addEventListener('input', function () {
+        replyCharCount.textContent = replyInput.value.length;
+    });
+
     const submitButton = document.createElement('button');
     const cancelButton = document.createElement('button');
 
@@ -37,9 +50,20 @@ function createReplyForm(replyButton, parentId) {
     cancelButton.type = 'button';
     cancelButton.textContent = '취소';
 
+    const replyFormFooter = document.createElement('div');
+    replyFormFooter.classList.add('reply-form-footer');
+
+    const replyButtonArea = document.createElement('div');
+    replyButtonArea.classList.add('reply-button-area');
+
+    replyButtonArea.appendChild(submitButton);
+    replyButtonArea.appendChild(cancelButton);
+
+    replyFormFooter.appendChild(replyButtonArea)
+
     replyForm.appendChild(replyInput);
-    replyForm.appendChild(submitButton);
-    replyForm.appendChild(cancelButton);
+    replyForm.appendChild(charCountArea);
+    replyForm.appendChild(replyFormFooter);
 
     cancelButton.addEventListener('click', function () {
         replyForm.remove();

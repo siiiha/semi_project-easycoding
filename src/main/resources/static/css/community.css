@@ -525,8 +525,7 @@
 
 .reply-form {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  flex-direction: column;
   gap: 8px;
   margin: 8px 0 8px 38px;
 }
@@ -563,6 +562,22 @@
 .reply-form button[type="button"] {
   background: #F3F4F6;
   color: #4B5563;
+}
+
+.reply-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.reply-form-footer .char-count-area {
+  margin: 0;
+}
+
+.reply-button-area {
+  display: flex;
+  gap: 8px;
 }
 
 .profile-area {
