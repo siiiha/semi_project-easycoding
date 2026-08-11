@@ -36,7 +36,7 @@ public interface EducationService {
     List<EducationDto> notAssignedEducations(Long memberId, int qty, Short categoryId);
     // (카테고리별) DB에 저장된 문제풀에서 사용자에게 할당되지 않은 문제를 무작위로 n개 선택해 반환한다
 
-    List<EducationDto> assignEducation(Long memberID, List<EducationDto> educationList);
+    List<EducationDto> assignEducation(Long memberId, List<EducationDto> educationList);
     // 사용자에게 해당문제들을 할당한다
 
     List<EducationDto> userEducationAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);

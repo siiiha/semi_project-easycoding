@@ -35,7 +35,7 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
     public void prepareDailyQuiz(
             Long memberId,
             int problemCount,
-            Long categoryId
+            Short categoryId
     ) {
         if (!ALLOWED_PROBLEM_COUNTS.contains(problemCount)) {
             throw new IllegalArgumentException(
@@ -53,10 +53,10 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
         List<EducationDto> educations;
 
         if (categoryId == null) {
-            educations = educationService.NotAssignedEducations(memberId, problemCount);
+            educations = educationService.notAssignedEducations(memberId, problemCount);
             //전체 선택을 한 경우
         } else {
-            educations = educationService.NotAssignedEducations(memberId, problemCount, categoryId);
+            educations = educationService.notAssignedEducations(memberId, problemCount, categoryId);
         }
 
         educationService.assignEducation(memberId, educations);
