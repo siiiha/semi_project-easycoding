@@ -35,15 +35,16 @@
 
     <!-- 게시글 갯수를 통한 인기 사용자 5위 조회 -->
     <select id="selectPopularMember" resultType="PopularMemberDto">
-        SELECT m.member_id, m.nickname, COUNT(p.post_id) AS post_count
+        SELECT m.member_id, m.nickname, SUM(p.views) AS cumulative_views, COUNT(p.post_id) AS post_count
         FROM post p
             LEFT JOIN member m USING (member_id)
         GROUP BY
             m.member_id,
             m.nickname
         ORDER BY
-            post_count DESC,
-            m.member_id ASC
+            post_count DESC,    <!-- 1순위 : 누적 게시글 작성이 많은 순 -->
+            SUM(p.views) DESC,  <!-- 2순위 : 게시글 수가 같으면 조회수가 많은 순 -->
+            m.member_id ASC     <!-- 3순위 : 위에 조건이 모두 같은 경우에는 PK (회원가입을 빨리한 순) -->
         LIMIT 5
     </select>
 

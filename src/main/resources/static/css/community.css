@@ -107,7 +107,7 @@
 
 /* ── 오른쪽 인기 사용자 사이드바 ── */
 .comm-popular {
-  width: 220px;
+  width: 300px;
 }
 .popular-card {
   background: #fff;
@@ -124,12 +124,14 @@
 .popular-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 .popular-item {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 4px;
+  border-bottom: 0.5px solid #d9d9d9;
 }
 .popular-rank {
   width: 24px;
@@ -149,6 +151,11 @@
   font-size: 14px;
   font-weight: 600;
   color: #1E1E1E;
+}
+.popular-points {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .popular-point { font-size: 12px; color: #767676; }
 
