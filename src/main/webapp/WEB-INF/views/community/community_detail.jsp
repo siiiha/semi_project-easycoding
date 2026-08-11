@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${post.title} - 쉽코딩</title>
+    <title><c:out value="${postDetail.title}" /> - 쉽코딩</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
@@ -51,7 +51,7 @@
 
                     <!-- 제목 + 작성자 정보 -->
                     <div style="display:flex;flex-direction:column;gap:12px;">
-                        <h2 style="font-size:28px;font-weight:700;color:#1E1E1E;line-height:1.4;">${postDetail.title}</h2>
+                        <h2 style="font-size:28px;font-weight:700;color:#1E1E1E;line-height:1.4;"><c:out value="${postDetail.title}" /></h2>
                         <div style="display:flex;align-items:center;justify-content:space-between;">
                             <div style="display:flex;align-items:center;gap:8px;">
                                 <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;border:1px solid #E5E7EB;overflow:hidden;flex-shrink:0;">
@@ -61,7 +61,7 @@
                                         <%-- 삭제할지 말지 고민중입니다. --%>
                                 </div>
                                 <div style="display:flex;flex-direction:column;gap:2px;">
-                                    <span style="font-size:15px;font-weight:600;color:#1E1E1E;">${postDetail.nickname}</span>
+                                    <span style="font-size:15px;font-weight:600;color:#1E1E1E;"><c:out value="${postDetail.nickname}" /></span>
                                     <span style="font-size:12px;color:#9CA3AF;">${postDetail.createdAtStr}</span>
                                 </div>
                             </div>
@@ -75,12 +75,12 @@
                     <div style="height:1px;background:#B8BEC5;"></div>
 
                     <!-- 본문 -->
-                    <div style="font-size:16px;color:#1E1E1E;line-height:1.7;white-space:pre-line;">${postDetail.content}</div>
+                    <div style="font-size:16px;color:#1E1E1E;line-height:1.7;white-space:pre-line;"><c:out value="${postDetail.content}" /></div>
 
                     <div style="height:1px;background:#B8BEC5;"></div>
 
                     <!-- 수정 / 삭제 (본인 글만 노출) -->
-                    <c:if test="${postDetail.nickname == sessionScope.loginUser.nickname}">
+                    <c:if test="${not empty sessionScope.loginUser and postDetail.memberId eq sessionScope.loginUser.memberId}">
                         <div style="display:flex;gap:12px;justify-content:flex-end;">
                             <a href="${pageContext.request.contextPath}/community/${postDetail.postId}/edit"
                                style="padding:6px 16px;background:#fff;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;font-weight:600;color:#5B5B5B;text-decoration:none;">수정</a>
