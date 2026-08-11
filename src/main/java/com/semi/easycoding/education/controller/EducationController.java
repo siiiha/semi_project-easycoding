@@ -1,9 +1,6 @@
 package com.semi.easycoding.education.controller;
 
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionSubmitDto;
-import com.semi.easycoding.education.dto.EducationSummaryDto;
-import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
+import com.semi.easycoding.education.dto.*;
 import com.semi.easycoding.education.service.EducationService;
 import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
@@ -132,9 +129,18 @@ public class EducationController {
     }
 
     @GetMapping("/review")
-    public String reviewPage(){
+    public String reviewPage(HttpSession session,
+                             Model model){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        Long memberId = Long.valueOf(loginUser.getMemberId());
 
-        return "education/quiz_review";
+        LocalDateTime startDate = LocalDate.now().atStartOfDay();
+        LocalDateTime endDate = LocalDate.now().atTime(LocalTime.MAX);
+
+        List<EducationOptionTypeSubmitDto> submittedList = educationService.getSubmittedEducationDtoAtDate(memberId, startDate, endDate);
+        model.addAttribute("submittedList", submittedList);
+
+        return "education/review";
     }
 
 
