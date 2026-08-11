@@ -148,35 +148,54 @@ function reloadComment(comment) {
         actionArea.appendChild(deleteBtn);
 
         deleteBtn.addEventListener('click', async function() {
-            if (!confirm('삭제하시겠습니까?')) {
-                return;
-            }
-            const commentId = comment.commentId;
-            const postId = postIdInput.value;
-            const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
-                    "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+            // if (!confirm('삭제하시겠습니까?')) {
+            //     return;
+            // }
+            CommonModal.open({
+                type: 'confirm',
+                theme: 'danger',
+                title: '댓글 삭제',
+                message: '정말로 댓글을 삭제하시겠습니까?',
+                onConfirm: async function() {
+                    const commentId = comment.commentId;
+                    const postId = postIdInput.value;
+                    try {
+                        const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
+                                "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        if (!response.ok || !result.success) {
+                            alert(result.message || "댓글 삭제에 실패했습니다.");
+                            return;
+                        }
+
+                        const commentList = result.data;
+                        if (commentList == null) {
+                            return;
+                        }
+                        commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
+                        commentList.forEach(function(comment) {
+                            reloadComment(comment); // 각 댓글을 하나씩 전달
+                        })
+                        commentCountArea.textContent = "댓글수 " + commentList.length;
+                    } catch (error) {
+                        console.log("댓글 삭제 중 오류 발생", error);
+                        CommonModal.open({
+                            type: 'alert',
+                            theme: 'danger',
+                            message: '댓글 삭제 중 오류가 발생하였습니다.',
+                        });
+                    }
                 }
             });
 
-            const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                alert(result.message || "댓글 삭제에 실패했습니다.");
-                return;
-            }
-
-            const commentList = result.data;
-            if (commentList == null) {
-                return;
-            }
-            commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
-            commentList.forEach(function(comment) {
-                reloadComment(comment); // 각 댓글을 하나씩 전달
-            })
-            commentCountArea.textContent = "댓글수 " + commentList.length;
         });
     }
 
