@@ -1,6 +1,8 @@
 (function () {
+    // 선택지 라벨(A, B, C...) 표시에 사용
     var optionLabels = ["A", "B", "C", "D"];
 
+    // 퀴즈 진행 상태 저장
     var state = {
         educations: [],
         currentIndex: 0,
@@ -8,11 +10,13 @@
         submitting: false
     };
 
+    // 안전하게 텍스트를 읽어오고 없으면 빈 문자열 반환
     function getElementText(item, select) {
         var el = item.querySelector(select);
         return el ? el.textContent.trim() : "";
     }
 
+    // 문제 타입 코드를 사용자에게 보여줄 텍스트로 변환
     function getTypeText(typeValue) {
         if (String(typeValue) === "1") {
             return "객관식";
@@ -23,6 +27,7 @@
         return "알수없음";
     }
 
+    // JSP에 숨겨둔 문제 데이터를 JS에서 사용할 구조로 파싱
     function readQuizData() {
         var nodes = document.querySelectorAll("#today-education-data .quiz-data-item");
         return Array.prototype.map.call(nodes, function (item) {
@@ -53,6 +58,7 @@
         });
     }
 
+    // 상단 진행 점(dot)에서 현재 문제 위치를 활성화
     function setActiveDot(index) {
         var dots = document.querySelectorAll(".quiz-step-dots .dot");
         Array.prototype.forEach.call(dots, function (dot, dotIndex) {
@@ -64,12 +70,39 @@
         });
     }
 
+    // 버튼 상태(선택 전/선택 후/제출 후)에 맞는 시각 효과 클래스 갱신
+    function updateSubmitButtonVisual() {
+        var form = document.getElementById("quiz-form");
+        if (!form) {
+            return;
+        }
+
+        if (state.submitted) {
+            form.classList.remove("pending-selection");
+            form.classList.remove("has-selection");
+            form.classList.add("submitted-selection");
+            return;
+        }
+
+        form.classList.remove("submitted-selection");
+        form.classList.add("pending-selection");
+
+        var selectedInput = form.querySelector('input[name="answer"]:checked');
+        if (selectedInput) {
+            form.classList.add("has-selection");
+        } else {
+            form.classList.remove("has-selection");
+        }
+    }
+
+    // 정답/오답 피드백 박스를 모두 숨김
     function hideFeedback() {
         document.querySelectorAll(".quiz-feedback").forEach(function (node) {
             node.classList.add("is-hidden");
         });
     }
 
+    // 채점 결과에 따라 피드백 문구와 해설을 표시
     function showFeedback(isCorrect, quiz) {
         hideFeedback();
         var feedbackEl = document.querySelector(isCorrect ? ".quiz-feedback-correct" : ".quiz-feedback-wrong");
@@ -104,6 +137,7 @@
         feedbackEl.classList.remove("is-hidden");
     }
 
+    // 현재 문제의 선택지를 렌더링하고 클릭 이벤트를 연결
     function renderOptions(quiz) {
         var optionsWrap = document.getElementById("quiz-options");
         var options = quiz.answers && quiz.answers.length > 0 ? quiz.answers : [];
@@ -144,10 +178,12 @@
                 });
                 optionEl.classList.add("selected");
                 optionEl.querySelector('input[type="radio"]').checked = true;
+                updateSubmitButtonVisual();
             });
         });
     }
 
+    // 현재 문제 정보를 화면 전체(문항/메타/버튼/보기)에 반영
     function renderCurrentQuiz() {
         var totalCount = state.educations.length;
         var questionEl = document.getElementById("quiz-question");
@@ -173,6 +209,12 @@
             hideFeedback();
             nextBtn.textContent = "문제가 없습니다";
             nextBtn.disabled = true;
+            var form = document.getElementById("quiz-form");
+            if (form) {
+                form.classList.remove("pending-selection");
+                form.classList.remove("has-selection");
+                form.classList.remove("submitted-selection");
+            }
             return;
         }
 
@@ -188,8 +230,10 @@
         setActiveDot(state.currentIndex);
         hideFeedback();
         renderOptions(quiz);
+        updateSubmitButtonVisual();
     }
 
+    // 객관식 선택값을 기준으로 정답 여부를 계산
     function gradeMultipleChoice(quiz) {
         var form = document.getElementById("quiz-form");
         var selectedInput = form.querySelector('input[name="answer"]:checked');
@@ -213,6 +257,7 @@
         };
     }
 
+    // 채점 결과를 선택지 스타일/피드백/버튼 상태에 반영
     function applyMultipleChoiceResult(quiz, gradeResult) {
         var optionsWrap = document.getElementById("quiz-options");
         var nextBtn = document.getElementById("quiz-next-btn");
@@ -232,8 +277,10 @@
         showFeedback(gradeResult.isCorrect, quiz);
         state.submitted = true;
         nextBtn.textContent = state.currentIndex === state.educations.length - 1 ? "학습 완료" : "다음 문제 →";
+        updateSubmitButtonVisual();
     }
 
+    // 답안을 서버에 제출하고 성공 시에만 결과 UI를 반영
     async function submitMultipleChoiceAnswer(quiz) {
         var form = document.getElementById("quiz-form");
         var gradeResult = gradeMultipleChoice(quiz);
@@ -276,6 +323,7 @@
         return true;
     }
 
+    // 제출 버튼 이벤트: 미제출이면 채점, 제출 후면 다음 문제로 이동
     function bindFormSubmit() {
         var form = document.getElementById("quiz-form");
         if (!form) {
@@ -323,6 +371,7 @@
         });
     }
 
+    // 초기화: 데이터 읽기 -> 이벤트 연결 -> 첫 문제 렌더링
     document.addEventListener("DOMContentLoaded", function () {
         state.educations = readQuizData();
         bindFormSubmit();
