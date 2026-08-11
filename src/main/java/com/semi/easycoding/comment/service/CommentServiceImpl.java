@@ -105,7 +105,11 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> deleteComment(Long postId, Long commentId, Long memberId) {
-        int result = commentMapper.deleteComment(commentId);
+        CommentDto commentDto = new CommentDto();
+        commentDto.setPostId(postId);
+        commentDto.setMemberId(memberId);
+        commentDto.setCommentId(commentId);
+        int result = commentMapper.deleteComment(commentDto);
         if (result < 1) {
             // 삭제 실패한 경우
             throw new IllegalStateException("삭제 권한이 없거나 댓글이 존재하지 않습니다.");
