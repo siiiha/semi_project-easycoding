@@ -97,27 +97,36 @@
                 <div style="background:#fff;border:1.5px solid #B8BEC5;border-radius:12px;padding:40px;display:flex;flex-direction:column;gap:28px;">
                     <p style="font-size:22px;font-weight:700;color:#1E1E1E;">댓글 ${post.commentCount}</p>
 
-                    <!-- 댓글 입력 -->
-                    <form id="comment-form" action="${pageContext.request.contextPath}/comment/insert/${postDetail.postId}" method="post" style="display:flex;flex-direction:column;gap:12px;">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                        <div>
-                        <textarea name="content" rows="4"
-                                  maxlength="300"
-                                  placeholder="댓글을 입력해보세요... (커뮤니티 가이드를 준수하여 고운 말을 사용해주세요.)"
-                                  style="width:100%;border:1.5px solid #D9D9D9;border-radius:6px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1E1E1E;resize:none;outline:none;box-sizing:border-box;"
-                                  onfocus="this.style.borderColor='#4CAF50'"
-                                  onblur="this.style.borderColor='#D9D9D9'"
-                                  oninput="checkLength(this, document.getElementById('charCount'))"></textarea>
-                        <!-- 사용자에게 현재 글자 수를 보여줄 UI 공간 (선택사항) -->
-                        <div style="text-align: right; font-size: 12px; color: #666; margin-right: 8px;">
-                            <span id="charCount">0</span>/300자
-                        </div>
-                        </div>
-                        <div style="display:flex;justify-content:flex-end;">
-                            <button type="submit"
-                                    style="padding:10px 20px;background:#4CAF50;border:none;border-radius:6px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">댓글 등록</button>
-                        </div>
-                    </form>
+                    <c:choose>
+                        <c:when test="${loginMember != null}">
+                            <!-- 댓글 입력 -->
+                            <form id="comment-form" action="${pageContext.request.contextPath}/comment/insert/${postDetail.postId}" method="post" style="display:flex;flex-direction:column;gap:12px;">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                                <div>
+                                <textarea name="content" rows="4"
+                                          maxlength="300"
+                                          placeholder="댓글을 입력해보세요... (커뮤니티 가이드를 준수하여 고운 말을 사용해주세요.)"
+                                          style="width:100%;border:1.5px solid #D9D9D9;border-radius:6px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1E1E1E;resize:none;outline:none;box-sizing:border-box;"
+                                          onfocus="this.style.borderColor='#4CAF50'"
+                                          onblur="this.style.borderColor='#D9D9D9'"
+                                          oninput="checkLength(this, document.getElementById('charCount'))"></textarea>
+                                <!-- 사용자에게 현재 글자 수를 보여줄 UI 공간 (선택사항) -->
+                                <div style="text-align: right; font-size: 12px; color: #666; margin-right: 8px;">
+                                    <span id="charCount">0</span>/300자
+                                </div>
+                                </div>
+                                <div style="display:flex;justify-content:flex-end;">
+                                    <button type="submit"
+                                            style="padding:10px 20px;background:#4CAF50;border:none;border-radius:6px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">댓글 등록</button>
+                                </div>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="un-login-comment">
+                                <p>댓글을 등록하시려면 &nbsp;<a href="${pageContext.request.contextPath}/member/login">로그인</a>&nbsp; 후 이용하세요</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
 
                     <div style="height:1px;background:#E6E6E6;"></div>
 
