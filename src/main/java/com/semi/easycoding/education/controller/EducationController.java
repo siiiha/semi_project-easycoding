@@ -131,6 +131,12 @@ public class EducationController {
         return "education/category_quiz";
     }
 
+    @GetMapping("/review")
+    public String reviewPage(){
+
+        return "education/quiz_review";
+    }
+
 
     @GetMapping("/test")
     public String test() {
