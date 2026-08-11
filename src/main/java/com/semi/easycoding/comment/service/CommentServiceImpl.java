@@ -22,6 +22,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> selectCommentByPostId(Long postId) {
+        if (!commentMapper.existsPublishedPost(postId)) {
+            throw new IllegalArgumentException("존재하지 않거나 접근할 수 없는 게시글입니다.");
+        }
+
         return commentMapper.selectCommentList(postId);
     }
 
@@ -34,10 +38,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> insertComment(Long postId, Long parentId, String content, Long memberId) {
-        if (content == null || content.equals("")) {
-            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
-        } else if (content.length() > 300) {
-            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
+        validateContent(content);
+
+        if (!commentMapper.existsPublishedPost(postId)) {
+            throw new IllegalArgumentException("존재하지 않거나 접근할 수 없는 게시글입니다.");
         }
 
         if (parentId != null) {
@@ -81,6 +85,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, Long memberId) {
+        validateContent(content);
 
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
@@ -105,12 +110,24 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> deleteComment(Long postId, Long commentId, Long memberId) {
-        int result = commentMapper.deleteComment(commentId);
+        CommentDto commentDto = new CommentDto();
+        commentDto.setPostId(postId);
+        commentDto.setMemberId(memberId);
+        commentDto.setCommentId(commentId);
+        int result = commentMapper.deleteComment(commentDto);
         if (result < 1) {
             // 삭제 실패한 경우
             throw new IllegalStateException("삭제 권한이 없거나 댓글이 존재하지 않습니다.");
         }
 
         return commentMapper.selectCommentList(postId);
+    }
+
+    private void validateContent(String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+        } else if (content.length() > 300) {
+            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
+        }
     }
 }
