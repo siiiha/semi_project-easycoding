@@ -21,6 +21,7 @@ public class EducationOptionTypeSubmitDto {
     private String educationExplanation;
     private List<OptionDto> options;
     private Long historyId;
+    private boolean answered;
     private boolean correct;
     private Short choseOption;
 }
