@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,6 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/daily.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -35,7 +39,7 @@
         <section class="daily-mission-card">
             <div class="daily-mission-head">
                 <span class="daily-mission-label">오늘의 일일 미션</span>
-                <span class="daily-mission-rate">🎯 ${progressPercent}% 달성</span>
+                <span class="daily-mission-rate">🎯 <fmt:formatNumber value="${progressPercent}" maxFractionDigits="2" minFractionDigits="0"/>% 달성</span>
             </div>
 
             <p class="daily-mission-count"><strong>${completedCount}</strong> / ${totalCount}</p>
@@ -53,5 +57,18 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp" />
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+
+<c:if test="${not empty modalMessage}">
+    <script>
+        CommonModal.open({
+            type: 'alert',
+            theme: '${modalTheme}',
+            title: '${modalTitle}',
+            message: '${modalMessage}'
+        });
+    </script>
+</c:if>
 </body>
 </html>
