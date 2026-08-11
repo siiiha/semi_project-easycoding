@@ -34,11 +34,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> insertComment(Long postId, Long parentId, String content, Long memberId) {
-        if (content == null || content.equals("")) {
-            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
-        } else if (content.length() > 300) {
-            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
-        }
+        validateContent(content);
 
         if (parentId != null) {
             CommentDto parentComment = commentMapper.selectCommentById(parentId);
@@ -81,6 +77,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> updateComment(Long postId, Long commentId, String content, Long memberId) {
+        validateContent(content);
 
         CommentDto comment = new CommentDto();
         comment.setPostId(postId);
@@ -116,5 +113,13 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return commentMapper.selectCommentList(postId);
+    }
+
+    private void validateContent(String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+        } else if (content.length() > 300) {
+            throw new IllegalArgumentException("댓글을 300자 이하로 작성해주세요.");
+        }
     }
 }
