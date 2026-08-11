@@ -1,9 +1,6 @@
 package com.semi.easycoding.community.service;
 
-import com.semi.easycoding.community.dto.PopularMemberDto;
-import com.semi.easycoding.community.dto.PostDto;
-import com.semi.easycoding.community.dto.PostListResult;
-import com.semi.easycoding.community.dto.PostSearchCondition;
+import com.semi.easycoding.community.dto.*;
 
 import java.util.List;
 
@@ -18,9 +15,11 @@ public interface CommunityService {
     PostDto whenEditSelectPostDetail(Long postId);
 
     Long insertPost(PostDto postDto);
+    Long temporarySavePost(SaveTemporaryPostDto temporaryPostDto, Long memberId);
 
     Long updatePost(PostDto postDto);
 
-    int deletePost(Long postId, Long memberId);
+    void deletePost(Long postId, Long memberId);
 
+    List<PostDto> selectTemporaryPostList(Long memberId);
 }

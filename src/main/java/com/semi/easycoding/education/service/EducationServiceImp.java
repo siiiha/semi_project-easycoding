@@ -341,5 +341,20 @@ public class EducationServiceImp implements EducationService {
         return true;
     }
     // 오늘 할당 받은 문제를 전부 풀었는지 체크
+    public List<EducationOptionTypeSubmitDto> getSubmittedEducationDtoAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate){
+        List<EducationOptionTypeSubmitDto> submittedList = educationMapper.selectMemberQuizHistoryJoinAnsweredOptionJoinQuizAtDate(memberId, startDate, endDate);
+
+        // submittedList를 순회하면서 getAnswerByEducationId메서드를 이용해 OptionDto를 조회하고
+        // options에 대입
+        for (EducationOptionTypeSubmitDto submitted : submittedList) {
+            List<OptionDto> options = getAnswerByEducationId(submitted.getEducationId(), submitted.getEducationType());
+            submitted.setOptions(options);
+        }
+
+        return submittedList;
+    }
+    // 컨트롤러의 "/review" 요청을 받는 서비스 오케스트레이션 메서드
+    // 특정 기간동안 답변제출이 완료된 문제들을 조회하고
+    // 문제 타입에 따라서 답변과 히스토리 상태까지 묶어서 반환
 
 }

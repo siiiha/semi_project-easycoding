@@ -68,6 +68,11 @@ public interface EducationService {
 
     boolean isTodayAllClear(Long memberId);
     // 오늘 할당 받은 문제를 전부 풀었는지 체크
+    List<EducationOptionTypeSubmitDto> getSubmittedEducationDtoAtDate(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
+    // 컨트롤러의 "/review" 요청을 받는 서비스 오케스트레이션 메서드
+    // 특정 기간동안 답변제출이 완료된 문제들을 조회하고
+    // 문제 타입에 따라서 답변과 히스토리 상태까지 묶어서 반환
+
 
     /*
      * 조건 1 : 카테고리 학습은 일일학습을 완료한 사용자만 가능하다

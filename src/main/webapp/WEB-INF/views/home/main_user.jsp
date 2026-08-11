@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,11 +12,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main_user.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <main class="user-main-page">
 
@@ -27,7 +29,8 @@
             <div class="hero-banner-card">
                 <div class="hero-banner-left">
                     <div class="hero-greeting">
-                        <h1 class="hero-greeting-title">안녕하세요, <span class="text-primary">${sessionScope.loginUser.nickname}</span> 님! 👋🏻</h1>
+                        <h1 class="hero-greeting-title">안녕하세요, <span
+                                class="text-primary">${sessionScope.loginUser.nickname}</span> 님! 👋🏻</h1>
                         <p class="hero-greeting-sub">오늘도 꾸준한 하루를 만들어봐요.</p>
                     </div>
 
@@ -37,7 +40,7 @@
                         <h2 class="mission-title">오늘의 미션</h2>
                         <c:if test="${not empty missionError}">
                             <p class="mission-error">
-                                <c:out value="${missionError}" />
+                                <c:out value="${missionError}"/>
                             </p>
                         </c:if>
                         <div class="mission-fields">
@@ -57,7 +60,7 @@
 
                                     <c:forEach var="category" items="${categories}">
                                         <option value="${category.categoryId}">
-                                            <c:out value="${category.categoryName}" />
+                                            <c:out value="${category.categoryName}"/>
                                         </option>
                                     </c:forEach>
                                 </select>
@@ -66,16 +69,16 @@
 
                         <!-- 진행 상황 -->
                         <c:if test="${not empty todayProgress}">
-                        <div class="mission-progress">
-                            <p class="mission-progress-label">
-                                <span class="mission-progress-current">${todayProgress.done}</span>
-                                <span class="mission-progress-total"> / ${todayProgress.total}</span>
-                                <span class="mission-progress-text"> 문제완료</span>
-                            </p>
-                            <div class="mission-progress-bar-wrap">
-                                <div class="mission-progress-bar" style="width: ${todayProgress.percent}%"></div>
+                            <div class="mission-progress">
+                                <p class="mission-progress-label">
+                                    <span class="mission-progress-current">${todayProgress.done}</span>
+                                    <span class="mission-progress-total"> / ${todayProgress.total}</span>
+                                    <span class="mission-progress-text"> 문제완료</span>
+                                </p>
+                                <div class="mission-progress-bar-wrap">
+                                    <div class="mission-progress-bar" style="width: ${todayProgress.percent}%"></div>
+                                </div>
                             </div>
-                        </div>
                         </c:if>
 
                         <button type="submit" class="btn mission-start-btn">오늘의 학습 시작하기</button>
@@ -84,7 +87,8 @@
 
                 <!-- 양 캐릭터 이미지 -->
                 <div class="hero-banner-right">
-                    <img src="${pageContext.request.contextPath}/images/코딩_집중_양.png" alt="집중하는 양 캐릭터" class="hero-sheep-img">
+                    <img src="${pageContext.request.contextPath}/images/코딩_집중_양.png" alt="집중하는 양 캐릭터"
+                         class="hero-sheep-img">
                 </div>
             </div>
         </div>
@@ -98,24 +102,31 @@
 
                 <!-- 잔디 그리드 카드 -->
                 <div class="grass-card">
-                    <div class="grass-months">
-                        <span>6월</span>
-                        <span>7월</span>
-                        <span>8월</span>
-                    </div>
-                    <div class="grass-grid" id="grassGrid">
-                        <c:choose>
-                            <c:when test="${not empty grassCells}">
-                                <c:forEach var="cell" items="${grassCells}">
-                                    <div class="grass-cell grass-lv${cell.level}" title="${cell.date}"></div>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach begin="1" end="105" var="i">
-                                    <div class="grass-cell grass-lv0"></div>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>
+                    <div class="grass-calendars">
+                        <c:forEach var="grassMonth" items="${grassMonths}">
+                            <div class="grass-month">
+                                <span class="grass-month-label">
+                                    ${grassMonth.month}월
+                                </span>
+
+                                <div class="grass-month-grid">
+                                    <c:if test="${grassMonth.leadingEmptyCellCount > 0}">
+                                        <c:forEach
+                                                begin="1"
+                                                end="${grassMonth.leadingEmptyCellCount}">
+                                            <div class="grass-cell grass-cell-empty"></div>
+                                        </c:forEach>
+                                    </c:if>
+
+                                    <c:forEach var="cell" items="${grassMonth.cells}">
+                                        <div
+                                                class="grass-cell grass-lv${cell.level}"
+                                                title="${cell.date}">
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
 
@@ -142,8 +153,12 @@
                         <div class="record-row">
                             <p class="record-sub-label">정답률</p>
                             <p class="record-sub-value">
-                                <span class="record-big">${learningStats != null ? learningStats.correctRate : 0}</span>
-                                <span class="record-unit">%</span>
+                            <span class="record-big">
+                                <fmt:formatNumber
+                                        value="${learningStats != null ? learningStats.correctRate : 0}"
+                                        pattern="0.0"
+                                />
+                            </span> <span class="record-unit">%</span>
                             </p>
                         </div>
                     </div>
@@ -155,7 +170,7 @@
 
 </main>
 
-<jsp:include page="/WEB-INF/views/common/footer.jsp" />
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>
 </body>
 </html>

@@ -266,6 +266,41 @@
     background: #a6e4ac;
 }
 
+.quiz-submit-btn.is-emphasized {
+    background: #58c467;
+    box-shadow: 0 6px 14px rgba(88, 196, 103, 0.28);
+}
+
+.quiz-submit-btn.is-emphasized:hover {
+    background: #4bb45a;
+}
+
+.quiz-form.pending-selection .quiz-submit-btn {
+    background: #c6ebcb;
+}
+
+.quiz-form.pending-selection .quiz-submit-btn:hover {
+    background: #bde6c2;
+}
+
+.quiz-form.pending-selection.has-selection .quiz-submit-btn {
+    background: #58c467;
+    box-shadow: 0 6px 14px rgba(88, 196, 103, 0.28);
+}
+
+.quiz-form.pending-selection.has-selection .quiz-submit-btn:hover {
+    background: #4bb45a;
+}
+
+.quiz-form.submitted-selection .quiz-submit-btn {
+    background: #58c467;
+    box-shadow: 0 6px 14px rgba(88, 196, 103, 0.28);
+}
+
+.quiz-form.submitted-selection .quiz-submit-btn:hover {
+    background: #4bb45a;
+}
+
 @media (max-width: 1200px) {
     .quiz-back-link {
         font-size: 16px;

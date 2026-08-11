@@ -17,6 +17,7 @@
                     <ul class="dropdown">
                         <li><a href="${pageContext.request.contextPath}/education/daily">일일퀴즈</a></li>
                         <li><a href="${pageContext.request.contextPath}/education/category">카테고리학습</a></li>
+                        <li><a href="${pageContext.request.contextPath}/education/review">오답노트</a></li>
                     </ul>
                 </li>
                 <li class="nav-item has-dropdown">
