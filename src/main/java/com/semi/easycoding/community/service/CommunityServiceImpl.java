@@ -174,7 +174,7 @@ public class CommunityServiceImpl implements CommunityService {
         PostDto postDto = new PostDto();
         postDto.setPostId(postId);
         postDto.setMemberId(memberId);
-        int result = communityMapper.deletePost(postId, memberId);
+        int result = communityMapper.deletePost(postDto);
         if (result != 1) {
             // 실패 시 로직
             throw new IllegalStateException("삭제 권한이 없거나 게시글이 존재하지 않습니다.");

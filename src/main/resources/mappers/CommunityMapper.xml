@@ -118,7 +118,7 @@
     </update>
 
     <!-- 게시글 삭제 (실제는 수정) -->
-    <delete id="deletePost">
+    <delete id="deletePost" parameterType="PostDto">
         UPDATE post
         SET deleted_at = NOW()
         WHERE post_id = #{postId}
