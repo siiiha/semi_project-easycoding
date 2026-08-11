@@ -19,7 +19,7 @@ function createReplyForm(replyButton, parentId) {
     if (existingReplyForm) {
         existingReplyForm.remove();
     }
-
+    if (loginMemberId) {
     const commentArea = replyButton.closest('.comment-area');
     const replyForm = document.createElement('form');
     const replyInput = document.createElement('textarea');
@@ -106,5 +106,6 @@ function createReplyForm(replyButton, parentId) {
     });
 
     commentArea.appendChild(replyForm);
+    }
 }
 
