@@ -64,5 +64,5 @@ public interface EducationMapper {
 
     List<EducationOptionTypeSubmitDto> selectMemberQuizHistoryJoinAnsweredOptionJoinQuizAtDate(@Param("memberId") Long memberId,
                                                                              @Param("startDate") LocalDateTime startDate,
-                                                                             @Param("endDate") LocalDateTime endDate)
+                                                                             @Param("endDate") LocalDateTime endDate);
 }
