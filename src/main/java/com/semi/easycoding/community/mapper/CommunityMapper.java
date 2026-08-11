@@ -3,7 +3,6 @@ package com.semi.easycoding.community.mapper;
 import com.semi.easycoding.community.dto.PopularMemberDto;
 import com.semi.easycoding.community.dto.PostDto;
 import com.semi.easycoding.community.dto.PostSearchCondition;
-import com.semi.easycoding.community.dto.SaveTemporaryPostDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -27,7 +26,6 @@ public interface CommunityMapper {
     int increaseViews(Long postId);
 
     int insertPost(PostDto postDto);
-    int temporarySavePost(SaveTemporaryPostDto temporaryPostDto);
 
     int selectCategoryId(String category);
 

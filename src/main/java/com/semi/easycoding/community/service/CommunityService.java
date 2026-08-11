@@ -22,6 +22,4 @@ public interface CommunityService {
     void deletePost(Long postId, Long memberId);
 
     List<PostDto> selectTemporaryPostList(Long memberId);
-
-    Long insertTemporaryPost(PostDto postDto);
 }

@@ -190,27 +190,4 @@ public class CommunityServiceImpl implements CommunityService {
         return communityMapper.selectTemporaryPostList(memberId);
     }
 
-    /**
-     * 임시저장 게시글을 불러온 후 등록을 누르는 경우에 실제로 insert가 아닌 update하는 메소드
-     * @param postDto
-     * @return
-     */
-    @Override
-    public Long insertTemporaryPost(PostDto postDto) {
-        int category_id = communityMapper.selectCategoryId(postDto.getCategory());
-        postDto.setCategoryId(category_id);
-
-        int result = communityMapper.insertTemporaryPost(postDto);
-        if (result != 1) {
-            return 0L;
-        }
-        return postDto.getPostId();
-    }
-
-    /**
-     * 임시저장 게시글을 삭제하는 메소드
-     * @param postId
-     * @param memberId
-     * @return
-     */
 }

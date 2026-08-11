@@ -1,6 +1,5 @@
 package com.semi.easycoding.community.controller;
 
-import com.semi.easycoding.comment.dto.CommentDto;
 import com.semi.easycoding.common.util.SessionConst;
 import com.semi.easycoding.community.dto.SaveTemporaryPostDto;
 import com.semi.easycoding.community.service.CommunityService;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +36,6 @@ public class ApiCommunityController {
     @PostMapping("/insert/temporaryPost")
     public ResponseEntity<ApiResponse<List<PostDto>>> insertTemporaryPost(
             @RequestBody SaveTemporaryPostDto temporaryPostDto,
-            Model model,
             HttpSession session
     ) {
         System.out.println(temporaryPostDto);
@@ -76,7 +73,6 @@ public class ApiCommunityController {
 
             List<PostDto> temporaryPostList = communityService.selectTemporaryPostList(loginMember.getMemberId());
 
-            model.addAttribute("successMsg", "임시저장 성공");
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(temporaryPostList));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(e.getMessage()));
