@@ -59,14 +59,14 @@
                 <div class="comm-form-row">
                     <label class="comm-form-label" for="title">제목</label>
                     <input type="text" id="title" name="title" class="comm-form-input-real"
-                           placeholder="제목을 입력해주세요" maxlength="85" required value="${param.title}">
+                           placeholder="제목을 입력해주세요" maxlength="85" required value="<c:out value="${param.title}"/>">
                 </div>
 
                 <!-- 내용 -->
                 <div class="comm-form-row top">
                     <label class="comm-form-label" for="content">내용</label>
                     <textarea id="content" name="content" class="comm-form-textarea"
-                              placeholder="내용을 입력해주세요" maxlength="10000" required>${param.content}</textarea>
+                              placeholder="내용을 입력해주세요" maxlength="10000" required><c:out value="${param.content}"/></textarea>
                 </div>
 
                 <div class="comm-form-divider"></div>
