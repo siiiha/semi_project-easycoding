@@ -85,11 +85,13 @@
         SELECT q.quiz_id AS educationId,
                q.type_id AS educationType,
                q.category_id AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
                q.title AS educationTitle,
                q.content AS educationContent,
                q.explanation AS educationExplanation,
                q.created_at AS createdAt
         FROM quiz q
+        JOIN quiz_category qc ON qc.category_id = q.category_id
         WHERE NOT EXISTS (
             SELECT 1
             FROM member_quiz_history mqh
@@ -113,11 +115,13 @@
         SELECT q.quiz_id AS educationId,
                q.type_id AS educationType,
                q.category_id AS educationCategoryID,
+               qc.category_name AS educationCategoryName,
                q.title AS educationTitle,
                q.content AS educationContent,
                q.explanation AS educationExplanation,
                q.created_at AS createdAt
         FROM quiz q
+        JOIN quiz_category qc ON qc.category_id = q.category_id
         WHERE q.category_id = #{categoryId}
         AND NOT EXISTS (
             SELECT 1
