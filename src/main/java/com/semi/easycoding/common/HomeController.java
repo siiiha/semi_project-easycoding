@@ -39,8 +39,8 @@ public class HomeController {
                 "todayProgress",
                 homeDashboardService.getTodayProgress(memberId));
         model.addAttribute(
-                "grassCells",
-                homeDashboardService.getGrassCells(memberId));
+                "grassMonths",
+                homeDashboardService.getGrassMonths(memberId));
         model.addAttribute(
                 "learningStats",
                 homeDashboardService.getLearningStats(memberId));
