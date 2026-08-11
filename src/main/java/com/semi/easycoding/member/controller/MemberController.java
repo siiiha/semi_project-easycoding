@@ -266,6 +266,7 @@ public class MemberController {
             @RequestParam String nickname,
             @RequestParam String currentPassword,
             @RequestParam String newPassword,
+            @RequestParam(required = false) Short profileId,
             HttpSession session,
             Model model,
             RedirectAttributes redirectAttributes
@@ -335,6 +336,22 @@ public class MemberController {
 
             if (result == 0) {
                 model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
+                return "mypage/edit";
+            }
+        }
+
+        if (profileId != null
+                && !profileId.equals(loginUser.getProfileId())) {
+            int result = memberService.updateProfileId(
+                    loginUser.getMemberId(),
+                    profileId
+            );
+
+            if (result == 0) {
+                model.addAttribute(
+                        "errorMsg",
+                        "프로필 이미지 변경에 실패했습니다."
+                );
                 return "mypage/edit";
             }
         }

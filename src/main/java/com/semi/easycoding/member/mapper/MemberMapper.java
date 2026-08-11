@@ -40,7 +40,6 @@ public interface MemberMapper {
             @Param("nickname") String nickname
     );
 
-
     int updatePasswordByEmail(
             @Param("email") String email,
             @Param("password") String password
@@ -49,5 +48,10 @@ public interface MemberMapper {
     int updatePasswordByMemberId(
             @Param("memberId") Long memberId,
             @Param("password") String password
+    );
+
+    int updateProfileId(
+            @Param("memberId") Long memberId,
+            @Param("profileId") Short profileId
     );
 }

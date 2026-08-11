@@ -70,7 +70,6 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
         return homeDashboardMapper.selectTodayProgress(memberId);
     }
 
-    // 최근 105일의 날짜별 학습 잔디 상태를 조회한다
     @Override
     public List<GrassCellDto> getGrassCells(Long memberId) {
         return homeDashboardMapper.selectGrassCells(memberId);
