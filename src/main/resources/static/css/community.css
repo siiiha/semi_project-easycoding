@@ -413,7 +413,7 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 15px;
   color: #1E1E1E;
-  resize: vertical;
+  resize: none;
   outline: none;
   line-height: 1.6;
   width: 100%;
