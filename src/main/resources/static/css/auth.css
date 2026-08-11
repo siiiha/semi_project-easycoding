@@ -8,7 +8,6 @@
 
 .auth-page {
   background-color: var(--color-bg-card);
-  font-family: var(--font-body);
 }
 
 /* ── 전체 레이아웃 ── */
@@ -38,7 +37,6 @@
 }
 
 .branding-title {
-  font-family: var(--font-body);
   font-weight: 700;
   font-size: 30px;
   line-height: 1.4;
@@ -47,7 +45,6 @@
 }
 
 .branding-sub {
-  font-family: var(--font-body);
   font-weight: 500;
   font-size: 14px;
   color: var(--color-text-secondary);
@@ -90,7 +87,6 @@
 }
 
 .auth-title {
-  font-family: var(--font-body);
   font-weight: 600;
   font-size: 24px;
   color: var(--color-text-primary);
@@ -98,22 +94,24 @@
 }
 
 .auth-subtitle {
-  font-family: var(--font-body);
   font-weight: 400;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
 
-/* ── 오류 메시지 ── */
+/* ── 결과 메시지 공통 ── */
+.auth-error,
+.find-result {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
 .auth-error {
   background-color: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-family: var(--font-body);
-  font-size: 14px;
   color: var(--color-error);
-  margin-bottom: 20px;
 }
 
 /* ── 폼 ── */
@@ -136,7 +134,6 @@
 }
 
 .form-label {
-  font-family: var(--font-body);
   font-weight: 600;
   font-size: 14px;
   color: var(--color-text-primary);
@@ -194,7 +191,6 @@
 #check-password-format-result,
 #check-password-result {
   min-height: 18px;
-  font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.5;
   color: var(--color-error);
@@ -219,7 +215,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-body);
   font-weight: 400;
   font-size: 13px;
   color: var(--color-text-secondary);
@@ -235,7 +230,6 @@
 
 .auth-link {
   margin-left: auto;
-  font-family: var(--font-body);
   font-weight: 400;
   font-size: 13px;
   color: var(--color-text-secondary);
@@ -258,8 +252,7 @@
   align-items: center;
   gap: 16px;
   margin: 20px 0;
-  color: #9CA3AF;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  color: var(--color-text-muted);
   font-weight: 600;
   font-size: 20px;
 }
@@ -284,26 +277,24 @@
   justify-content: center;
   gap: 8px;
   height: 60px;
-  background: #fff;
+  background: var(--color-bg-card);
   border: 1px solid #B3B3B3;
   border-radius: 12px;
   text-decoration: none;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 600;
   font-size: 18px;
-  color: #1A1A1A;
+  color: var(--color-text-primary);
   transition: background-color var(--transition-fast);
 }
 .social-btn:hover {
-  background-color: #F5F5F5;
-  color: #1A1A1A;
+  background-color: var(--color-bg-sub);
+  color: var(--color-text-primary);
 }
 
 /* ── 하단 전환 링크 ── */
 .auth-switch {
   margin-top: 18px;
   text-align: center;
-  font-family: var(--font-body);
   font-weight: 400;
   font-size: 13px;
   color: var(--color-text-secondary);
@@ -311,7 +302,6 @@
 
 .auth-link-primary {
   margin-left: 4px;
-  font-family: var(--font-body);
   font-weight: 600;
   font-size: 13px;
   color: var(--color-primary);
@@ -333,8 +323,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 60px 140px;
-  height: 360px;
+  width: 100%;
+  max-width: var(--auth-content-width);
+  height: auto;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
   box-sizing: border-box;
 }
 
@@ -345,43 +338,44 @@
 }
 
 .find-hero-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 700;
-  font-size: 54px;
+  font-size: 30px;
   line-height: 1.2;
-  color: #1A1A1A;
+  color: var(--color-text-primary);
 }
 
 .find-hero-sub {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 500;
-  font-size: 18px;
-  color: #5B5B5B;
+  font-size: 14px;
+  color: var(--color-text-secondary);
 }
 
 /* 카드 */
 .find-card-section {
   display: flex;
   justify-content: center;
-  padding: 0 100px 80px;
+  width: 100%;
+  max-width: var(--auth-content-width);
+  margin: 0 auto;
+  padding: 0 24px 60px;
 }
 
 .find-card {
-  width: 853px;
-  background: #fff;
-  border: 2px solid var(--color-border);
+  width: 100%;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 56px;
+  padding: 28px 24px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
 }
 
 /* 탭 */
 .find-tabs {
   display: flex;
-  height: 60px;
+  height: 52px;
   border-bottom: 2px solid var(--color-border);
   position: relative;
 }
@@ -391,10 +385,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 500;
-  font-size: 22px;
-  color: #5B5B5B;
+  font-size: 16px;
+  color: var(--color-text-secondary);
   text-decoration: none;
   cursor: pointer;
   border-bottom: 4px solid transparent;
@@ -415,18 +408,17 @@
 }
 
 .find-field-label {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 600;
-  font-size: 20px;
-  color: #1A1A1A;
+  font-size: 14px;
+  color: var(--color-text-primary);
   margin-bottom: 2px;
 }
 
 .find-submit-btn {
   width: 100%;
-  height: 64px;
-  border-radius: 12px;
-  font-size: 24px;
+  height: 52px;
+  border-radius: 8px;
+  font-size: 15px;
   margin-top: 16px;
 }
 
@@ -442,93 +434,18 @@
   min-width: 0;
 }
 
-.find-page-compact .find-hero {
-  width: 100%;
-  max-width: var(--auth-content-width);
-  height: auto;
-  margin: 0 auto;
-  padding: 40px 24px 20px;
-}
-
-.find-page-compact .find-hero-title {
-  font-size: 30px;
-}
-
-.find-page-compact .find-hero-sub {
-  font-size: 14px;
-}
-
-.find-page-compact .find-card-section {
-  width: 100%;
-  max-width: var(--auth-content-width);
-  margin: 0 auto;
-  padding: 0 24px 60px;
-}
-
-.find-page-compact .find-card {
-  width: 100%;
-  padding: 28px 24px;
-  border-width: 1px;
-  gap: 20px;
-}
-
-.find-page-compact .find-tabs {
-  height: 52px;
-}
-
-.find-page-compact .find-tab {
-  font-size: 16px;
-}
-
-.find-page-compact .find-field-label {
-  font-size: 14px;
-}
-
-.find-page-compact .find-submit-btn {
-  height: 52px;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-.find-page-compact .find-alt-link a {
-  font-size: 14px;
+#password-email-result:empty {
+  display: none;
 }
 
 /* 결과 박스 */
 .find-result {
-  background-color: #F2FCF5;
-  border: 1.5px solid var(--color-border);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.find-result-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
+  background-color: var(--color-very-light);
+  border: 1px solid var(--color-border);
   color: var(--color-primary-hover);
 }
 
-.find-result-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-  color: #1E1E1E;
-}
-.find-result-row .result-email { color: var(--color-primary); font-weight: 700; }
-
-.find-result-note {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  color: #5B5B5B;
-}
+.find-result .result-email { font-weight: 700; }
 
 /* 하단 링크 */
 .find-alt-link {
@@ -536,9 +453,8 @@
   justify-content: flex-end;
 }
 .find-alt-link a {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 14px;
   color: var(--color-primary);
   text-decoration: none;
 }

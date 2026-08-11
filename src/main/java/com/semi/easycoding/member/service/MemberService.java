@@ -38,6 +38,8 @@ public interface MemberService {
             String newPassword
     );
 
+    String findMaskedEmailByNickname(String nickname);
+
     int updateNickname(Long memberId, String nickname);
 
 }
