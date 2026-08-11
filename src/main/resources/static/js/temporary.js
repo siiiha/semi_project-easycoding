@@ -132,6 +132,7 @@ async function deleteTemporaryPost(postId) {
     if (temporaryPostList == null) {
         return;
     }
+    draftList.innerHTML = '';
     temporaryPostList.forEach(function(temporaryPost) {
         renderTemporaryPosts(temporaryPost);
     });

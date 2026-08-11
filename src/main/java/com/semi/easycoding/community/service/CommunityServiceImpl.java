@@ -95,9 +95,19 @@ public class CommunityServiceImpl implements CommunityService {
         int category_id = communityMapper.selectCategoryId(postDto.getCategory());
         postDto.setCategoryId(category_id);
 
-        int result = communityMapper.insertPost(postDto);
-        if (result != 1) {
-            throw new IllegalStateException("게시글 작성을 실패했습니다.");
+        // 임시 저장한 글을 저장하는 경우 사실상 UPDATE
+        if (postDto.getPostId() != null) {
+            // 임시 저장 -> 등록
+            int result = communityMapper.insertTemporaryPost(postDto);
+            if (result != 1) {
+                throw new IllegalStateException("게시글 작성을 실패했습니다.");
+            }
+        } else {
+            // 최초 게시글 등록
+            int result = communityMapper.insertPost(postDto);
+            if (result != 1) {
+                throw new IllegalStateException("게시글 작성을 실패했습니다.");
+            }
         }
 
         return postDto.getPostId();
