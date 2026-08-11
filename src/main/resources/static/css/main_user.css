@@ -194,7 +194,7 @@
 
 /* ── 나의 학습 잔디 ── */
 .grass-section {
-  padding: 8px 16px 36px;
+  padding: 8px 16px 60px;
 }
 
 .grass-inner {
@@ -217,14 +217,18 @@
   align-items: flex-start;
 }
 
+.grass-card,
+.stat-card {
+  background: #fff;
+  border: 1px solid #BFD5BD;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 .grass-card {
   flex: 1;
   min-width: 0;
   overflow-x: auto;
-  background: #fff;
-  border: 1.3px solid #000;
-  border-radius: 15px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
   padding: 18px 14px 39px;
 }
 
@@ -273,9 +277,6 @@
 
 /* 통계 카드 공통 */
 .stat-card {
-  background: #fff;
-  border: 1px solid #B3B3B3;
-  border-radius: 11px;
   padding: 8px 12px;
 }
 
@@ -301,7 +302,7 @@
 .stat-big {
   font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   font-weight: 700;
-  font-size: 36px;
+  font-size: 32px;
   color: var(--color-primary);
   line-height: 1;
 }
