@@ -35,7 +35,7 @@ public interface EducationMapper {
     List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
     // 사용자에게 할당되지 않은 문제 조회
     List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
-                                                            @Param("categoryId") Long categoryId);
+                                                            @Param("categoryId") Short categoryId);
 
 
     int insertMemberQuizHistory(@Param("memberId") Long memberId,
@@ -61,4 +61,8 @@ public interface EducationMapper {
     int insertAnsweredOption(@Param("historyId") Long historyId,
                             @Param("choseOption") Short choseOption);
     // AnsweredOption 테이블 삽입
+
+    List<EducationOptionTypeSubmitDto> selectMemberQuizHistoryJoinAnsweredOptionJoinQuizAtDate(@Param("memberId") Long memberId,
+                                                                             @Param("startDate") LocalDateTime startDate,
+                                                                             @Param("endDate") LocalDateTime endDate);
 }

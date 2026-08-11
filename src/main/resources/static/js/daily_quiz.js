@@ -45,6 +45,35 @@
         // 다른 문제타입이 추기된다면, 계속 늘려나가야 함
     }
 
+    // 정답확인 버튼 강조 상태(선택 전/후)를 제어
+    function updateSubmitButtonVisual() {
+        var form = document.getElementById("quiz-form");
+        var submitBtn = document.getElementById("quiz-next-btn");
+        if (!form || !submitBtn) {
+            return;
+        }
+
+        if (state.submitted) {
+            form.classList.remove("pending-selection");
+            form.classList.remove("has-selection");
+            form.classList.add("submitted-selection");
+            submitBtn.classList.add("is-emphasized");
+            return;
+        }
+
+        form.classList.remove("submitted-selection");
+        form.classList.add("pending-selection");
+
+        var selectedInput = form.querySelector('input[name="answer"]:checked');
+        if (selectedInput) {
+            form.classList.add("has-selection");
+            submitBtn.classList.add("is-emphasized");
+        } else {
+            form.classList.remove("has-selection");
+            submitBtn.classList.remove("is-emphasized");
+        }
+    }
+
     // JSP에서 저장해둔 todayEducation DOM 데이터를 읽어 JS에서 쓰기 편하게 저장
     function readQuizData() {
         // id: today-education-data안에 담긴 class: quiz-data-item 요소들을 NodeList 형태로 저장
@@ -160,6 +189,7 @@
                 // 현재 클릭한 선택지를 선택 상태로 만들기
                 optionEl.classList.add("selected");
                 optionEl.querySelector('input[type="radio"]').checked = true;
+                updateSubmitButtonVisual();
             });
         });
     }
@@ -173,15 +203,14 @@
         // 좌측/우측 상단 진행 숫자 영역
         var currentIndexEl = document.getElementById("quiz-current-index");
         var totalCountEl = document.getElementById("quiz-total-count");
-        // 문제 메타정보(카테고리/유형/주제) 영역
-        var categoryEl = document.getElementById("quiz-category-name");
+        // 문제 메타정보(유형/주제) 영역
         var typeEl = document.getElementById("quiz-type-text");
         var topicEl = document.getElementById("quiz-topic-text");
         // 제출/다음 버튼
         var nextBtn = document.getElementById("quiz-next-btn");
 
         // 중요한거 뭐 하나라도 null이면 중지
-        if (!questionEl || !currentIndexEl || !totalCountEl || !categoryEl || !typeEl || !topicEl || !nextBtn) {
+        if (!questionEl || !currentIndexEl || !totalCountEl || !typeEl || !topicEl || !nextBtn) {
             return;
         }
 
@@ -189,13 +218,38 @@
 
         // 현재 표시할 문제 객체
         var quiz = state.educations[state.currentIndex];
+        if (!quiz) {
+            questionEl.textContent = "현재 풀 수 있는 문제가 없습니다.";
+            currentIndexEl.textContent = "0";
+            if (typeEl) {
+                typeEl.textContent = "-";
+            }
+            if (topicEl) {
+                topicEl.textContent = "-";
+            }
+            var optionsWrap = document.getElementById("quiz-options");
+            if (optionsWrap) {
+                optionsWrap.innerHTML = "";
+            }
+            hideFeedback();
+            nextBtn.textContent = "문제가 없습니다";
+            nextBtn.disabled = true;
+            var form = document.getElementById("quiz-form");
+            if (form) {
+                form.classList.remove("pending-selection");
+                form.classList.remove("has-selection");
+                form.classList.remove("submitted-selection");
+            }
+            if (nextBtn) {
+                nextBtn.classList.remove("is-emphasized");
+            }
+            return;
+        }
+        nextBtn.disabled = false;
 
         // 문제 본문은 educationContent를 우선 사용
         questionEl.textContent = quiz.educationContent || "테스트 문제 텍스트";
         currentIndexEl.textContent = String(state.currentIndex + 1);
-        if (categoryEl) {
-            categoryEl.textContent = "일일 문제";
-        }
         if (typeEl) {
             typeEl.textContent = getTypeText(quiz.educationType);
         }
@@ -213,6 +267,7 @@
         setActiveDot(state.currentIndex);
         hideFeedback();
         renderByEducationType(quiz);
+        updateSubmitButtonVisual();
     }
 
     // 정답/오답 피드백 박스 숨기기
@@ -307,10 +362,12 @@
         state.submitted = true;
         var totalCount = state.educations.length;
         nextBtn.textContent = state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →";
+        updateSubmitButtonVisual();
     }
 
     // 객관식 답안을 서버에 제출하고 성공 시에만 화면 반영
     async function submitMultipleChoiceAnswer(quiz) {
+        var form = document.getElementById("quiz-form");
         var gradeResult = gradeMultipleChoice(quiz);
         if (!gradeResult) {
             return false;
@@ -322,8 +379,16 @@
             choseOption: gradeResult.selectedIndex + 1
         };
 
+        var submitUrl = "/education/submit";
+        if (form) {
+            var formSubmitUrl = form.getAttribute("data-submit-url");
+            if (formSubmitUrl) {
+                submitUrl = formSubmitUrl;
+            }
+        }
+
         try {
-            var response = await fetch("answer", {
+            var response = await fetch(submitUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
