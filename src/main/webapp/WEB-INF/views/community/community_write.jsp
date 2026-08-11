@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/community.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/temporary.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -59,21 +60,39 @@
                 <div class="comm-form-row">
                     <label class="comm-form-label" for="title">제목</label>
                     <input type="text" id="title" name="title" class="comm-form-input-real"
-                           placeholder="제목을 입력해주세요" maxlength="85" required value="${param.title}">
+                           placeholder="제목을 입력해주세요" maxlength="85" required value="<c:out value="${param.title}"/>">
                 </div>
 
                 <!-- 내용 -->
                 <div class="comm-form-row top">
                     <label class="comm-form-label" for="content">내용</label>
                     <textarea id="content" name="content" class="comm-form-textarea"
-                              placeholder="내용을 입력해주세요" maxlength="10000" required>${param.content}</textarea>
+                              placeholder="내용을 입력해주세요" maxlength="10000" required><c:out value="${param.content}"/></textarea>
                 </div>
 
                 <div class="comm-form-divider"></div>
 
+                <!-- 임시저장 목록: 처음에는 숨김 -->
+                <div id="draft-panel" class="comm-draft-panel" >
+                    <div class="comm-draft-panel-header">
+                        <strong>임시저장 글</strong>
+                        <button type="button" class="comm-draft-close"
+                                onclick="toggleDraftPanel(false)">
+                            닫기
+                        </button>
+                    </div>
+
+                    <!-- AJAX 응답으로 항목을 추가할 영역 -->
+                    <div id="draft-list" class="comm-draft-list"></div>
+                </div>
+
                 <!-- 버튼 -->
                 <div class="comm-form-btns">
-                    <button type="button" class="btn-temp-save" onclick="saveDraft()">임시저장</button>
+                        <button type="button" class="btn-temp-save">
+                            <span onclick="saveDraft()">임시저장</span>
+                            &nbsp;|&nbsp;
+                            <span onclick="toggleDraftPanel()">${temporaryPost.postCount}</span>
+                        </button>
                     <div style="flex:1;"></div>
                     <button type="submit" class="btn-submit">등록</button>
                     <a href="${pageContext.request.contextPath}/community" class="btn-cancel"
@@ -89,19 +108,12 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
-function saveDraft() {
-    var form = document.getElementById('writeForm');
-    var action = form.action;
-    form.action = action + '?draft=true';
-    form.submit();
-    form.action = action;
-}
-</script>
-<script src="${pageContext.request.contextPath}/js/modal.js"></script>
-<script>
-    const editErrorMsg = "${errMsg}";
+    const ErrorMsg = "${errMsg}";
+    const successMsg = "${successMsg}";
 </script>
 <script src="${pageContext.request.contextPath}/js/post.js"></script>
+<script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/temporary.js"></script>
 </body>
 <jsp:include page="/WEB-INF/views/common/modal/alertModal.jsp"/>
 </html>

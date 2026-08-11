@@ -19,6 +19,7 @@
         <where>
             <!-- 전달받은 alias가 있으면 'alias.', 없으면 빈값으로 생성 -->
             ${alias}.deleted_at IS NULL
+            AND status = 0
 
             <if test="postCategory != null
                     and postCategory != ''
@@ -83,7 +84,7 @@
     </select>
 
 
-    <update id="increseViews" parameterType="Long">
+    <update id="increaseViews" parameterType="Long">
         UPDATE post
         SET views = views + 1
         WHERE post_id = #{postId}
@@ -100,16 +101,17 @@
 
     <!-- 게시글 작성/추가 -->
     <insert id="insertPost" parameterType="PostDto" useGeneratedKeys="true" keyProperty="postId">
-        INSERT INTO post (member_id, category_id, title, content)
-        VALUES (#{memberId}, #{categoryId}, #{title}, #{content})
+        INSERT INTO post (member_id, category_id, title, content, status)
+        VALUES (#{memberId}, #{categoryId}, #{title}, #{content}, #{temporaryStatus})
     </insert>
 
     <!-- 게시글 수정 -->
     <update id="updatePost" parameterType="PostDto">
         UPDATE post
         SET title = #{title},
-        content = #{content},
-        category_id = #{categoryId}
+            content = #{content},
+            category_id = #{categoryId},
+            updated_at = NOW()
         WHERE post_id = #{postId}
         AND member_id = #{memberId}
         AND deleted_at IS NULL
@@ -121,7 +123,45 @@
         SET deleted_at = NOW()
         WHERE post_id = #{postId}
             AND member_id = #{memberId}
+            AND status = #{temporaryStatus}
             AND deleted_at IS NULL
     </delete>
+
+    <!-- 회원 번호로 임시저장한 게시글 조회 -->
+    <select id="selectTemporaryPostList" parameterType="Long" resultType="PostDto">
+        SELECT p.post_id, p.member_id, p.category_id, c.category, p.title, p.content, p.created_at,
+            DATE_FORMAT (p.created_at, '%Y-%m-%d %H:%i') AS created_at_str
+        FROM post p
+            LEFT JOIN post_category c USING (category_id)
+        WHERE p.member_id = #{memberId}
+            AND p.status = 1
+            AND p.deleted_at IS NULL
+        ORDER BY p.post_id DESC
+    </select>
+
+    <!-- 임시저장한 게시글 저장 (사실 상 게시글 상태 update) -->
+    <update id="insertTemporaryPost" parameterType="PostDto">
+        UPDATE post
+        SET title = #{title},
+            content = #{content},
+            status = 0,
+            category_id = #{categoryId},
+            updated_at = NOW()
+        WHERE post_id = #{postId}
+            AND member_id = #{memberId}
+            AND status = 1
+            AND deleted_at IS NULL
+    </update>
+
+    <select id="isDuplicatePost" parameterType="PostDto" resultType="boolean">
+        SELECT COUNT(*)
+        FROM post
+        WHERE title = #{title}
+            AND content = #{content}
+            AND category_id = #{categoryId}
+            AND member_id = #{memberId}
+            AND status = 1
+            AND deleted_at IS NULL
+    </select>
 
 </mapper>

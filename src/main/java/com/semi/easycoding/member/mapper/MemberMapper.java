@@ -26,6 +26,8 @@ public interface MemberMapper {
 
     int countByNickname(String nickname);
 
+    String findMaskedEmailByNickname(String nickname);
+
     int join(MemberDto memberDto);
     //회원정보가 담긴 memberDto를 받고, DB처리 결과를 숫자로 돌려주는 join()메서드
 

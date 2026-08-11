@@ -23,7 +23,7 @@ public interface CommunityMapper {
     PostDto selectPostDetail(Long postId);
 
     // 게시글의 조회수 변경
-    int increseViews(Long postId);
+    int increaseViews(Long postId);
 
     int insertPost(PostDto postDto);
 
@@ -34,4 +34,12 @@ public interface CommunityMapper {
   
     int deletePost(Long postId, Long memberId);
 
+    // 로그인한 회원의 임시저장 게시물 목록 정보를 조회
+    List<PostDto> selectTemporaryPostList(Long memberId);
+
+    // 임시저장한 게시글을 등록 (실제로는 update)
+    int insertTemporaryPost(PostDto postDto);
+
+    // 임시 저장하려는 게시글의 같은 정보로 있는지 확인
+    boolean isDuplicatePost(PostDto temporarySavePost);
 }

@@ -17,7 +17,7 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<main class="find-page find-page-compact">
+<main class="find-page">
 
     <!-- 히어로 -->
     <div class="find-hero">

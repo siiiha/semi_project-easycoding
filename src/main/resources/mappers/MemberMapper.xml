@@ -33,6 +33,22 @@
            AND deleted_at IS NULL
     </select>
 
+    <select id="findMaskedEmailByNickname"
+            parameterType="String"
+            resultType="String">
+        SELECT CONCAT(
+                   LEFT(email, 4),
+                   REPEAT(
+                       '*',
+                       GREATEST(LOCATE('@', email) - 5, 0)
+                   ),
+                   SUBSTRING(email, LOCATE('@', email))
+               )
+        FROM member
+        WHERE nickname = #{nickname}
+          AND deleted_at IS NULL
+    </select>
+
     <!-- 조회 결과이기 때문에 resultType을 적어야 한다.-->
     <select id="login" parameterType="MemberDto" resultType="MemberDto">
         SELECT member_id,

@@ -7,15 +7,20 @@
 
     <select id="selectGrassCells"
             resultType="com.semi.easycoding.home.dto.GrassCellDto">
-        <!-- 104일 전부터 오늘까지 총 105개의 날짜를 만든다. -->
+        <!-- 두 달 전의 1일부터 오늘까지 달력 날짜를 생성한다. -->
         WITH RECURSIVE dates AS (
-            SELECT CURDATE() - INTERVAL 104 DAY AS study_date
+            SELECT CAST(
+                       DATE_FORMAT(
+                           CURDATE() - INTERVAL 2 MONTH,
+                           '%Y-%m-01'
+                       ) AS DATE
+                   ) AS calendar_date
 
             UNION ALL
 
-            SELECT study_date + INTERVAL 1 DAY
+            SELECT calendar_date + INTERVAL 1 DAY
             FROM dates
-            WHERE study_date &lt; CURDATE()
+            WHERE calendar_date &lt; CURDATE()
         ),
 
         <!-- 현재 회원이 완료한 문제 수를 날짜별로 계산한다. -->
@@ -25,13 +30,13 @@
             FROM member_quiz_history
             WHERE member_id = #{memberId}
               AND answered = TRUE
-              AND exam_at >= CURDATE() - INTERVAL 104 DAY
+              AND exam_at >= (SELECT MIN(calendar_date) FROM dates)
               AND exam_at &lt; CURDATE() + INTERVAL 1 DAY
             GROUP BY DATE(exam_at)
         )
 
         <!-- 완료 문제 수를 잔디 색상 단계로 변환한다. -->
-        SELECT dates.study_date AS date,
+        SELECT dates.calendar_date AS date,
                CASE
                    WHEN COALESCE(daily_activity.solved_count, 0) = 0 THEN 0
                    WHEN daily_activity.solved_count &lt; 5 THEN 1
@@ -39,24 +44,8 @@
                END AS level
         FROM dates
         LEFT JOIN daily_activity
-               ON daily_activity.study_date = dates.study_date
-        ORDER BY dates.study_date
-    </select>
-
-    <select id="selectLearningStats"
-            resultType="com.semi.easycoding.home.dto.LearningStatsDto">
-        <!-- 현재 회원의 총 완료 문제 수와 정답률을 계산한다. -->
-        SELECT COALESCE(SUM(answered = TRUE), 0) AS totalSolved,
-               COALESCE(
-                   ROUND(
-                       100.0 * SUM(answered = TRUE AND correct = TRUE)
-                       / NULLIF(SUM(answered = TRUE), 0),
-                       1
-                   ),
-                   0
-               ) AS correctRate
-        FROM member_quiz_history
-        WHERE member_id = #{memberId}
+               ON daily_activity.study_date = dates.calendar_date
+        ORDER BY dates.calendar_date
     </select>
 
     <select id="selectTodayProgress"

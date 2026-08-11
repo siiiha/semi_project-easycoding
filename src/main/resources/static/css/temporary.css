@@ -1,0 +1,89 @@
+/* 임시저장 목록 패널 */
+.comm-draft-panel {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    border: 1.5px solid #D9D9D9;
+    border-radius: 8px;
+    background: #FAFCF9;
+    box-sizing: border-box;
+}
+
+.comm-draft-panel.is-open {
+    display: flex;
+}
+
+/* 패널 제목 / 닫기 버튼 */
+.comm-draft-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #1E1E1E;
+    font-size: 15px;
+}
+
+.comm-draft-close {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    color: #767676;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.comm-draft-close:hover {
+    color: #1E1E1E;
+}
+
+/* AJAX로 추가할 목록 */
+.comm-draft-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* AJAX로 만드는 각 임시글 항목 */
+.comm-draft-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 4px;
+    border-top: 1px solid #E5E7EB;
+    color: #1E1E1E;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.comm-draft-item:hover {
+    color: var(--color-primary);
+}
+
+.comm-draft-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.comm-draft-date {
+    flex-shrink: 0;
+    color: #9CA3AF;
+    font-size: 12px;
+}
+
+/* 현재 임시저장 버튼 안의 개수 영역 */
+.btn-temp-save > span {
+    cursor: pointer;
+}
+
+.btn-temp-save > span:last-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: #E8F5E9;
+    font-size: 12px;
+}

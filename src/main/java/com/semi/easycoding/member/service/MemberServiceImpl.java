@@ -111,7 +111,7 @@ public class MemberServiceImpl implements MemberService {
     public boolean resetPassword(
             String email,
             String newPassword
-    ) {
+    ){
         String encodedPassword = passwordEncoder.encode(newPassword);
 
         int result = memberMapper.updatePasswordByEmail(
@@ -148,6 +148,14 @@ public class MemberServiceImpl implements MemberService {
         return result > 0;
     }
 
+    @Override
+    public String findMaskedEmailByNickname(String nickname) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            return null;
+        }
+        String trimmedNickname = nickname.trim();
+        return memberMapper.findMaskedEmailByNickname(trimmedNickname);
+    }
     @Override
     public int updateProfileId(Long memberId, Short profileId) {
         if (profileId == null
