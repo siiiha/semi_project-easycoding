@@ -37,13 +37,9 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
         
         List<MemberQuizHistoryDto> todayEducationHistory = educationService.todayEducations(memberId);
@@ -54,13 +50,9 @@ public class EducationController {
 
     @GetMapping("/daily/quiz")
     public String mainQuizPage(HttpSession session, Model model){
-        // 비로그인시, 로그인쪽으로 리다이렉팅
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
-        if(loginUser == null){
-            return "redirect:/member/login";
-        }
 
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
         // 모든 문제가 이미 제출된 상태라면 (모든 answered가 true) "/daily/complete" 페이지로 이동
@@ -81,7 +73,7 @@ public class EducationController {
     @PostMapping("/submit")
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
-
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
@@ -94,6 +86,7 @@ public class EducationController {
     @GetMapping("/daily/complete")
     public String DailyCompletePage(HttpSession session, Model model){
 
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
@@ -118,6 +111,7 @@ public class EducationController {
     public String categoryListPage(@RequestParam("categoryId") Short categoryId,
                                    HttpSession session,
                                    Model model) {
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
@@ -131,6 +125,7 @@ public class EducationController {
     @GetMapping("/review")
     public String reviewPage(HttpSession session,
                              Model model){
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         Long memberId = Long.valueOf(loginUser.getMemberId());
 
