@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EducationOptionSubmitDto {
-    Long historyId;
-    Long educationID;
-    boolean correct;
-    Short choseOption;
+    private Long historyId;
+    private Long educationID;
+    private boolean correct;
+    private Short choseOption;
 }

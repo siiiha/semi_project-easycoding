@@ -3,6 +3,14 @@ package com.semi.easycoding.home.service;
 import com.semi.easycoding.education.dto.EducationDto;
 import com.semi.easycoding.education.dto.EducationSummaryDto;
 import com.semi.easycoding.education.service.EducationService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.semi.easycoding.home.dto.TodayProgressDto;
+import com.semi.easycoding.home.mapper.HomeDashboardMapper;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import com.semi.easycoding.home.dto.GrassCellDto;
 import com.semi.easycoding.home.dto.GrassMonthDto;
 import com.semi.easycoding.home.dto.LearningStatsDto;
@@ -42,10 +50,13 @@ public class HomeDashboardServiceImpl implements HomeDashboardService {
         if (!ALLOWED_PROBLEM_COUNTS.contains(problemCount)) {
             throw new IllegalArgumentException("허용되지 않은 문제 수입니다.");
         }
+        //사용자가 선택한 문제 수가 3, 5, 10, 20 중 하나인지 확인
+        //허용되지 않은 숫자라면 문제 배정을 중단한다.
 
         if (!educationService.memberTodayEducationIsEmpty(memberId)) {
             return;
         }
+        //이미 문제가 배정되었는지 확인한다.
 
         List<EducationDto> educations;
         if (categoryId == null) {
