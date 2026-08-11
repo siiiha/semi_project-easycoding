@@ -22,6 +22,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentDto> selectCommentByPostId(Long postId) {
+        if (!commentMapper.existsPublishedPost(postId)) {
+            throw new IllegalArgumentException("존재하지 않거나 접근할 수 없는 게시글입니다.");
+        }
+
         return commentMapper.selectCommentList(postId);
     }
 
@@ -35,6 +39,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> insertComment(Long postId, Long parentId, String content, Long memberId) {
         validateContent(content);
+
+        if (!commentMapper.existsPublishedPost(postId)) {
+            throw new IllegalArgumentException("존재하지 않거나 접근할 수 없는 게시글입니다.");
+        }
 
         if (parentId != null) {
             CommentDto parentComment = commentMapper.selectCommentById(parentId);

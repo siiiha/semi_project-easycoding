@@ -10,6 +10,9 @@ public interface CommentMapper {
     // 댓글 등록하는 메소드
     int insertComment(CommentDto comment);
 
+    // 댓글 등록 전 게시글이 삭제된 게시글이 아닌지 확인하는 메소드
+    boolean existsPublishedPost(Long postId);
+
     // 게시글 번호로 댓글 조회하는 메소드
     List<CommentDto> selectCommentList(Long postId);
 
