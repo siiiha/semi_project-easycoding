@@ -95,7 +95,7 @@
 
                 <!-- 댓글 섹션 -->
                 <div style="background:#fff;border:1.5px solid #B8BEC5;border-radius:12px;padding:40px;display:flex;flex-direction:column;gap:28px;">
-                    <p style="font-size:22px;font-weight:700;color:#1E1E1E;">댓글 ${post.commentCount}</p>
+                    <p style="font-size:22px;font-weight:700;color:#1E1E1E;">댓글</p>
 
                     <c:choose>
                         <c:when test="${loginMember != null}">
@@ -132,60 +132,6 @@
 
                     <!-- 댓글 목록 -->
                     <div id="comments-area" style="display:flex;flex-direction:column;gap:24px;">
-                        <c:forEach var="comment" items="${comments}">
-                            <div class="comment" style="display:flex;flex-direction:column;gap:12px;">
-                                <!--게시글 하나 영역--><div style="display:flex;align-items:center;justify-content:space-between;">
-                                    <!--프로필+작성자 영역-->
-                                    <div style="display:flex;align-items:center;gap:10px;">
-                                        <!--프로필영역-->
-                                        <div style="width:32px;height:32px;border-radius:50%;background:#F3F4F6;border:1px solid #E5E7EB;overflow:hidden;flex-shrink:0;">
-                                            <c:if test="${not empty comment.authorProfileImage}">
-                                                <!--이미지 태그-->
-                                                <img src="${comment.authorProfileImage}" alt="${comment.author}" style="width:100%;height:100%;object-fit:cover;">
-                                            </c:if>
-                                        </div>
-                                        <!--작성자 + 작성일영역-->
-                                        <div style="display:flex;flex-direction:column;gap:2px;">
-                                            <!--작성자-->
-                                            <span style="font-size:14px;font-weight:600;color:#1E1E1E;">${comment.author}</span>
-                                            <!--작성일-->
-                                            <span style="font-size:11px;color:#9CA3AF;">${comment.createdAt}</span>
-                                        </div>
-                                    </div>
-                                    <c:if test="${comment.author == sessionScope.loginUser.nickname}">
-                                        <!--댓글 내용 영역-->
-                                        <div style="display:flex;gap:12px;font-size:12px;color:#9CA3AF;">
-                                            <span onclick="toggleCommentEdit(${comment.id})" style="cursor:pointer;">수정</span>
-                                            <form action="${pageContext.request.contextPath}/community/${post.id}/comment/${comment.id}/delete"
-                                                  method="post" style="display:inline;" onsubmit="return confirm('삭제하시겠습니까?')">
-                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                                                <button type="submit" style="border:none;background:none;color:#9CA3AF;font-size:12px;cursor:pointer;padding:0;">삭제</button>
-                                            </form>
-                                        </div>
-                                    </c:if>
-                                </div>
-
-                                <!-- 댓글 본문 / 수정 폼 -->
-                                <div id="comment-text-${comment.id}">
-                                    <p style="font-size:14px;font-weight:600;color:#1E1E1E;line-height:1.6;">${comment.content}</p>
-                                </div>
-                                <form id="comment-edit-${comment.id}"
-                                      action="${pageContext.request.contextPath}/community/${post.id}/comment/${comment.id}/edit"
-                                      method="post" style="display:none;flex-direction:column;gap:8px;">
-                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                                    <textarea name="content" rows="4"
-                                              style="width:100%;border:1.5px solid #4CAF50;border-radius:6px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1E1E1E;resize:vertical;outline:none;box-sizing:border-box;">${comment.content}</textarea>
-                                    <div style="display:flex;gap:8px;justify-content:flex-end;">
-                                        <button type="button" onclick="toggleCommentEdit(${comment.id})"
-                                                style="padding:8px 16px;background:#fff;border:1px solid #D9D9D9;border-radius:6px;font-size:13px;font-weight:600;color:#5B5B5B;cursor:pointer;">취소</button>
-                                        <button type="submit"
-                                                style="padding:8px 16px;background:#4CAF50;border:none;border-radius:6px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">수정</button>
-                                    </div>
-                                </form>
-
-                                <div style="height:1px;background:#E6E6E6;"></div>
-                            </div>
-                        </c:forEach>
                     </div>
                 </div>
 
@@ -203,21 +149,12 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script>
-    const loginNickname = "${sessionScope.loginUser.nickname}";
-    const contextPath = "${pageContext.request.contextPath}";
-    const postId = "${post.id}";
-</script>
-<script>
-function toggleCommentEdit(id) {
-    var textDiv = document.getElementById('comment-text-' + id);
-    var formEl  = document.getElementById('comment-edit-' + id);
-    var isHidden = formEl.style.display === 'none' || formEl.style.display === '';
-    textDiv.style.display = isHidden ? 'none' : 'block';
-    formEl.style.display  = isHidden ? 'flex' : 'none';
-}
-</script>
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script>
+    const contextPath = "${pageContext.request.contextPath}";
+    const loginMemberId =
+        ${empty sessionScope.loginUser ? 'null' : sessionScope.loginUser.memberId};
+</script>
 <script>
 const ErrorMsg = "${errMsg}";
 const successMsg = "${successMsg}";
