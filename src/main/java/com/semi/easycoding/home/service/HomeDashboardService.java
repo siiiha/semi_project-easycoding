@@ -1,6 +1,7 @@
 package com.semi.easycoding.home.service;
 
 import com.semi.easycoding.home.dto.GrassMonthDto;
+import com.semi.easycoding.home.dto.GrassCellDto;
 import com.semi.easycoding.home.dto.LearningStatsDto;
 import com.semi.easycoding.home.dto.TodayProgressDto;
 import java.util.List;
