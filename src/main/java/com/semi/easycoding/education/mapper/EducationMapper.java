@@ -61,4 +61,8 @@ public interface EducationMapper {
     int insertAnsweredOption(@Param("historyId") Long historyId,
                             @Param("choseOption") Short choseOption);
     // AnsweredOption 테이블 삽입
+
+    List<EducationOptionTypeSubmitDto> selectMemberQuizHistoryJoinAnsweredOptionJoinQuizAtDate(@Param("memberId") Long memberId,
+                                                                             @Param("startDate") LocalDateTime startDate,
+                                                                             @Param("endDate") LocalDateTime endDate)
 }
