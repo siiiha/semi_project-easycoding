@@ -71,17 +71,8 @@
 
     <!-- 실제로 DB에 회원을 저장하는 SQL -->
     <insert id="join" parameterType="MemberDto">
-        INSERT INTO member (
-            login_id,
-            email,
-            password,
-            nickname
-        ) VALUES (
-            #{email},
-            #{email},
-            #{password},
-            #{nickname}
-        )
+        insert into member (login_id, email, password, nickname)
+        values (#{email}, #{email}, #{password}, #{nickname})
         <!-- 첫번째 email에는 login_id가 두번째에는 email이 저장 -->
         <!-- #{...}는 MemberDto에서 값을 꺼내는 표현 -->
     </insert>
@@ -138,6 +129,59 @@
          WHERE member_id = #{memberId}
            AND deleted_at IS NULL
     </update>
+
+    <select id="findExpiredWithdrawnMemberIds"
+            resultType="long">
+        SELECT member_id
+        FROM member
+        WHERE deleted_at IS NOT NULL
+        AND deleted_at &lt; NOW() - INTERVAL 30 DAY
+    </select>
+
+    <update id="clearPostMemberId">
+        UPDATE post
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
+
+    <update id="clearCommentMemberId">
+        UPDATE comment
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
+
+    <delete id="deleteAnsweredBlankByMemberId">
+        DELETE FROM answered_blank
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteAnsweredOptionByMemberId">
+        DELETE FROM answered_option
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteQuizHistoryByMemberId">
+        DELETE FROM member_quiz_history
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteQuizCategoriesByMemberId">
+        DELETE FROM member_and_quiz_category
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteMemberById">
+        DELETE FROM member
+        WHERE member_id = #{memberId}
+    </delete>
 
     <update id="updateProfileId">
         UPDATE member

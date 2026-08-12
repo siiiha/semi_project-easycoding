@@ -2,9 +2,11 @@ package com.semi.easycoding.member.service;
 
 import com.semi.easycoding.member.dto.MemberDto;
 import com.semi.easycoding.member.mapper.MemberMapper;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -156,6 +158,24 @@ public class MemberServiceImpl implements MemberService {
         String trimmedNickname = nickname.trim();
         return memberMapper.findMaskedEmailByNickname(trimmedNickname);
     }
+
+    @Transactional
+    @Override
+    public void deleteExpiredWithdrawnMembers() {
+        List<Long> memberIds =
+                memberMapper.findExpiredWithdrawnMemberIds();
+
+        for (Long memberId : memberIds) {
+            memberMapper.clearPostMemberId(memberId);
+            memberMapper.clearCommentMemberId(memberId);
+
+            memberMapper.deleteAnsweredBlankByMemberId(memberId);
+            memberMapper.deleteAnsweredOptionByMemberId(memberId);
+            memberMapper.deleteQuizHistoryByMemberId(memberId);
+            memberMapper.deleteQuizCategoriesByMemberId(memberId);
+
+            memberMapper.deleteMemberById(memberId);
+        }
     @Override
     public int updateProfileId(Long memberId, Short profileId) {
         if (profileId == null
