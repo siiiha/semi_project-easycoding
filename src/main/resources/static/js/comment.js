@@ -35,7 +35,12 @@ if (commentForm) {
         const content = contentInput.value.trim();
 
         if (!content) {
-            alert("댓글 내용을 입력하세요.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 등록 실패',
+                message: '댓글 내용을 입력하세요.'
+            });
             return;
         }
 
@@ -53,7 +58,12 @@ if (commentForm) {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            alert(result.message || "댓글 등록에 실패했습니다.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 등록 실패',
+                message: result.message
+            });
             return;
         }
 
@@ -171,7 +181,12 @@ function reloadComment(comment) {
                         const result = await response.json();
 
                         if (!response.ok || !result.success) {
-                            alert(result.message || "댓글 삭제에 실패했습니다.");
+                            CommonModal.open({
+                                type: 'alert',
+                                theme: 'warning',
+                                title: '댓글 삭제 실패',
+                                message: result.message
+                            });
                             return;
                         }
 
@@ -185,10 +200,10 @@ function reloadComment(comment) {
                         })
                         commentCountArea.textContent = "댓글수 " + commentList.length;
                     } catch (error) {
-                        console.log("댓글 삭제 중 오류 발생", error);
                         CommonModal.open({
                             type: 'alert',
                             theme: 'danger',
+                            title: '댓글 삭제 실패',
                             message: '댓글 삭제 중 오류가 발생하였습니다.',
                         });
                     }
@@ -297,7 +312,12 @@ function createEditForm(commentArea, comment) {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            alert(result.message || "댓글 수정에 실패했습니다.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 수정 실패',
+                message: result.message
+            });
             return;
         }
 

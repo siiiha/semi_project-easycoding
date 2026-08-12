@@ -75,7 +75,12 @@ function createReplyForm(replyButton, parentId) {
         const content = replyInput.value.trim();
 
         if (!content) {
-            alert('답글 내용을 입력해주세요.');
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '답글 등록 실패',
+                message: '답글 내용을 입력해주세요.'
+            });
             return;
         }
 
@@ -98,7 +103,12 @@ function createReplyForm(replyButton, parentId) {
 
         const result = await response.json();
         if (!response.ok || !result.success) {
-            alert(result.message || '답글 등록에 실패했습니다.');
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '답글 등록 실패',
+                message: result.message
+            });
             return;
         }
         renderCommentList(result.data);
