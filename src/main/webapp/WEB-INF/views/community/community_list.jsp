@@ -158,10 +158,6 @@
                                     <div class="popular-item">
                                         <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
                                         <span class="popular-name">${user.nickname}</span>
-                                        <div class="popular-points">
-                                            <span class="popular-point">누적 게시글 : ${user.postCount}개</span>
-                                            <span class="popular-point">누적 조회수 : ${user.cumulativeViews}회</span>
-                                        </div>
                                     </div>
                                 </c:forEach>
                             </c:if>
