@@ -126,7 +126,7 @@
                 <div class="comm-pagination">
                     <c:choose>
                         <c:when test="${pageInfo.hasPrevPage}">
-                            <a href="${pageContext.request.contextPath}/community/?postCategory=${condition.postCategory}&keyword=${condition.keyword}&page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
+                            <a href="${pageContext.request.contextPath}/community?postCategory=${condition.postCategory}&keyword=${condition.keyword}&page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">이전</span>

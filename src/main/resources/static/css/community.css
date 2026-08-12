@@ -300,6 +300,19 @@
 .post-table-title { font-weight: 600; color: #1E1E1E; }
 .post-table-date  { color: #9CA3AF; }
 
+/* 목록 헤더·행: 기본은 중앙 정렬 */
+.post-table-head > span,
+.post-table-row > span {
+  display: block;
+  text-align: center;
+}
+
+/* 제목 열만 왼쪽 정렬 */
+.post-table-head > span:nth-child(3),
+.post-table-row .post-table-title {
+  text-align: left;
+}
+
 /* ─────────────── 글 상세 ─────────────── */
 /* PostDetailScreen 컴포넌트가 자체 레이아웃을 갖고 있으므로
    comm-inner 안에서 포함될 때 wrapper만 지정 */
@@ -400,7 +413,7 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 15px;
   color: #1E1E1E;
-  resize: vertical;
+  resize: none;
   outline: none;
   line-height: 1.6;
   width: 100%;

@@ -51,11 +51,10 @@
 
     <!-- 조회 결과이기 때문에 resultType을 적어야 한다.-->
     <select id="login" parameterType="MemberDto" resultType="MemberDto">
-        SELECT member_id,
-               password
-          FROM member
-         WHERE email = #{email}
-           AND deleted_at IS NULL
+        select member_id, password
+        from member
+        where BINARY email = BINARY #{email}
+          and deleted_at is null
     </select>
 
     <select id="countByEmail" parameterType="String" resultType="int">
