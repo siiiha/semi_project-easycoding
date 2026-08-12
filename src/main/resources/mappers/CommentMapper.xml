@@ -23,13 +23,13 @@
     </select>
 
     <select id="selectCommentList" parameterType="Long" resultType="CommentDto">
-        SELECT c.comment_id, c.post_id, c.parent_id, c.member_id, m.profile_id, c.content, c.created_at,
-            DATE_FORMAT(c.created_at, '%Y-%m-%d %H:%i') AS created_at_str,
+        SELECT c.comment_id, c.post_id, c.parent_id, c.member_id, m.profile_id, c.content, c.created_at, c.deleted_at,
+            DATE_FORMAT(c.created_at, '%Y-%m-%d') AS created_at_str,
             m.nickname
         FROM comment c
             LEFT JOIN member m USING (member_id)
         WHERE c.post_id = #{postId}
-            AND c.deleted_at IS NULL
+<!--            AND c.deleted_at IS NULL-->
         ORDER BY COALESCE(c.parent_id, c.comment_id) DESC,
             c.parent_id IS NOT NULL,
             c.comment_id ASC

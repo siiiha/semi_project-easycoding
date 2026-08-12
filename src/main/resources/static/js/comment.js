@@ -90,6 +90,20 @@ function reloadComment(comment) {
         commentArea.classList.add('comment-reply');
     }
 
+    // 삭제된 댓글 처리
+    if (comment.deletedAt) {
+        commentArea.classList.add('comment-deleted'); // CSS 스타일링을 위한 클래스 추가
+
+        const deletedMessage = document.createElement('p');
+        deletedMessage.classList.add('deleted-msg');
+        deletedMessage.textContent = '삭제된 댓글입니다.'; // 대댓글 맥락이므로 '삭제된 댓글'이 더 자연스럽습니다.
+
+        commentArea.appendChild(deletedMessage);
+        commentsArea.appendChild(commentArea);
+
+        return;
+    }
+
     // 댓글 영역의 상단 영역(프로필 + 수정/삭제 버튼)
     const topArea = document.createElement('div');
     topArea.classList.add('top-area');
