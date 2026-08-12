@@ -10,6 +10,12 @@ const newPasswordConfirmInput = document.getElementById('new-password-confirm');
 const resetPasswordButton = document.getElementById('reset-password-button');
 const resetPasswordResult = document.getElementById('reset-password-result');
 
+passwordEmailInput.addEventListener('input', function () {
+    passwordEmailResult.textContent = '';
+    passwordEmailResult.classList.remove('is-success');
+    passwordResetSection.hidden = true;
+});
+
 resetPasswordButton.addEventListener(
     'click',
     async function () {
@@ -111,6 +117,8 @@ async function handlePasswordCodeVerification(code) {
 
         if (verified) {
             passwordResetSection.hidden = false;
+            passwordEmailResult.textContent = '인증된 이메일입니다.';
+            passwordEmailResult.classList.add('is-success');
             CommonModal.open({
                 type: 'alert',
                 theme: 'success',
@@ -182,6 +190,7 @@ passwordEmailForm.addEventListener(
 
             if (sent) {
                 passwordEmailResult.textContent = '';
+                passwordEmailResult.classList.remove('is-success');
                 passwordResetSection.hidden = true;
                 newPasswordInput.value = '';
                 newPasswordConfirmInput.value = '';
@@ -190,10 +199,12 @@ passwordEmailForm.addEventListener(
                 openPasswordCodeModal();
             } else {
                 passwordEmailResult.textContent = '가입되지 않은 이메일입니다.';
+                passwordEmailResult.classList.remove('is-success');
                 // 가입되지 않은 이메일 문구
             }
         } catch (error) {
             passwordEmailResult.textContent = '인증번호 발송 중 오류가 발생했습니다.';
+            passwordEmailResult.classList.remove('is-success');
         }
     }
 );

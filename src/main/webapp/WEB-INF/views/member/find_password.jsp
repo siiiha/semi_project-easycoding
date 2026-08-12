@@ -63,11 +63,10 @@
                                value="${param.email}"
                                required>
                     </div>
+                    <p id="password-email-result"></p>
                 </div>
                 <button type="submit" class="btn btn-primary find-submit-btn">인증 메일 발송</button>
             </form>
-
-            <p id="password-email-result"></p>
 
             <div id="password-reset-section" hidden>
                 <div class="password-reset-fields">

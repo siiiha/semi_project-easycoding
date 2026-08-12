@@ -189,7 +189,8 @@
 #check-email-result,
 #check-nickname-result,
 #check-password-format-result,
-#check-password-result {
+#check-password-result,
+#password-email-result {
   min-height: 18px;
   font-size: 12px;
   line-height: 1.5;
@@ -199,7 +200,8 @@
 #check-email-result.is-success,
 #check-nickname-result.is-success,
 #check-password-format-result.is-success,
-#check-password-result.is-success {
+#check-password-result.is-success,
+#password-email-result.is-success {
   color: var(--color-success);
 }
 
