@@ -86,6 +86,7 @@
                                    autocomplete="new-password"
                                    placeholder="새 비밀번호를 입력해주세요.">
                         </div>
+                        <p id="reset-password-result"></p>
                     </div>
 
                     <div class="form-group">
@@ -103,6 +104,7 @@
                                    autocomplete="new-password"
                                    placeholder="새 비밀번호를 다시 입력해주세요.">
                         </div>
+                        <p id="reset-password-confirm-result"></p>
                     </div>
                 </div>
 
@@ -111,7 +113,6 @@
                         class="btn btn-primary find-submit-btn">
                     비밀번호 변경
                 </button>
-                <p id="reset-password-result"></p>
             </div>
 
             <!-- 로그인 링크 -->

@@ -189,7 +189,9 @@
 #check-email-result,
 #check-nickname-result,
 #check-password-format-result,
-#check-password-result {
+#check-password-result,
+#reset-password-result,
+#reset-password-confirm-result {
   min-height: 18px;
   font-size: 12px;
   line-height: 1.5;
@@ -199,7 +201,9 @@
 #check-email-result.is-success,
 #check-nickname-result.is-success,
 #check-password-format-result.is-success,
-#check-password-result.is-success {
+#check-password-result.is-success,
+#reset-password-result.is-success,
+#reset-password-confirm-result.is-success {
   color: var(--color-success);
 }
 
@@ -432,6 +436,10 @@
 .password-reset-fields .form-group {
   flex: 1;
   min-width: 0;
+}
+
+.password-reset-fields + .find-submit-btn {
+  margin-top: 24px;
 }
 
 #password-email-result:empty {
