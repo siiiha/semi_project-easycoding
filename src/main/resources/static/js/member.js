@@ -234,6 +234,13 @@ async function validateNickname() {
         return;
     }
 
+    if (!isValidNickname(nickname)) {
+        nicknameResult.textContent =
+            "1~8자의 한글, 영문, 숫자만 사용할 수 있습니다.";
+        nicknameResult.classList.remove("is-success");
+        return;
+    }
+
     nicknameResult.textContent = "닉네임 중복 확인 중입니다.";
     nicknameResult.classList.remove("is-success");
 

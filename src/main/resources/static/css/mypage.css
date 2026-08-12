@@ -382,7 +382,13 @@
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: var(--color-error);
+}
+
+#check-edit-nickname-result.is-success,
+#check-new-password-result.is-success,
+#check-confirm-password-result.is-success {
+  color: var(--color-success);
 }
 
 /* 액션 버튼 */
