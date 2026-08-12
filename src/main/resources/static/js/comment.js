@@ -105,13 +105,15 @@ function reloadComment(comment) {
     profile.classList.add('profile');
     const profileImg = document.createElement('img');
     profileImg.classList.add('profile-img');
-    // 💡 프로필 이미지 경로 바인딩 (데이터에 없다면 기본이미지 처리)
-    // profile.src = comment.profileId || '/images/default-profile.png';
     // 프로필 이미지가 있을 경우
-    // if (comment.authorProfileImage) {
-    //     profileImg.src = comment.authorProfileImage;
-    //     profileImg.alt = comment.nickname;
-    // }
+    if (comment.profileId) {
+        profileImg.src = contextPath + '/images/profile/sheep-' + comment.profileId + '.png';
+        profileImg.alt = '프로필 이미지';
+    } else {
+        // 데이터가 없다면 기본이미지 처리
+        profileImg.src = contextPath + '/images/profile/sheep-0.png';
+        profileImg.alt = '프로필 이미지';
+    }
 
     // 작성자 영역
     const writerArea = document.createElement('div');
