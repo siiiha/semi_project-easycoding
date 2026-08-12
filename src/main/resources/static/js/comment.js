@@ -95,15 +95,13 @@ function reloadComment(comment) {
     profile.classList.add('profile');
     const profileImg = document.createElement('img');
     profileImg.classList.add('profile-img');
-    console.log('프로필 경로');
-    console.log(contextPath + '/images/profile/sheep-' + comment.profileId);
     // 프로필 이미지가 있을 경우
     if (comment.profileId) {
         profileImg.src = contextPath + '/images/profile/sheep-' + comment.profileId + '.png';
         profileImg.alt = '프로필 이미지';
     } else {
         // 데이터가 없다면 기본이미지 처리
-        profileImg.src = contextPath + '/images/profile/sheep-1.png';
+        profileImg.src = contextPath + '/images/profile/sheep-0.png';
         profileImg.alt = '프로필 이미지';
     }
 
