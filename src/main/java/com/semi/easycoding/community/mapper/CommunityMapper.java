@@ -32,7 +32,7 @@ public interface CommunityMapper {
     // 게시글 수정
     int updatePost(PostDto postDto);
   
-    int deletePost(Long postId, Long memberId);
+    int deletePost(PostDto postDto);
 
     // 로그인한 회원의 임시저장 게시물 목록 정보를 조회
     List<PostDto> selectTemporaryPostList(Long memberId);

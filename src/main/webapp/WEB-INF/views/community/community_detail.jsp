@@ -98,7 +98,7 @@
                     <p style="font-size:22px;font-weight:700;color:#1E1E1E;">댓글</p>
 
                     <c:choose>
-                        <c:when test="${loginMember != null}">
+                        <c:when test="${not empty sessionScope.loginUser}">
                             <!-- 댓글 입력 -->
                             <form id="comment-form" action="${pageContext.request.contextPath}/comment/insert/${postDetail.postId}" method="post" style="display:flex;flex-direction:column;gap:12px;">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">

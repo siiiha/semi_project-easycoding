@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
             type: 'alert',
             theme: 'warning',
             title: '잘못된 접근',
-            message: editErrorMsg
+            message: ErrorMsg
         });
     }
 
@@ -18,18 +18,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const deletePostForm = document.querySelector('#delete-post-form');
     const deletePostBtn = document.querySelector('#delete-post-btn');
-    deletePostBtn.addEventListener('click', function(ev) {
-        // form안에 submit 동작을 차단
-        ev.preventDefault();
+    if (deletePostBtn) {
+        deletePostBtn.addEventListener('click', function (ev) {
+            // form안에 submit 동작을 차단
+            ev.preventDefault();
 
-        CommonModal.open({
-            type: 'confirm',
-            theme: 'danger',
-            title: '게시글을 삭제하시겠습니까?',
-            onConfirm: () => {
-                deletePostForm.submit();
-            }
+            CommonModal.open({
+                type: 'confirm',
+                theme: 'danger',
+                title: '게시글을 삭제하시겠습니까?',
+                onConfirm: () => {
+                    deletePostForm.submit();
+                }
+            });
         });
-    });
+    }
 });
 
