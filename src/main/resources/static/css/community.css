@@ -300,6 +300,13 @@
 .post-table-title { font-weight: 600; color: #1E1E1E; }
 .post-table-date  { color: #9CA3AF; }
 
+/* 게시글 목록이 없는 경우 */
+.empty-post-list {
+  padding: 56px 20px;
+  color: #777;
+  text-align: center;
+}
+
 /* ─────────────── 글 상세 ─────────────── */
 /* PostDetailScreen 컴포넌트가 자체 레이아웃을 갖고 있으므로
    comm-inner 안에서 포함될 때 wrapper만 지정 */

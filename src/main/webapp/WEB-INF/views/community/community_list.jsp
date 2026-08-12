@@ -98,28 +98,44 @@
                         <span>조회수</span>
                         <span>작성일</span>
                     </div>
-                    <c:forEach var="post" items="${postList}" varStatus="st">
-                        <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">
-                            <span class="post-table-num">${(pageInfo.page - 1) * pageInfo.pageSize + st.count}</span>
-                            <span>
+                    <c:choose>
+                        <c:when test="${not empty postList}">
+                            <c:forEach var="post" items="${postList}" varStatus="st">
+                                <a href="${pageContext.request.contextPath}/community/detail/${post.postId}?postCategory=${condition.postCategory}&page=${condition.page}" class="post-table-row">
+                                    <span class="post-table-num">${(pageInfo.page - 1) * pageInfo.pageSize + st.count}</span>
+                                    <span>
+                                        <c:choose>
+                                            <c:when test="${post.category == '질문&답변'}">
+                                                <span class="post-cat-badge qna">${post.category}</span>
+                                            </c:when>
+                                            <c:when test="${post.category == '풀이공유'}">
+                                                <span class="post-cat-badge solution">${post.category}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="post-cat-badge problem">${post.category}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                    <span class="post-table-title">${post.title}</span>
+                                    <span>${post.nickname}</span>
+                                    <span>${post.views}</span>
+                                    <span class="post-table-date">${post.createdAtStr}</span>
+                                </a>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="empty-post-list">
                                 <c:choose>
-                                    <c:when test="${post.category == '질문&답변'}">
-                                        <span class="post-cat-badge qna">${post.category}</span>
-                                    </c:when>
-                                    <c:when test="${post.category == '풀이공유'}">
-                                        <span class="post-cat-badge solution">${post.category}</span>
+                                    <c:when test="${not empty condition.keyword}">
+                                        '<c:out value="${condition.keyword}" />'에 대한 게시글이 없습니다.
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="post-cat-badge problem">${post.category}</span>
+                                        아직 작성된 게시글이 없습니다.
                                     </c:otherwise>
                                 </c:choose>
-                            </span>
-                            <span class="post-table-title">${post.title}</span>
-                            <span>${post.nickname}</span>
-                            <span>${post.views}</span>
-                            <span class="post-table-date">${post.createdAtStr}</span>
-                        </a>
-                    </c:forEach>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
                 <!-- 페이지네이션 -->
