@@ -42,4 +42,6 @@ public interface MemberService {
 
     int updateNickname(Long memberId, String nickname);
 
+    int updateProfileId(Long memberId, Short profileId);
+
 }
