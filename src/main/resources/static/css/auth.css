@@ -190,8 +190,11 @@
 #check-nickname-result,
 #check-password-format-result,
 #check-password-result,
-#password-email-result {
+#password-email-result,
+#reset-password-result,
+#reset-password-confirm-result {
   min-height: 18px;
+  font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.5;
   color: var(--color-error);
@@ -201,7 +204,9 @@
 #check-nickname-result.is-success,
 #check-password-format-result.is-success,
 #check-password-result.is-success,
-#password-email-result.is-success {
+#password-email-result.is-success,
+#reset-password-result.is-success,
+#reset-password-confirm-result.is-success {
   color: var(--color-success);
 }
 

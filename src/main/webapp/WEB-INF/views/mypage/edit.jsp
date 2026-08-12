@@ -113,6 +113,7 @@
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
                                 <input type="password" id="newPassword" name="newPassword" class="edit-input"
+                                       minlength="8" maxlength="20"
                                        placeholder="새 비밀번호를 입력해주세요.">
                             </div>
                             <p id="check-new-password-result"></p>
@@ -125,6 +126,7 @@
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
                                 <input type="password" id="confirmPassword" class="edit-input"
+                                       minlength="8" maxlength="20"
                                        placeholder="새 비밀번호를 다시 입력해주세요.">
                             </div>
                             <p id="check-confirm-password-result"></p>

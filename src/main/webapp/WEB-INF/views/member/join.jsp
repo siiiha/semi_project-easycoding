@@ -109,7 +109,8 @@
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                             <input type="password" id="password" name="password" class="form-input-inner"
-                                   placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
+                                   placeholder="비밀번호를 입력해주세요." autocomplete="new-password"
+                                   minlength="8" maxlength="20" required>
                         </div>
                         <p id="check-password-format-result"></p>
                     </div>
@@ -125,7 +126,8 @@
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                             <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input-inner"
-                                   placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password" required>
+                                   placeholder="비밀번호를 다시 입력해주세요." autocomplete="new-password"
+                                   minlength="8" maxlength="20" required>
                         </div>
                         <p id="check-password-result"></p>
                     </div>
