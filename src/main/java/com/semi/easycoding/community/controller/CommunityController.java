@@ -131,18 +131,8 @@ public class CommunityController {
                 throw new IllegalArgumentException("내용은 30000자 이내로 작성해주세요.");
             }
 
-            // 잘못된 카테고리가 온 경우에 예외 발생
-            if (postDto.getCategory() == null
-                || postDto.getCategory().isBlank()
-                || !(
-                    postDto.getCategory().equals("all")
-                    || postDto.getCategory().equals("qna")
-                    || postDto.getCategory().equals("solution")
-                    || postDto.getCategory().equals("problem")
-                )
-            ) {
-                throw new IllegalArgumentException("잘못된 카테고리입니다.");
-            }
+            // 올바른 카테고리가 왔는지 검증
+            validatePostCategory(postDto.getCategory());
 
             MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
             postDto.setMemberId(loginMember.getMemberId());
@@ -209,10 +199,9 @@ public class CommunityController {
                 throw new IllegalArgumentException("내용은 30000자 이내로 작성해주세요.");
             }
 
-            // 잘못된 카테고리가 온 경우에 예외 발생
-            if (postDto.getCategory() == null || postDto.getCategory().isBlank()) {
-                throw new IllegalArgumentException("잘못된 카테고리입니다.");
-            }
+            // 올바른 카테고리가 왔는지 검증
+            validatePostCategory(postDto.getCategory());
+
             MemberDto loginMember = (MemberDto)session.getAttribute(SessionConst.LOGIN_USER);
             Long memId = Long.valueOf(loginMember.getMemberId());
             postDto.setPostId(postId);
@@ -252,6 +241,14 @@ public class CommunityController {
         return "redirect:/community";
     }
 
-
-
+    // 게시글 저장(등록, 수정)시 카테고리 검증하는 메소드
+    private void validatePostCategory(String category) {
+        // 잘못된 카테고리가 온 경우에 예외 발생
+        if (!"qna".equals(category)
+                && !"solution".equals(category)
+                && !"problem".equals(category)
+        ) {
+            throw new IllegalArgumentException("잘못된 카테고리입니다.");
+        }
+    }
 }
