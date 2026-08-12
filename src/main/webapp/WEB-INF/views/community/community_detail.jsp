@@ -55,10 +55,16 @@
                         <div style="display:flex;align-items:center;justify-content:space-between;">
                             <div style="display:flex;align-items:center;gap:8px;">
                                 <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;border:1px solid #E5E7EB;overflow:hidden;flex-shrink:0;">
-<%--                                    <c:if test="${not empty postDetail.authorProfileImage}">--%>
-<%--                                        <img src="${postDetail.authorProfileImage}" alt="${post.author}" style="width:100%;height:100%;object-fit:cover;">--%>
-<%--                                    </c:if>--%>
-                                        <%-- 삭제할지 말지 고민중입니다. --%>
+                                    <c:choose>
+                                        <c:when test="${not empty postDetail.profileId}">
+                                            <img src="${pageContext.request.contextPath}/images/profile/sheep-${postDetail.profileId}.png"
+                                                 alt="프로필 이미지" style="width:100%;height:100%;object-fit:cover;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/images/profile/sheep-0.png"
+                                                 alt="프로필 이미지" style="width:100%;height:100%;object-fit:cover;">
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div style="display:flex;flex-direction:column;gap:2px;">
                                     <span style="font-size:15px;font-weight:600;color:#1E1E1E;"><c:out value="${postDetail.nickname}" /></span>
