@@ -128,12 +128,11 @@ function reloadComment(comment) {
     profileArea.appendChild(writerArea);
 
     // ==== 작성자인 경우 수정/삭제 버튼 ====
-    if (comment.nickname === loginNickname) {
+    if (loginMemberId !== null && comment.memberId === loginMemberId) {
         // 수정 버튼
         const editBtn = document.createElement('button');
         editBtn.textContent = '수정';
         editBtn.classList.add('comment-action-btn');
-        editBtn.onclick = () => toggleCommentEdit(comment.commentId);
 
         editBtn.addEventListener('click', () => {
             createEditForm(commentArea, comment);
@@ -231,7 +230,6 @@ function createEditForm(commentArea, comment) {
     const charCountArea = document.createElement('div');
     charCountArea.classList.add('char-count-area');
     const charCount = document.createElement('span');
-    charCount.id = 'charCount';
     charCount.textContent = comment.content.length; // 기존 댓글의 글자수로 초기값 설정
 
     charCountArea.appendChild(charCount);

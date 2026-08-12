@@ -45,6 +45,35 @@
         // 다른 문제타입이 추기된다면, 계속 늘려나가야 함
     }
 
+    // 정답확인 버튼 강조 상태(선택 전/후)를 제어
+    function updateSubmitButtonVisual() {
+        var form = document.getElementById("quiz-form");
+        var submitBtn = document.getElementById("quiz-next-btn");
+        if (!form || !submitBtn) {
+            return;
+        }
+
+        if (state.submitted) {
+            form.classList.remove("pending-selection");
+            form.classList.remove("has-selection");
+            form.classList.add("submitted-selection");
+            submitBtn.classList.add("is-emphasized");
+            return;
+        }
+
+        form.classList.remove("submitted-selection");
+        form.classList.add("pending-selection");
+
+        var selectedInput = form.querySelector('input[name="answer"]:checked');
+        if (selectedInput) {
+            form.classList.add("has-selection");
+            submitBtn.classList.add("is-emphasized");
+        } else {
+            form.classList.remove("has-selection");
+            submitBtn.classList.remove("is-emphasized");
+        }
+    }
+
     // JSP에서 저장해둔 todayEducation DOM 데이터를 읽어 JS에서 쓰기 편하게 저장
     function readQuizData() {
         // id: today-education-data안에 담긴 class: quiz-data-item 요소들을 NodeList 형태로 저장
@@ -160,6 +189,7 @@
                 // 현재 클릭한 선택지를 선택 상태로 만들기
                 optionEl.classList.add("selected");
                 optionEl.querySelector('input[type="radio"]').checked = true;
+                updateSubmitButtonVisual();
             });
         });
     }
@@ -204,6 +234,15 @@
             hideFeedback();
             nextBtn.textContent = "문제가 없습니다";
             nextBtn.disabled = true;
+            var form = document.getElementById("quiz-form");
+            if (form) {
+                form.classList.remove("pending-selection");
+                form.classList.remove("has-selection");
+                form.classList.remove("submitted-selection");
+            }
+            if (nextBtn) {
+                nextBtn.classList.remove("is-emphasized");
+            }
             return;
         }
         nextBtn.disabled = false;
@@ -228,6 +267,7 @@
         setActiveDot(state.currentIndex);
         hideFeedback();
         renderByEducationType(quiz);
+        updateSubmitButtonVisual();
     }
 
     // 정답/오답 피드백 박스 숨기기
@@ -322,6 +362,7 @@
         state.submitted = true;
         var totalCount = state.educations.length;
         nextBtn.textContent = state.currentIndex === totalCount - 1 ? "학습 완료 🎉" : "다음 문제 →";
+        updateSubmitButtonVisual();
     }
 
     // 객관식 답안을 서버에 제출하고 성공 시에만 화면 반영

@@ -12,6 +12,16 @@
             VALUES (#{postId}, #{parentId}, #{memberId}, #{content})
     </insert>
 
+    <select id="existsPublishedPost" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM post
+        WHERE post_id = #{postId}
+        AND status = 0
+        AND deleted_at IS NULL
+        )
+    </select>
+
     <select id="selectCommentList" parameterType="Long" resultType="CommentDto">
         SELECT c.comment_id, c.post_id, c.parent_id, c.member_id, m.profile_id, c.content, c.created_at,
             DATE_FORMAT(c.created_at, '%Y-%m-%d %H:%i') AS created_at_str,

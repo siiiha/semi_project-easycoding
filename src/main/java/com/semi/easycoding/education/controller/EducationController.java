@@ -1,22 +1,17 @@
 package com.semi.easycoding.education.controller;
 
+import com.semi.easycoding.education.dto.*;
 import com.semi.easycoding.common.util.SessionUtil;
-import com.semi.easycoding.education.dto.EducationDto;
-import com.semi.easycoding.education.dto.EducationOptionSubmitDto;
-import com.semi.easycoding.education.dto.EducationSummaryDto;
-import com.semi.easycoding.education.dto.MemberQuizHistoryDto;
 import com.semi.easycoding.education.service.EducationService;
 import com.semi.easycoding.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +36,7 @@ public class EducationController {
     // 일일 학습 페이지 이동
     @GetMapping("/daily")
     public String dailyQuizPage(HttpSession session, Model model){
+
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = SessionUtil.getLoginMemberId(session);
         
@@ -74,7 +70,7 @@ public class EducationController {
     @PostMapping("/submit")
     public String submitDailyAnswer(@RequestBody EducationOptionSubmitDto submitDto,
                                                   HttpSession session) {
-
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = SessionUtil.getLoginMemberId(session);
 
         boolean result = educationService.submitDailyAnswerByOption(submitDto, memberId);
@@ -86,6 +82,7 @@ public class EducationController {
     @GetMapping("/daily/complete")
     public String DailyCompletePage(HttpSession session, Model model){
 
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = SessionUtil.getLoginMemberId(session);
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
@@ -101,7 +98,16 @@ public class EducationController {
 
     // 카테고리 학습 페이지 이동
     @GetMapping("/category")
-    public String categoryPage(){
+    public String categoryPage(HttpSession session, RedirectAttributes redirectAttributes) {
+        Long memberId = SessionUtil.getLoginMemberId(session);
+
+        if (!educationService.isTodayAllClear(memberId)) {
+            redirectAttributes.addFlashAttribute("modalTitle", "안내");
+            redirectAttributes.addFlashAttribute("modalMessage", "남은 문제를 다 풀어야 추가 문제를 받을 수 있어요.");
+            redirectAttributes.addFlashAttribute("modalTheme", "warning");
+            return "redirect:/education/daily";
+        }
+
         return "education/category";
     }
 
@@ -109,13 +115,29 @@ public class EducationController {
     public String categoryListPage(@RequestParam("categoryId") Short categoryId,
                                    HttpSession session,
                                    Model model) {
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
+        Long memberId = SessionUtil.getLoginMemberId(session);
 
-        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(loginUser.getMemberId(), 1, categoryId);
+        List<EducationDto> educationListByCategory = educationService.getNotAssignedEducationsByCategoryWithAnswers(memberId, 1, categoryId);
 
         model.addAttribute("educations", educationListByCategory);
 
         return "education/category_quiz";
+    }
+
+    @GetMapping("/review")
+    public String reviewPage(HttpSession session,
+                             Model model){
+        // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
+        Long memberId = SessionUtil.getLoginMemberId(session);
+
+        LocalDateTime startDate = LocalDate.now().atStartOfDay();
+        LocalDateTime endDate = LocalDate.now().atTime(LocalTime.MAX);
+
+        List<EducationOptionTypeSubmitDto> submittedList = educationService.getSubmittedEducationDtoAtDate(memberId, startDate, endDate);
+        model.addAttribute("submittedList", submittedList);
+
+        return "education/review";
     }
 
 

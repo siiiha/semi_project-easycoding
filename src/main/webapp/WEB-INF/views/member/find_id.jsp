@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아이디 찾기 - 쉽코딩</title>
+    <title>이메일 찾기 - 쉽코딩</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
@@ -16,7 +16,7 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<main class="find-page find-page-compact">
+<main class="find-page">
 
     <!-- 히어로 -->
     <div class="find-hero">
@@ -58,14 +58,8 @@
             <!-- 결과 (닉네임으로 조회 후 model에 결과 담아서 전달) -->
             <c:if test="${not empty foundEmail}">
                 <div class="find-result">
-                    <p class="find-result-title">아이디 찾기 결과</p>
-                    <div class="find-result-row">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                        </svg>
-                        <span>회원님의 아이디는 <span class="result-email">${foundEmail}</span> 입니다.</span>
-                    </div>
-                    <p class="find-result-note">보안을 위해 아이디의 일부만 표시됩니다.</p>
+                    회원님의 이메일은
+                    <span class="result-email">${foundEmail}</span>입니다.
                 </div>
             </c:if>
             <c:if test="${not empty notFoundMsg}">

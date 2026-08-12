@@ -7,8 +7,6 @@ import com.semi.easycoding.community.dto.PostListResult;
 import com.semi.easycoding.community.dto.PostSearchCondition;
 import com.semi.easycoding.community.service.CommunityService;
 import com.semi.easycoding.member.dto.MemberDto;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -37,7 +32,10 @@ public class CommunityController {
             @ModelAttribute PostSearchCondition condition,
             Model model) {
         try {
-            if (condition.getPage() < 1 || condition.getPageSize() > 10) {
+            if (condition.getPage() < 1
+                || condition.getPageSize() > 10
+                || condition.getPageSize() < 1
+            ) {
                 throw new IllegalArgumentException("잘못된 접근입니다.");
             }
 
@@ -147,7 +145,7 @@ public class CommunityController {
             }
 
             MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
-            postDto.setMemberId(Long.valueOf( loginMember.getMemberId()));
+            postDto.setMemberId(loginMember.getMemberId());
 
             Long postId = communityService.insertPost(postDto);
             redirectAttributes.addFlashAttribute("successMsg", "게시글 작성 성공");
@@ -253,5 +251,7 @@ public class CommunityController {
         redirectAttributes.addFlashAttribute("successMsg", "게시글 삭제 성공");
         return "redirect:/community";
     }
+
+
 
 }
