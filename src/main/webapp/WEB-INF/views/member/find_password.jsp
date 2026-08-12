@@ -83,6 +83,8 @@
                                    id="new-password"
                                    class="form-input-inner"
                                    autocomplete="new-password"
+                                   minlength="8"
+                                   maxlength="20"
                                    placeholder="새 비밀번호를 입력해주세요.">
                         </div>
                         <p id="reset-password-result"></p>
@@ -101,6 +103,8 @@
                                    id="new-password-confirm"
                                    class="form-input-inner"
                                    autocomplete="new-password"
+                                   minlength="8"
+                                   maxlength="20"
                                    placeholder="새 비밀번호를 다시 입력해주세요.">
                         </div>
                         <p id="reset-password-confirm-result"></p>

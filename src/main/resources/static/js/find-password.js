@@ -36,8 +36,29 @@ function validateResetPasswordConfirm() {
     return true;
 }
 
+function validateResetPassword() {
+    const newPassword = newPasswordInput.value;
+
+    resetPasswordResult.classList.remove('is-success');
+
+    if (newPassword === '') {
+        resetPasswordResult.textContent = '';
+        return false;
+    }
+
+    if (!isValidPassword(newPassword)) {
+        resetPasswordResult.textContent =
+            '8~20자의 영문, 숫자, 특수문자(!@#$%^&*)를 모두 포함해주세요.';
+        return false;
+    }
+
+    resetPasswordResult.textContent = '사용 가능한 비밀번호입니다.';
+    resetPasswordResult.classList.add('is-success');
+    return true;
+}
+
 newPasswordInput.addEventListener('input', function () {
-    resetPasswordResult.textContent = '';
+    validateResetPassword();
     validateResetPasswordConfirm();
 });
 
@@ -58,23 +79,17 @@ resetPasswordButton.addEventListener(
         const newPassword = newPasswordInput.value;
         const newPasswordConfirm = newPasswordConfirmInput.value;
 
-        resetPasswordResult.textContent = '';
-
         if (newPassword === '' || newPasswordConfirm === '') {
+            resetPasswordResult.classList.remove('is-success');
             resetPasswordResult.textContent =
                 '새 비밀번호를 모두 입력해주세요.';
             return;
         }
 
-        if (!isValidPassword(newPassword)) {
-            resetPasswordResult.textContent =
-                '8~20자의 영문, 숫자, 특수문자(!@#$%^&*)를 모두 포함해주세요.';
-            return;
-        }
+        const isPasswordValid = validateResetPassword();
+        const isPasswordConfirmValid = validateResetPasswordConfirm();
 
-        if (newPassword !== newPasswordConfirm) {
-            resetPasswordConfirmResult.textContent =
-                '두 비밀번호가 일치하지 않습니다.';
+        if (!isPasswordValid || !isPasswordConfirmValid) {
             return;
         }
 
@@ -233,6 +248,9 @@ passwordEmailForm.addEventListener(
                 newPasswordInput.value = '';
                 newPasswordConfirmInput.value = '';
                 resetPasswordResult.textContent = '';
+                resetPasswordResult.classList.remove('is-success');
+                resetPasswordConfirmResult.textContent = '';
+                resetPasswordConfirmResult.classList.remove('is-success');
 
                 openPasswordCodeModal();
             } else {
