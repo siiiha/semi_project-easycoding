@@ -14,6 +14,6 @@ public class MemberDto {
     private String email;
     private String password;
     private String nickname;
-    private String profileImg;
+    private Short profileId;
     private String createdAt;
 }

@@ -256,6 +256,14 @@
 .grass-cell {
   aspect-ratio: 1;
   border-radius: 4px;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.grass-cell:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
 }
 
 .grass-cell-empty {

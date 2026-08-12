@@ -159,7 +159,7 @@
                 </div>
 
                 <!-- ── 오른쪽 인기 사용자: 스크롤 고정 floating ── -->
-                <aside class="comm-popular" style="position:fixed;bottom:40px;right:40px;z-index:50;">
+                <aside class="comm-popular" style="position:fixed;bottom:20px;left:20px;z-index:50;">
                     <div class="popular-card">
                         <p class="popular-title">🏆 실시간 인기 사용자</p>
                         <div class="popular-list">

@@ -4,7 +4,7 @@ const draftList = document.querySelector('#draft-list');
 
 // 임시 저장 목록 불러오는 Ajax 비동기 함수
 async function selectTemporaryPost() {
-    const response = await fetch(`${contextPath}/api/select/temporaryPost`, {
+    const response = await fetch(`/api/select/temporaryPost`, {
        method: "GET",
        headers: {
            "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
@@ -110,7 +110,7 @@ function loadTemporaryPost(temporaryPost) {
 
 // 임시저장한 게시글을 삭제하는 Ajax 비동기 함수
 async function deleteTemporaryPost(postId) {
-    const response = await fetch(`${contextPath}/api/delete/temporaryPost/` + postId, {
+    const response = await fetch(`/api/delete/temporaryPost/` + postId, {
         method: "POST",
         headers: {
             "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
@@ -164,7 +164,7 @@ async function saveDraft() {
     console.log(postIdInput);
     console.log(draft);
 
-    const response = await fetch(`${contextPath}/api/insert/temporaryPost`, {
+    const response = await fetch(`/api/insert/temporaryPost`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
