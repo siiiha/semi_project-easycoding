@@ -8,26 +8,29 @@
 <mapper namespace="com.semi.easycoding.member.mapper.MemberMapper">
 
     <select id="findByMemberId" parameterType="Long" resultType="MemberDto">
-        <!-- 1. id="findByMemberId"는 MemberDto findByMemberId(String memberId)와 연결
+        <!-- 1. id="findByMemberId"는 MemberDto findByMemberId(Long memberId)와 연결
                 Mapper 인터페이스의 메서드 이름과 동일해야함.-->
-        <!-- 2. parameterType="String"인 이유는 findByMemberId(String memberId)를 받기 때문-->
+        <!-- 2. parameterType="Long"인 이유는 findByMemberId(Long memberId)를 받기 때문-->
         <!-- 3. resultType="MemberDto"인 이유는 조회 결과를 MemberDto로 받기 때문 -->
 
-        select member_id, email, nickname,
-               date_format(created_at, '%Y.%m.%d') as created_at
-        from member
-        where member_id = #{memberId}
-          and deleted_at is null
+        SELECT member_id,
+               email,
+               nickname,
+               profile_id,
+               DATE_FORMAT(created_at, '%Y.%m.%d') AS created_at
+          FROM member
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
     </select>
 
     <select id="findPasswordByMemberId"
-            parameterType="String"
+            parameterType="Long"
             resultType="String">
 
-        select password
-        from member
-        where member_id = #{memberId}
-          and deleted_at is null
+        SELECT password
+          FROM member
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
     </select>
 
     <select id="findMaskedEmailByNickname"
@@ -55,31 +58,21 @@
     </select>
 
     <select id="countByEmail" parameterType="String" resultType="int">
-        select count(*)
-        from member
-        where email = #{email}
+        SELECT COUNT(*)
+          FROM member
+         WHERE email = #{email}
     </select>
 
     <select id="countByNickname" parameterType="String" resultType="int">
-        select count(*)
-        from member
-        where nickname = #{nickname}
+        SELECT COUNT(*)
+          FROM member
+         WHERE nickname = #{nickname}
     </select>
 
     <!-- 실제로 DB에 회원을 저장하는 SQL -->
     <insert id="join" parameterType="MemberDto">
-        insert into member (
-        login_id,
-        email,
-        password,
-        nickname
-        )
-        values (
-        #{email},
-        #{email},
-        #{password},
-        #{nickname}
-        )
+        insert into member (login_id, email, password, nickname)
+        values (#{email}, #{email}, #{password}, #{nickname})
         <!-- 첫번째 email에는 login_id가 두번째에는 email이 저장 -->
         <!-- #{...}는 MemberDto에서 값을 꺼내는 표현 -->
     </insert>
@@ -88,9 +81,9 @@
     <select id="countPostByMemberId"
             parameterType="Long"
             resultType="int">
-        select count(*)
-          from post
-         where member_id = #{memberId}
+        SELECT COUNT(*)
+          FROM post
+         WHERE member_id = #{memberId}
            AND deleted_at IS NULL
     </select>
 
@@ -98,14 +91,14 @@
     <select id="countCommentByMemberId"
             parameterType="Long"
             resultType="int">
-        select count(*)
-        from comment
-        where member_id = #{memberId}
-        AND deleted_at IS NULL
+        SELECT COUNT(*)
+          FROM comment
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
     </select>
 
     <!-- 회원탈퇴 처리 -->
-    <update id="withdraw" parameterType="String">
+    <update id="withdraw" parameterType="Long">
         UPDATE member
            SET deleted_at = NOW()
          WHERE member_id = #{memberId}
@@ -118,25 +111,82 @@
 
     <update id="updateNickname">
         UPDATE member
-        SET nickname = #{nickname}
-        WHERE member_id = #{memberId}
-        and deleted_at Is NULL
+           SET nickname = #{nickname}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
     </update>
     <!-- 비밀번호 변경 SQL -->
     <update id="updatePasswordByEmail">
         UPDATE member
-        SET PASSWORD = #{password}
-        WHERE email = #{email}
-        AND DELETED_AT IS NULL
+           SET password = #{password}
+         WHERE email = #{email}
+           AND deleted_at IS NULL
     </update>
 
     <update id="updatePasswordByMemberId">
         UPDATE member
-        SET password = #{password}
-        WHERE member_id = #{memberId}
-        AND deleted_at IS NULL
+           SET password = #{password}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
     </update>
 
+    <select id="findExpiredWithdrawnMemberIds"
+            resultType="long">
+        SELECT member_id
+        FROM member
+        WHERE deleted_at IS NOT NULL
+        AND deleted_at &lt; NOW() - INTERVAL 30 DAY
+    </select>
 
+    <update id="clearPostMemberId">
+        UPDATE post
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
 
+    <update id="clearCommentMemberId">
+        UPDATE comment
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
+
+    <delete id="deleteAnsweredBlankByMemberId">
+        DELETE FROM answered_blank
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteAnsweredOptionByMemberId">
+        DELETE FROM answered_option
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteQuizHistoryByMemberId">
+        DELETE FROM member_quiz_history
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteQuizCategoriesByMemberId">
+        DELETE FROM member_and_quiz_category
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteMemberById">
+        DELETE FROM member
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <update id="updateProfileId">
+        UPDATE member
+           SET profile_id = #{profileId}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </update>
 </mapper>

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class PostDto {
     private Long postId;        // 게시글 번호
     private Long memberId;    // 작성자 번호 (PK)
+    private Short profileId;    // 프로필 번호
     private String category;    // 카테고리
     private int categoryId;    // post테이블에 저장할 FK (카테고리 번호)
     private String title;       // 제목

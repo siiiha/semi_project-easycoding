@@ -111,6 +111,9 @@
             if (!item) {
                 return;
             }
+            if (!item.answered) {
+                return;
+            }
 
             var choseOrder = item.answered ? item.choseOption : 0;
             var choseOption = null;
@@ -161,6 +164,9 @@
                 if (!card || !listPanel.contains(card)) {
                     return;
                 }
+                if (card.getAttribute("data-answered") !== "true") {
+                    return;
+                }
                 var index = Number(card.getAttribute("data-index") || -1);
                 showDetail(index);
             });
@@ -171,6 +177,9 @@
                 }
                 var card = event.target.closest(".review-card");
                 if (!card || !listPanel.contains(card)) {
+                    return;
+                }
+                if (card.getAttribute("data-answered") !== "true") {
                     return;
                 }
                 event.preventDefault();

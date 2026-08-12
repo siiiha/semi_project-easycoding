@@ -46,7 +46,11 @@
                         <div class="mission-fields">
                             <div class="mission-field">
                                 <label class="mission-field-label">풀 문제 수</label>
-                                <select class="mission-select" name="problemCount">
+                                <select class="mission-select"
+                                        name="problemCount"
+                                        <c:if test="${todayProgress.total > 0}">
+                                            disabled
+                                        </c:if>>
                                     <option value="3">3문제</option>
                                     <option value="5" selected>5문제</option>
                                     <option value="10">10문제</option>
@@ -55,7 +59,11 @@
                             </div>
                             <div class="mission-field">
                                 <label class="mission-field-label">문제 카테고리</label>
-                                <select class="mission-select" name="categoryId">
+                                <select class="mission-select"
+                                        name="categoryId"
+                                        <c:if test="${todayProgress.total > 0}">
+                                            disabled
+                                        </c:if>>
                                     <option value="">전체</option>
 
                                     <c:forEach var="category" items="${categories}">
@@ -81,7 +89,20 @@
                             </div>
                         </c:if>
 
-                        <button type="submit" class="btn mission-start-btn">오늘의 학습 시작하기</button>
+                        <c:choose>
+                            <c:when test="${todayProgress.total > 0}">
+                                <a class="btn mission-start-btn"
+                                   href="${pageContext.request.contextPath}/education/daily/quiz">
+                                    오늘의 학습 이어하기
+                                </a>
+                            </c:when>
+
+                            <c:otherwise>
+                                <button type="submit" class="btn mission-start-btn">
+                                    오늘의 학습 시작하기
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
                     </form>
                 </div>
 
@@ -119,10 +140,11 @@
                                     </c:if>
 
                                     <c:forEach var="cell" items="${grassMonth.cells}">
-                                        <div
+                                        <a
                                                 class="grass-cell grass-lv${cell.level}"
+                                                href="${pageContext.request.contextPath}/education/review?date=${cell.date}"
                                                 title="${cell.date}">
-                                        </div>
+                                        </a>
                                     </c:forEach>
                                 </div>
                             </div>

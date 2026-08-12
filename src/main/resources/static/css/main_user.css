@@ -110,9 +110,17 @@
   background-position: right 12px center;
   cursor: pointer;
 }
+
 .mission-select:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.mission-select:disabled {
+  color: var(--color-text-muted);
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.75;
 }
 
 /* 진행 상황 */
@@ -256,6 +264,14 @@
 .grass-cell {
   aspect-ratio: 1;
   border-radius: 4px;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.grass-cell:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
 }
 
 .grass-cell-empty {

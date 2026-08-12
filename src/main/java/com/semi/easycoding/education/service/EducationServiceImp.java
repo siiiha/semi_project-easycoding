@@ -9,7 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EducationServiceImp implements EducationService {
@@ -255,8 +257,10 @@ public class EducationServiceImp implements EducationService {
 
     @Override
     public int countStreakDay(Long memberId){
-        int count = 0;
-        // 전체 학습 이력을 넉넉한 기간으로 조회 (정렬: 최신일 기준 내림차순 전제)
+        // 통과기준, 지금은 5
+        final int PASS_COUNT = 5;
+
+        // 전체 학습 이력을 넉넉한 기간으로 조회
         LocalDateTime startDate = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2200, 12, 31, 23, 59, 59);
         List<MemberQuizHistoryDto> historyList = getMemberQuizHistoryAtDate(memberId, startDate, endDate);
@@ -265,46 +269,25 @@ public class EducationServiceImp implements EducationService {
             return 0;
         }
 
-        // 가장 최근 날짜부터 연속 여부를 확인하기위한 초기화
-        LocalDate expectedDate = historyList.get(0).getEducationDate().toLocalDate();
-        // 같은 날짜 묶음에서 한 문제라도 미제출이면 false로 바뀌는 플래그
-        boolean dayAllAnswered = true;
-
+        Map<LocalDate, Integer> answeredCountByDate = new HashMap<>();
         for (MemberQuizHistoryDto history : historyList) {
-            LocalDate currentDate = history.getEducationDate().toLocalDate();
-
-            if (currentDate.equals(expectedDate)) {
-                // 같은 날짜 데이터는 제출 여부만 누적 확인
-                if (!history.isAnswered()) {
-                    dayAllAnswered = false;
-                }
+            if (!history.isAnswered()) {
                 continue;
             }
-
-            // continue를 만나지 않고 넘어왔다면 날짜가 바뀌었다는 의미
-
-            // 이전 히스토리중에서 제출되지 않은 문제가하나라도 있으면 연속일수 카운트 중단
-            if (!dayAllAnswered) {
-                break;
-            }
-
-            // 이전 날짜의 히스토리는 전부 제출되었다는 의미이므로 카운트 +1
-            count += 1;
-
-            // 바뀐 날짜의 연속성을 판별
-            LocalDate previousDate = expectedDate.minusDays(1);
-            if (!currentDate.equals(previousDate)) {
-                break;
-            }
-
-            // expectedDate 갱신 및 dayAllAnswered 초기화
-            expectedDate = currentDate;
-            dayAllAnswered = history.isAnswered();
+            // 날짜별 "제출 완료 문제 수(answered=true)"만 집계
+            LocalDate educationDate = history.getEducationDate().toLocalDate();
+            answeredCountByDate.merge(educationDate, 1, Integer::sum);
         }
 
-        // 마지막으로 검사한 날짜 묶음도 전부 제출 상태면 카운트 반영
-        if (dayAllAnswered) {
+        LocalDate today = LocalDate.now();
+        // 오늘은 통과(5문제 이상)한 경우에만 +1, 미학습/미완수면 0으로 시작
+        int count = answeredCountByDate.getOrDefault(today, 0) >= PASS_COUNT ? 1 : 0;
+        LocalDate cursor = today.minusDays(1);
+
+        // 어제부터 과거방향으로 연속해서 통과한 날짜만 누적
+        while (answeredCountByDate.getOrDefault(cursor, 0) >= PASS_COUNT) {
             count += 1;
+            cursor = cursor.minusDays(1);
         }
 
         return count;
