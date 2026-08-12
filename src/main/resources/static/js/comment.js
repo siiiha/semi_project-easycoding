@@ -35,7 +35,12 @@ if (commentForm) {
         const content = contentInput.value.trim();
 
         if (!content) {
-            alert("댓글 내용을 입력하세요.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 등록 실패',
+                message: '댓글 내용을 입력하세요.'
+            });
             return;
         }
 
@@ -53,7 +58,12 @@ if (commentForm) {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            alert(result.message || "댓글 등록에 실패했습니다.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 등록 실패',
+                message: result.message
+            });
             return;
         }
 
@@ -95,13 +105,15 @@ function reloadComment(comment) {
     profile.classList.add('profile');
     const profileImg = document.createElement('img');
     profileImg.classList.add('profile-img');
-    // 💡 프로필 이미지 경로 바인딩 (데이터에 없다면 기본이미지 처리)
-    // profile.src = comment.profileId || '/images/default-profile.png';
     // 프로필 이미지가 있을 경우
-    // if (comment.authorProfileImage) {
-    //     profileImg.src = comment.authorProfileImage;
-    //     profileImg.alt = comment.nickname;
-    // }
+    if (comment.profileId) {
+        profileImg.src = contextPath + '/images/profile/sheep-' + comment.profileId + '.png';
+        profileImg.alt = '프로필 이미지';
+    } else {
+        // 데이터가 없다면 기본이미지 처리
+        profileImg.src = contextPath + '/images/profile/sheep-0.png';
+        profileImg.alt = '프로필 이미지';
+    }
 
     // 작성자 영역
     const writerArea = document.createElement('div');
@@ -148,35 +160,59 @@ function reloadComment(comment) {
         actionArea.appendChild(deleteBtn);
 
         deleteBtn.addEventListener('click', async function() {
-            if (!confirm('삭제하시겠습니까?')) {
-                return;
-            }
-            const commentId = comment.commentId;
-            const postId = postIdInput.value;
-            const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
-                    "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+            // if (!confirm('삭제하시겠습니까?')) {
+            //     return;
+            // }
+            CommonModal.open({
+                type: 'confirm',
+                theme: 'danger',
+                title: '댓글 삭제',
+                message: '정말로 댓글을 삭제하시겠습니까?',
+                onConfirm: async function() {
+                    const commentId = comment.commentId;
+                    const postId = postIdInput.value;
+                    try {
+                        const response = await fetch(`/comment/delete/${postId}/${commentId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json", // 서버에게 클라이언트가 보내는 데이터가 json이야
+                                "X-Requested-With": "XMLHttpRequest"    // 이 요청은 비동기(ajax) 요청이라고 명시하여 서버에게 전달
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        if (!response.ok || !result.success) {
+                            CommonModal.open({
+                                type: 'alert',
+                                theme: 'warning',
+                                title: '댓글 삭제 실패',
+                                message: result.message
+                            });
+                            return;
+                        }
+
+                        const commentList = result.data;
+                        if (commentList == null) {
+                            return;
+                        }
+                        commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
+                        commentList.forEach(function(comment) {
+                            reloadComment(comment); // 각 댓글을 하나씩 전달
+                        })
+                        commentCountArea.textContent = "댓글수 " + commentList.length;
+                    } catch (error) {
+                        CommonModal.open({
+                            type: 'alert',
+                            theme: 'danger',
+                            title: '댓글 삭제 실패',
+                            message: '댓글 삭제 중 오류가 발생하였습니다.',
+                        });
+                    }
                 }
             });
 
-            const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                alert(result.message || "댓글 삭제에 실패했습니다.");
-                return;
-            }
-
-            const commentList = result.data;
-            if (commentList == null) {
-                return;
-            }
-            commentsArea.innerHTML = "";    // 새로 다시 그리기 전에 영역 비우기
-            commentList.forEach(function(comment) {
-                reloadComment(comment); // 각 댓글을 하나씩 전달
-            })
-            commentCountArea.textContent = "댓글수 " + commentList.length;
         });
     }
 
@@ -278,7 +314,12 @@ function createEditForm(commentArea, comment) {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            alert(result.message || "댓글 수정에 실패했습니다.");
+            CommonModal.open({
+                type: 'alert',
+                theme: 'warning',
+                title: '댓글 수정 실패',
+                message: result.message
+            });
             return;
         }
 

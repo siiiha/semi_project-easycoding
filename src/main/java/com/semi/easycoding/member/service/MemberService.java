@@ -43,5 +43,6 @@ public interface MemberService {
     int updateNickname(Long memberId, String nickname);
 
     void deleteExpiredWithdrawnMembers();
+    int updateProfileId(Long memberId, Short profileId);
 
 }

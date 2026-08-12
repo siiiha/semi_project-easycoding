@@ -176,5 +176,19 @@ public class MemberServiceImpl implements MemberService {
 
             memberMapper.deleteMemberById(memberId);
         }
+    @Override
+    public int updateProfileId(Long memberId, Short profileId) {
+        if (profileId == null
+                || profileId < 1
+                || profileId > 6) {
+            throw new IllegalArgumentException(
+                    "올바르지 않은 프로필 이미지입니다."
+            );
+        }
+
+        return memberMapper.updateProfileId(
+                memberId,
+                profileId
+        );
     }
 }

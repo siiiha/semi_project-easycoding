@@ -76,4 +76,8 @@ public interface MemberMapper {
             @Param("memberId") Long memberId
     );
 
+    int updateProfileId(
+            @Param("memberId") Long memberId,
+            @Param("profileId") Short profileId
+    );
 }

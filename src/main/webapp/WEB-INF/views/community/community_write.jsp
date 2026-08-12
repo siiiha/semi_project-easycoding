@@ -67,7 +67,7 @@
                 <div class="comm-form-row top">
                     <label class="comm-form-label" for="content">내용</label>
                     <textarea id="content" name="content" class="comm-form-textarea"
-                              placeholder="내용을 입력해주세요" maxlength="10000" required><c:out value="${param.content}"/></textarea>
+                              placeholder="내용을 입력해주세요" maxlength="30000" required><c:out value="${param.content}"/></textarea>
                 </div>
 
                 <div class="comm-form-divider"></div>

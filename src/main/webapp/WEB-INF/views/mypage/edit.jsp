@@ -26,7 +26,7 @@
         <h1 class="mypage-title">회원정보 수정</h1>
 
         <div class="mypage-card">
-            <form action="${pageContext.request.contextPath}/member/edit" method="post" id="editForm" enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/member/edit" method="post" id="editForm">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
                 <!-- ── 상단: 아바타 + 기본정보 ── -->
@@ -35,19 +35,12 @@
                     <!-- 아바타 -->
                     <div class="avatar-section">
                         <div class="avatar-circle avatar-circle-lg">
-                            <c:choose>
-                                <c:when test="${not empty sessionScope.loginUser.profileImg}">
-                                    <img src="${sessionScope.loginUser.profileImg}" alt="프로필 이미지" class="avatar-img">
-                                </c:when>
-                                <c:otherwise>
-                                    <svg width="100" height="100" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                                        <path clip-rule="evenodd" d="M14 2a5 5 0 1 1 0 10A5 5 0 0 1 14 2zm0 12c6 0 10 2.7 10 4v2H4v-2c0-1.3 4-4 10-4z" fill="currentColor" fill-rule="evenodd"/>
-                                    </svg>
-                                </c:otherwise>
-                            </c:choose>
+                            <img
+                                    src="${pageContext.request.contextPath}/images/profile/sheep-${sessionScope.loginUser.profileId}.png"
+                                    alt="프로필 이미지"
+                                    class="avatar-img"
+                            >
                         </div>
-                        <label for="profileImage" class="avatar-change-btn" style="cursor:pointer;">이미지 변경</label>
-                        <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display:none;">
                     </div>
 
                     <!-- 필드 그리드 -->
@@ -68,25 +61,25 @@
                             <p id="check-edit-nickname-result"></p>
                         </div>
 
-                        <!-- 이메일 + 회원번호 (읽기 전용) -->
-                        <div class="edit-readonly-row">
-                            <div class="edit-field edit-field-flex">
-                                <label class="edit-field-label">이메일</label>
-                                <div class="edit-input-wrap edit-input-wrap-readonly">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                                    </svg>
-                                    <input type="text" class="edit-input" value="${sessionScope.loginUser.email}" readonly>
-                                </div>
-                            </div>
-                            <div class="edit-field edit-field-flex">
-                                <label class="edit-field-label">회원번호</label>
-                                <div class="edit-input-wrap edit-input-wrap-readonly">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                                    </svg>
-                                    <input type="text" class="edit-input" value="${sessionScope.loginUser.memberId}" readonly>
-                                </div>
+                        <div class="edit-field">
+                            <span class="edit-field-label">프로필 이미지 선택</span>
+                            <div class="profile-options">
+                                <c:forEach var="number" begin="1" end="6">
+                                    <label class="profile-option">
+                                        <input
+                                                type="radio"
+                                                name="profileId"
+                                                value="${number}"
+                                        <c:if test="${sessionScope.loginUser.profileId eq number}">
+                                                checked
+                                        </c:if>
+                                        >
+                                        <img
+                                                src="${pageContext.request.contextPath}/images/profile/sheep-${number}.png"
+                                                alt="양 프로필 ${number}"
+                                        >
+                                    </label>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
@@ -112,7 +105,7 @@
                     </div>
 
                     <!-- 새 비밀번호 + 확인 -->
-                    <div class="edit-readonly-row">
+                    <div class="edit-two-column-row">
                         <div class="edit-field edit-field-flex">
                             <label class="edit-field-label" for="newPassword">새 비밀번호</label>
                             <div class="edit-input-wrap">
@@ -156,19 +149,5 @@
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script>
-
-/* 프로필 이미지 미리보기 */
-document.getElementById('profileImage').addEventListener('change', function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-        var circle = document.querySelector('.avatar-circle-lg');
-        circle.innerHTML = '<img src="' + ev.target.result + '" alt="프로필 미리보기" class="avatar-img">';
-    };
-    reader.readAsDataURL(file);
-});
-</script>
 </body>
 </html>

@@ -119,10 +119,11 @@
                                     </c:if>
 
                                     <c:forEach var="cell" items="${grassMonth.cells}">
-                                        <div
+                                        <a
                                                 class="grass-cell grass-lv${cell.level}"
+                                                href="${pageContext.request.contextPath}/education/review?date=${cell.date}"
                                                 title="${cell.date}">
-                                        </div>
+                                        </a>
                                     </c:forEach>
                                 </div>
                             </div>

@@ -13,6 +13,17 @@ const confirmPasswordResult = document.querySelector("#check-confirm-password-re
 const originalNickname = editNicknameInput.dataset.originalNickname;
 let checkedNickname = originalNickname;
 
+const profileIdInputs =
+    document.querySelectorAll('input[name="profileId"]');
+const profilePreview = document.querySelector(".avatar-circle-lg");
+
+function getSelectedProfileId() {
+    return document.querySelector(
+        'input[name="profileId"]:checked'
+    )?.value ?? "";
+}
+
+const originalProfileId = getSelectedProfileId();
 
 editNicknameInput.addEventListener("input", function () {
     checkedNickname = null;
@@ -118,7 +129,14 @@ editForm.addEventListener("submit", async function (event) {
     const isPasswordUnchanged =
         newPasswordInput.value === "";
 
-    if (isNicknameUnchanged && isPasswordUnchanged) {
+    const selectedProfileId = getSelectedProfileId();
+
+    const isProfileUnchanged =
+        selectedProfileId === originalProfileId;
+
+    if (isNicknameUnchanged
+        && isPasswordUnchanged
+        && isProfileUnchanged) {
         event.preventDefault();
         editNicknameResult.textContent =
             "변경된 회원정보가 없습니다.";
@@ -192,3 +210,12 @@ function validatePasswordConfirm() {
     return true;
 }
 
+profileIdInputs.forEach((profileIdInput) => {
+    profileIdInput.addEventListener("change", function () {
+        const previewImage =
+            this.nextElementSibling.cloneNode();
+
+        previewImage.className = "avatar-img";
+        profilePreview.replaceChildren(previewImage);
+    });
+});
