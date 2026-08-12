@@ -116,8 +116,8 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </span>
-                                    <span class="post-table-title">${post.title}</span>
-                                    <span>${post.nickname}</span>
+                                    <span class="post-table-title"><c:out value="${post.title}"/></span>
+                                    <span><c:out value="${post.nickname}"/></span>
                                     <span>${post.views}</span>
                                     <span class="post-table-date">${post.createdAtStr}</span>
                                 </a>
