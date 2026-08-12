@@ -176,6 +176,8 @@ public class MemberServiceImpl implements MemberService {
 
             memberMapper.deleteMemberById(memberId);
         }
+    }
+
     @Override
     public int updateProfileId(Long memberId, Short profileId) {
         if (profileId == null
