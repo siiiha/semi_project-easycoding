@@ -49,7 +49,8 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
                         <input type="text" id="nickname" name="nickname" class="form-input-inner"
-                               placeholder="닉네임을 입력해주세요." value="${param.nickname}">
+                               placeholder="닉네임을 입력해주세요." value="${param.nickname}"
+                               maxlength="8">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary find-submit-btn">아이디 찾기</button>
