@@ -184,7 +184,6 @@
                                     <div class="popular-item">
                                         <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
                                         <span class="popular-name"><c:out value="${user.nickname}"/></span>
-                                        <span class="popular-point">${user.postCount}개</span>
                                     </div>
                                 </c:forEach>
                             </c:if>
