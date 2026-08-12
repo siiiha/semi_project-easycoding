@@ -78,7 +78,7 @@
                         <!-- 내용 -->
                         <div class="comm-form-row top">
                             <label class="comm-form-label" for="content">내용</label>
-                            <textarea id="content" name="content" class="comm-form-textarea" maxlength="10000" required><c:out value="${postDetail.content}" /></textarea>
+                            <textarea id="content" name="content" class="comm-form-textarea" maxlength="30000" required><c:out value="${postDetail.content}" /></textarea>
                         </div>
 
                         <div class="comm-form-divider"></div>
