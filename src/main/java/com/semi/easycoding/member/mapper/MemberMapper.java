@@ -2,9 +2,9 @@ package com.semi.easycoding.member.mapper;
 //MemberMapper는 인터페이스!
 
 import com.semi.easycoding.member.dto.MemberDto;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-//MyBatis가 제공하는 @Param 어노테이션을 사용하겠다.
 
 @Mapper
 public interface MemberMapper {
@@ -51,4 +51,29 @@ public interface MemberMapper {
             @Param("memberId") Long memberId,
             @Param("password") String password
     );
+
+    //삭제대상 회원번호 조회
+    List<Long> findExpiredWithdrawnMemberIds();
+    int clearPostMemberId(@Param("memberId") Long memberId);
+    int clearCommentMemberId(@Param("memberId") Long memberId);
+
+    int deleteAnsweredBlankByMemberId(
+            @Param("memberId") Long memberId
+    );
+    int deleteAnsweredOptionByMemberId(
+            @Param("memberId") Long memberId
+    );
+
+    int deleteQuizHistoryByMemberId(
+            @Param("memberId") Long memberId
+    );
+
+    int deleteQuizCategoriesByMemberId(
+            @Param("memberId") Long memberId
+    );
+
+    int deleteMemberById(
+            @Param("memberId") Long memberId
+    );
+
 }
