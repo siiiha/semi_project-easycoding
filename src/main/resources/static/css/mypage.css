@@ -76,14 +76,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
   width: 260px;
   flex-shrink: 0;
 }
 
 .avatar-circle {
-  width: 120px;
-  height: 120px;
+  width: 144px;
+  height: 144px;
   border-radius: 50%;
   background-color: var(--color-light-green);
   color: var(--color-primary);
@@ -105,26 +104,50 @@
   object-fit: cover;
 }
 
-.avatar-change-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  background-color: var(--color-bg-sub);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color var(--transition-fast);
-  white-space: nowrap;
+.profile-options {
+  display: grid;
+  grid-template-columns: repeat(6, 56px);
+  gap: 8px;
 }
-.avatar-change-btn:hover {
-  background-color: var(--color-light-green);
-  color: var(--color-text-secondary);
+
+.profile-option {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.profile-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  box-sizing: border-box;
+  transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+}
+
+.profile-option:hover img {
+  transform: scale(1.05);
+}
+
+.profile-option input:checked + img {
+  border-color: var(--color-primary);
+}
+
+.profile-option input:focus-visible + img {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* ── 정보 행 ── */
@@ -268,6 +291,7 @@
   display: flex;
   gap: 48px;
   align-items: flex-start;
+  padding-bottom: 24px;
 }
 
 .edit-fields-grid {
@@ -329,27 +353,8 @@
   color: var(--color-text-muted);
 }
 
-.edit-input[readonly] {
-  color: var(--color-text-secondary);
-  cursor: not-allowed;
-}
-
-.edit-input-wrap-readonly {
-  background-color: var(--color-bg-sub);
-  border-color: var(--color-border);
-}
-
-.edit-input-wrap-readonly:focus-within {
-  border-color: var(--color-border);
-  box-shadow: none;
-}
-
-.edit-input-wrap-readonly .edit-input {
-  background-color: transparent;
-}
-
-/* 읽기 전용 행 (2열) */
-.edit-readonly-row {
+/* 입력 필드 2열 배치 */
+.edit-two-column-row {
   display: flex;
   gap: 20px;
 }
@@ -358,7 +363,8 @@
 .password-section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  padding-top: 24px;
 }
 
 .password-section-title {
@@ -633,12 +639,16 @@
     width: 100%;
   }
 
+  .profile-options {
+    grid-template-columns: repeat(3, 56px);
+  }
+
   .info-rows,
   .edit-fields-grid {
     width: 100%;
   }
 
-  .edit-readonly-row {
+  .edit-two-column-row {
     flex-direction: column;
   }
 
