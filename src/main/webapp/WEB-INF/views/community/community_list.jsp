@@ -147,7 +147,7 @@
                                 <c:param name="keyword" value="${condition.keyword}"/>
                                 <c:param name="page" value="${pageInfo.startPage - 1}"/>
                             </c:url>
-                            <a href="<:out value='${prevPageUrl}'/>" class="page-btn-comm">이전</a>
+                            <a href="<c:out value='${prevPageUrl}'/>" class="page-btn-comm">이전</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">이전</span>
@@ -164,7 +164,7 @@
                             <c:url var="nextPageUrl" value="${pageContext.request.contextPath}/community">
                                 <c:param name="postCategory" value="${condition.postCategory}"/>
                                 <c:param name="keyword" value="${condition.keyword}"/>
-                                <c:param name="page" value="${pageInfo.startPage + 1}"/>
+                                <c:param name="page" value="${pageInfo.endPage + 1}"/>
                             </c:url>
                             <a href="<c:out value='${nextPageUrl}'/>" class="page-btn-comm">다음</a>
                         </c:when>
