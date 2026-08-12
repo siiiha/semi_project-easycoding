@@ -124,12 +124,38 @@
 .popular-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 .popular-item {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 10px;
+  padding: 4px;
+}
+/* 마우스 올렸을 때 상태: flex로 변경하여 노출 */
+.popular-card:hover .popular-item {
+  display: flex;
+  /* 부드럽게 나타나는 애니메이션을 0.35초 동안 실행 */
+  animation: expandFade 0.4s ease forwards;
+}
+/* 애니메이션 정의 */
+@keyframes expandFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px); /* 살짝 위에서 아래로 내려오는 효과 */
+  }
+  33% {
+    opacity: 0.4;
+    transform: translateY(-3px);
+  }
+  66% {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .popular-rank {
   width: 24px;
@@ -145,10 +171,15 @@
 .popular-rank.top { background: var(--color-primary); color: #fff; }
 .popular-rank.normal { background: #E8F5E9; color: var(--color-primary); }
 .popular-name {
-  flex: 1;
+  /*flex: 1;*/
   font-size: 14px;
   font-weight: 600;
   color: #1E1E1E;
+}
+.popular-points {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .popular-point { font-size: 12px; color: #767676; }
 
