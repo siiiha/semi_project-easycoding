@@ -23,9 +23,7 @@
                 <li class="nav-item has-dropdown">
                     <a href="/community" class="nav-link">커뮤니티</a>
                 </li>
-                <li class="nav-item">
-                    <a href="${pageContext.request.contextPath}/inquiry" class="nav-link">문의하기</a>
-                </li>
+                
             </ul>
         </nav>
 
