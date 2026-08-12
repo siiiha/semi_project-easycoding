@@ -190,6 +190,8 @@ editForm.addEventListener("submit", async function (event) {
 function validateNewPassword() {
     const newPassword = newPasswordInput.value;
 
+    newPasswordResult.classList.remove("is-success");
+
     if (newPassword === "") {
         newPasswordResult.textContent = "";
         return true;
@@ -201,6 +203,7 @@ function validateNewPassword() {
     }
 
     newPasswordResult.textContent = "사용 가능한 비밀번호입니다.";
+    newPasswordResult.classList.add("is-success");
     return true;
 }
 
@@ -215,9 +218,16 @@ function validatePasswordConfirm() {
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
+    confirmPasswordResult.classList.remove("is-success");
+
     if (newPassword === "" && confirmPassword === "") {
         confirmPasswordResult.textContent = "";
         return true;
+    }
+
+    if (!isValidPassword(newPassword)) {
+        confirmPasswordResult.textContent = "";
+        return false;
     }
 
     if (confirmPassword === "") {
@@ -231,6 +241,7 @@ function validatePasswordConfirm() {
     }
 
     confirmPasswordResult.textContent = "비밀번호가 일치합니다.";
+    confirmPasswordResult.classList.add("is-success");
     return true;
 }
 

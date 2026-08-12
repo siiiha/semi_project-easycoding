@@ -1,6 +1,7 @@
 package com.semi.easycoding.common.config;
 
 import com.semi.easycoding.common.interceptor.LoginInterceptor;
+import com.semi.easycoding.common.interceptor.MemberEntryInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,6 +22,12 @@ public class WebConfig implements WebMvcConfigurer {
                         "/education/**"
                         // 필요한 경로 추가 하시면 됩니다.
                         // 로그인 요청 시 redirect를 이전 화면으로 갈 수 있게 수정해주세요.
+                );
+
+        registry.addInterceptor(new MemberEntryInterceptor())
+                .addPathPatterns(
+                        "/member/login",
+                        "/member/join"
                 );
     }
 }
