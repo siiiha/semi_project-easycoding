@@ -82,7 +82,7 @@
                     <input type="hidden" name="postCategory" value="${condition.postCategory}">
                     <div class="post-search-input">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="text" name="keyword" value="${condition.keyword != null ? condition.keyword : ''}" placeholder="제목 입력..."
+                        <input type="text" name="keyword" value="<c:out value="${condition.keyword != null ? condition.keyword : ''}"/>" placeholder="제목 입력..."
                                style="border:none;background:transparent;flex:1;font-size:14px;color:#1E1E1E;outline:none;font-family:'Noto Sans KR',sans-serif;">
                     </div>
                     <button type="submit" class="post-search-btn">검색</button>
@@ -114,8 +114,8 @@
                                     </c:otherwise>
                                 </c:choose>
                             </span>
-                            <span class="post-table-title">${post.title}</span>
-                            <span>${post.nickname}</span>
+                            <span class="post-table-title"><c:out value="${post.title}"/></span>
+                            <span><c:out value="${post.nickname}"/></span>
                             <span>${post.views}</span>
                             <span class="post-table-date">${post.createdAtStr}</span>
                         </a>
@@ -126,7 +126,12 @@
                 <div class="comm-pagination">
                     <c:choose>
                         <c:when test="${pageInfo.hasPrevPage}">
-                            <a href="${pageContext.request.contextPath}/community/?postCategory=${condition.postCategory}&keyword=${condition.keyword}&page=${pageInfo.startPage - 1}" class="page-btn-comm">이전</a>
+                            <c:url var="prevPageUrl" value="${pageContext.request.contextPath}/community">
+                                <c:param name="postCategory" value="${condition.postCategory}"/>
+                                <c:param name="keyword" value="${condition.keyword}"/>
+                                <c:param name="page" value="${pageInfo.startPage - 1}"/>
+                            </c:url>
+                            <a href="<:out value='${prevPageUrl}'/>" class="page-btn-comm">이전</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">이전</span>
@@ -140,7 +145,12 @@
 
                     <c:choose>
                         <c:when test="${pageInfo.hasNextPage}">
-                            <a href="${pageContext.request.contextPath}/community?postCategory=${condition.postCategory}&keyword=${condition.keyword}&page=${pageInfo.endPage + 1}" class="page-btn-comm">다음</a>
+                            <c:url var="nextPageUrl" value="${pageContext.request.contextPath}/community">
+                                <c:param name="postCategory" value="${condition.postCategory}"/>
+                                <c:param name="keyword" value="${condition.keyword}"/>
+                                <c:param name="page" value="${pageInfo.startPage + 1}"/>
+                            </c:url>
+                            <a href="<c:out value='${nextPageUrl}'/>" class="page-btn-comm">다음</a>
                         </c:when>
                         <c:otherwise>
                             <span class="page-btn-comm disabled">다음</span>
@@ -149,7 +159,7 @@
                 </div>
 
                 <!-- ── 오른쪽 인기 사용자: 스크롤 고정 floating ── -->
-                <aside class="comm-popular" style="position:fixed;bottom:40px;right:40px;z-index:50;">
+                <aside class="comm-popular" style="position:fixed;bottom:20px;left:20px;z-index:50;">
                     <div class="popular-card">
                         <p class="popular-title">🏆 실시간 인기 사용자</p>
                         <div class="popular-list">
@@ -157,7 +167,7 @@
                                 <c:forEach var="user" items="${popularMemberList}" varStatus="st">
                                     <div class="popular-item">
                                         <span class="popular-rank ${st.index < 3 ? 'top' : 'normal'}">${st.count}</span>
-                                        <span class="popular-name">${user.nickname}</span>
+                                        <span class="popular-name"><c:out value="${user.nickname}"/></span>
                                         <span class="popular-point">${user.postCount}개</span>
                                     </div>
                                 </c:forEach>

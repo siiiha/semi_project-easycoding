@@ -1,6 +1,7 @@
 package com.semi.easycoding.member.controller;
 
 import com.semi.easycoding.common.util.PasswordValidator;
+import com.semi.easycoding.common.util.NicknameValidator;
 import com.semi.easycoding.email.constant.EmailSessionKeys;
 import com.semi.easycoding.email.constant.VerificationPurpose;
 import com.semi.easycoding.email.dto.EmailVerification;
@@ -53,12 +54,20 @@ public class MemberController {
             RedirectAttributes redirectAttributes
     ) {
 
-        if (memberDto.getNickname() == null
-                || memberDto.getNickname().trim().isEmpty()) {
-            model.addAttribute("errorMsg", "닉네임을 입력해주세요.");
+        String trimmedNickname =
+                memberDto.getNickname() == null
+                        ? null
+                        : memberDto.getNickname().trim();
+
+        if (!NicknameValidator.isValid(trimmedNickname)) {
+            model.addAttribute(
+                    "errorMsg",
+                    "닉네임은 1~8자의 한글, 영문, 숫자만 사용할 수 있습니다."
+            );
             return "member/join";
         }
-        memberDto.setNickname(memberDto.getNickname().trim());
+
+        memberDto.setNickname(trimmedNickname);
 
         if (!PasswordValidator.isValid(memberDto.getPassword())) {
             model.addAttribute(
@@ -281,6 +290,7 @@ public class MemberController {
             @RequestParam String nickname,
             @RequestParam String currentPassword,
             @RequestParam String newPassword,
+            @RequestParam(required = false) Short profileId,
             HttpSession session,
             Model model,
             RedirectAttributes redirectAttributes
@@ -293,14 +303,10 @@ public class MemberController {
 
         String trimmedNickname = nickname.trim();
 
-        if (trimmedNickname.isEmpty()) {
-            model.addAttribute("errorMsg", "닉네임을 입력해주세요.");
-            return "mypage/edit";
-        }
-
-        if (trimmedNickname.length() > 8) {
+        if (!NicknameValidator.isValid(trimmedNickname)) {
             model.addAttribute(
-                    "errorMsg", "닉네임은 8자 이하로 입력해주세요."
+                    "errorMsg",
+                    "닉네임은 1~8자의 한글, 영문, 숫자만 사용할 수 있습니다."
             );
             return "mypage/edit";
         }
@@ -350,6 +356,22 @@ public class MemberController {
 
             if (result == 0) {
                 model.addAttribute("errorMsg", "회원정보 수정에 실패했습니다.");
+                return "mypage/edit";
+            }
+        }
+
+        if (profileId != null
+                && !profileId.equals(loginUser.getProfileId())) {
+            int result = memberService.updateProfileId(
+                    loginUser.getMemberId(),
+                    profileId
+            );
+
+            if (result == 0) {
+                model.addAttribute(
+                        "errorMsg",
+                        "프로필 이미지 변경에 실패했습니다."
+                );
                 return "mypage/edit";
             }
         }

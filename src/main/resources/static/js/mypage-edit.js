@@ -13,9 +13,30 @@ const confirmPasswordResult = document.querySelector("#check-confirm-password-re
 const originalNickname = editNicknameInput.dataset.originalNickname;
 let checkedNickname = originalNickname;
 
+const profileIdInputs =
+    document.querySelectorAll('input[name="profileId"]');
+const profilePreview = document.querySelector(".avatar-circle-lg");
+
+function getSelectedProfileId() {
+    return document.querySelector(
+        'input[name="profileId"]:checked'
+    )?.value ?? "";
+}
+
+const originalProfileId = getSelectedProfileId();
 
 editNicknameInput.addEventListener("input", function () {
     checkedNickname = null;
+    editNicknameResult.classList.remove("is-success");
+
+    const nickname = editNicknameInput.value.trim();
+
+    if (nickname !== "" && !isValidNickname(nickname)) {
+        editNicknameResult.textContent =
+            "1~8자의 한글, 영문, 숫자만 사용할 수 있습니다.";
+        return;
+    }
+
     editNicknameResult.textContent = "";
 });
 
@@ -25,16 +46,27 @@ async function validateEditNickname() {
     if (nickname === "") {
         checkedNickname = null;
         editNicknameResult.textContent = "닉네임을 입력해주세요.";
+        editNicknameResult.classList.remove("is-success");
+        return false;
+    }
+
+    if (!isValidNickname(nickname)) {
+        checkedNickname = null;
+        editNicknameResult.textContent =
+            "1~8자의 한글, 영문, 숫자만 사용할 수 있습니다.";
+        editNicknameResult.classList.remove("is-success");
         return false;
     }
 
     if (nickname === originalNickname) {
         checkedNickname = originalNickname;
         editNicknameResult.textContent = "현재 사용 중인 닉네임입니다.";
+        editNicknameResult.classList.add("is-success");
         return true;
     }
 
     editNicknameResult.textContent = "닉네임 중복 확인 중입니다.";
+    editNicknameResult.classList.remove("is-success");
 
     try {
         const isDuplicate =
@@ -44,17 +76,20 @@ async function validateEditNickname() {
             checkedNickname = null;
             editNicknameResult.textContent =
                 "이미 사용 중인 닉네임입니다.";
+            editNicknameResult.classList.remove("is-success");
             return false;
         }
 
         checkedNickname = nickname;
         editNicknameResult.textContent =
             "사용 가능한 닉네임입니다.";
+        editNicknameResult.classList.add("is-success");
         return true;
     } catch (error) {
         checkedNickname = null;
         editNicknameResult.textContent =
             "닉네임 중복 확인 중 오류가 발생했습니다.";
+        editNicknameResult.classList.remove("is-success");
         return false;
     }
 }
@@ -118,7 +153,14 @@ editForm.addEventListener("submit", async function (event) {
     const isPasswordUnchanged =
         newPasswordInput.value === "";
 
-    if (isNicknameUnchanged && isPasswordUnchanged) {
+    const selectedProfileId = getSelectedProfileId();
+
+    const isProfileUnchanged =
+        selectedProfileId === originalProfileId;
+
+    if (isNicknameUnchanged
+        && isPasswordUnchanged
+        && isProfileUnchanged) {
         event.preventDefault();
         editNicknameResult.textContent =
             "변경된 회원정보가 없습니다.";
@@ -192,3 +234,12 @@ function validatePasswordConfirm() {
     return true;
 }
 
+profileIdInputs.forEach((profileIdInput) => {
+    profileIdInput.addEventListener("change", function () {
+        const previewImage =
+            this.nextElementSibling.cloneNode();
+
+        previewImage.className = "avatar-img";
+        profilePreview.replaceChildren(previewImage);
+    });
+});

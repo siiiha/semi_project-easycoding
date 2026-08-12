@@ -27,20 +27,11 @@
                 <div class="account-layout">
                     <div class="avatar-section">
                         <div class="avatar-circle">
-                            <c:choose>
-                                <c:when test="${not empty sessionScope.loginUser.profileImg}">
-                                    <img src="${sessionScope.loginUser.profileImg}"
-                                         alt="프로필 이미지" class="avatar-img">
-                                </c:when>
-                                <c:otherwise>
-                                    <svg width="100" height="100" viewBox="0 0 28 28"
-                                         fill="none" aria-hidden="true">
-                                        <path clip-rule="evenodd"
-                                              d="M14 2a5 5 0 1 1 0 10A5 5 0 0 1 14 2zm0 12c6 0 10 2.7 10 4v2H4v-2c0-1.3 4-4 10-4z"
-                                              fill="currentColor" fill-rule="evenodd"/>
-                                    </svg>
-                                </c:otherwise>
-                            </c:choose>
+                            <img
+                                    src="${pageContext.request.contextPath}/images/profile/sheep-${sessionScope.loginUser.profileId}.png"
+                                    alt="프로필 이미지"
+                                    class="avatar-img"
+                            >
                         </div>
                     </div>
 

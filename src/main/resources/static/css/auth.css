@@ -436,6 +436,10 @@
   min-width: 0;
 }
 
+.password-reset-fields + .find-submit-btn {
+  margin-top: 24px;
+}
+
 #password-email-result:empty {
   display: none;
 }

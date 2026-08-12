@@ -9,6 +9,42 @@ const newPasswordInput = document.getElementById('new-password');
 const newPasswordConfirmInput = document.getElementById('new-password-confirm');
 const resetPasswordButton = document.getElementById('reset-password-button');
 const resetPasswordResult = document.getElementById('reset-password-result');
+const resetPasswordConfirmResult = document.getElementById(
+    'reset-password-confirm-result'
+);
+
+function validateResetPasswordConfirm() {
+    const newPassword = newPasswordInput.value;
+    const newPasswordConfirm = newPasswordConfirmInput.value;
+
+    resetPasswordConfirmResult.classList.remove('is-success');
+
+    if (newPasswordConfirm === '') {
+        resetPasswordConfirmResult.textContent = '';
+        return false;
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+        resetPasswordConfirmResult.textContent =
+            '두 비밀번호가 일치하지 않습니다.';
+        return false;
+    }
+
+    resetPasswordConfirmResult.textContent =
+        '두 비밀번호가 일치합니다.';
+    resetPasswordConfirmResult.classList.add('is-success');
+    return true;
+}
+
+newPasswordInput.addEventListener('input', function () {
+    resetPasswordResult.textContent = '';
+    validateResetPasswordConfirm();
+});
+
+newPasswordConfirmInput.addEventListener(
+    'input',
+    validateResetPasswordConfirm
+);
 
 passwordEmailInput.addEventListener('input', function () {
     passwordEmailResult.textContent = '';
@@ -21,6 +57,8 @@ resetPasswordButton.addEventListener(
     async function () {
         const newPassword = newPasswordInput.value;
         const newPasswordConfirm = newPasswordConfirmInput.value;
+
+        resetPasswordResult.textContent = '';
 
         if (newPassword === '' || newPasswordConfirm === '') {
             resetPasswordResult.textContent =
@@ -35,7 +73,7 @@ resetPasswordButton.addEventListener(
         }
 
         if (newPassword !== newPasswordConfirm) {
-            resetPasswordResult.textContent =
+            resetPasswordConfirmResult.textContent =
                 '두 비밀번호가 일치하지 않습니다.';
             return;
         }
