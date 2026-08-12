@@ -53,6 +53,15 @@
     box-shadow: 0 6px 14px rgba(15, 34, 72, 0.06);
 }
 
+.review-list-panel .review-card.is-pending {
+    cursor: default;
+}
+
+.review-list-panel .review-card.is-pending:hover {
+    border-color: #edf0f5;
+    box-shadow: none;
+}
+
 .review-result-icon {
     flex-shrink: 0;
     width: 24px;

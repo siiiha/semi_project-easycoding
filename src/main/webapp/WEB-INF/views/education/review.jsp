@@ -21,8 +21,8 @@
         <c:choose>
             <c:when test="${empty submittedList}">
                 <section class="review-empty">
-                    <p class="review-empty-title">오늘 제출한 문제가 없어요.</p>
-                    <p class="review-empty-desc">데일리 퀴즈를 먼저 풀고 리뷰를 확인해보세요.</p>
+                    <p class="review-empty-title">이 날짜에는 푼 문제가 없어요.</p>
+                    <p class="review-empty-desc">매일매일 꾸준히 퀴즈를 풀어보세요.</p>
                 </section>
             </c:when>
             <c:otherwise>
@@ -36,8 +36,9 @@
                                      data-correct="${edu.correct}"
                                      data-chose-option="${edu.choseOption}"
                                      data-education-type="${edu.educationType}"
-                                     tabindex="0"
-                                     aria-label="문제 ${status.index + 1} 상세 보기">
+                                     tabindex="${edu.answered ? '0' : '-1'}"
+                                     aria-label="문제 ${status.index + 1}"
+                                     aria-disabled="${not edu.answered}">
                                         <div class="review-result-icon" aria-hidden="true">
                                             <c:choose>
                                                 <c:when test="${not edu.answered}">-</c:when>

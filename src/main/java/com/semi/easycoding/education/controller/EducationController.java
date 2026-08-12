@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -127,12 +128,15 @@ public class EducationController {
 
     @GetMapping("/review")
     public String reviewPage(HttpSession session,
+                             @RequestParam(value = "date", required = false)
+                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                              Model model){
         // 받아온 세션에서 memberID 꺼내서 Long타입으로 변환
         Long memberId = SessionUtil.getLoginMemberId(session);
 
-        LocalDateTime startDate = LocalDate.now().atStartOfDay();
-        LocalDateTime endDate = LocalDate.now().atTime(LocalTime.MAX);
+        LocalDate targetDate = (date != null) ? date : LocalDate.now();
+        LocalDateTime startDate = targetDate.atTime(LocalTime.MIN);
+        LocalDateTime endDate = targetDate.atTime(LocalTime.MAX);
 
         List<EducationOptionTypeSubmitDto> submittedList = educationService.getSubmittedEducationDtoAtDate(memberId, startDate, endDate);
         model.addAttribute("submittedList", submittedList);
