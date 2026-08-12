@@ -331,6 +331,13 @@
 .post-table-title { font-weight: 600; color: #1E1E1E; }
 .post-table-date  { color: #9CA3AF; }
 
+/* 게시글 목록이 없는 경우 */
+.empty-post-list {
+  padding: 56px 20px;
+  color: #777;
+  text-align: center;
+}
+
 /* 목록 헤더·행: 기본은 중앙 정렬 */
 .post-table-head > span,
 .post-table-row > span {
