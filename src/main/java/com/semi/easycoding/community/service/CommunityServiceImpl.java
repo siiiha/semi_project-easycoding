@@ -55,18 +55,18 @@ public class CommunityServiceImpl implements CommunityService {
      * @return : PostDto 게시글 1개
      */
     @Override
-    public PostDto selectPostDetail(Long postId) {
+    public PostDto selectPostDetail(Long postId, Long memberId) {
 
         PostDto postDetail = communityMapper.selectPostDetail(postId);
         if (postDetail == null) {
             throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
         }
-        // 조회하는 게시글의 조회수 1증가
-        int increaseViews = communityMapper.increaseViews(postId);
-        if (increaseViews != 1) {
-            throw new IllegalStateException("게시글 조회에 실패하였습니다.");
-        } else {
-            postDetail.setViews(postDetail.getViews() + 1);
+        if (memberId != null && !postDetail.getMemberId().equals(memberId)) {
+            // 조회하는 게시글의 조회수 1증가
+            int increaseViews = communityMapper.increaseViews(postId, memberId);
+            if (increaseViews == 1) {
+                postDetail.setViews(postDetail.getViews() + 1);
+            }
         }
 
         return postDetail;
