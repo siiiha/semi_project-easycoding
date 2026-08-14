@@ -10,7 +10,7 @@ public interface CommunityService {
 
     PostListResult selectPostList(PostSearchCondition condition);
 
-    PostDto selectPostDetail(Long postId);
+    PostDto selectPostDetail(Long postId, Long memberId);
 
     PostDto whenEditSelectPostDetail(Long postId);
 

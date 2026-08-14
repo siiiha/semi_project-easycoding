@@ -82,9 +82,13 @@ public class CommunityController {
     public String postDetailPage(
             PostSearchCondition condition,
             @PathVariable Long postId,
-            Model model) {
+            Model model,
+            HttpSession session
+    ) {
         try {
-            PostDto postDetail = communityService.selectPostDetail(postId);
+            MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
+            Long memberId = (loginMember != null) ? loginMember.getMemberId() : null;
+            PostDto postDetail = communityService.selectPostDetail(postId, memberId);
             model.addAttribute("postDetail", postDetail);
         } catch (IllegalArgumentException | IllegalStateException e) {
             // 등록되지 않은 게시글 인 경우, error페이지로 이동
@@ -158,11 +162,10 @@ public class CommunityController {
             Model model
     ) {
         MemberDto loginMember = (MemberDto) session.getAttribute(SessionConst.LOGIN_USER);
-        Long memId = Long.valueOf(loginMember.getMemberId());
         try {
             PostDto postDetail = communityService.whenEditSelectPostDetail(postId);
             model.addAttribute("postDetail", postDetail);
-            if (!postDetail.getMemberId().equals(memId)) {
+            if (!postDetail.getMemberId().equals(loginMember.getMemberId())) {
                 throw new IllegalArgumentException("수정 권한이 없거나 게시글이 존재하지 않습니다.");
             }
 //            if (postDetail.getMemberId().equals(loginMember.getMemberId())) {

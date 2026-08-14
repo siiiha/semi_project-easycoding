@@ -23,7 +23,7 @@ public interface CommunityMapper {
     PostDto selectPostDetail(Long postId);
 
     // 게시글의 조회수 변경
-    int increaseViews(Long postId);
+    int increaseViews(Long postId, Long memberId);
 
     int insertPost(PostDto postDto);
 
