@@ -102,7 +102,7 @@ public class CommunityServiceImpl implements CommunityService {
             // 임시 저장 -> 등록
             int result = communityMapper.insertTemporaryPost(postDto);
             if (result != 1) {
-                throw new IllegalStateException("게시글 작성을 실패했습니다.");
+                throw new IllegalStateException("이미 임시저장된 내용이 있습니다.");
             }
         } else {
             // 최초 게시글 등록

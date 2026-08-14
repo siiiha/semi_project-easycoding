@@ -181,7 +181,7 @@ async function saveDraft() {
             type: 'alert',
             theme: 'warning',
             title: '경고',
-            message: '임시저장에 실패하였습니다.'
+            message: '이미 임시저장된 내용이 있습니다.'
         });
     }
 
