@@ -59,7 +59,7 @@ public class CommunityServiceImpl implements CommunityService {
 
         PostDto postDetail = communityMapper.selectPostDetail(postId);
         if (postDetail == null) {
-            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+            throw new IllegalArgumentException("수정 권한이 없거나 존재하지 않는 게시글 입니다.");
         }
         if (memberId != null && !postDetail.getMemberId().equals(memberId)) {
             // 조회하는 게시글의 조회수 1증가
