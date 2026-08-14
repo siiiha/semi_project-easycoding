@@ -1,0 +1,68 @@
+package com.semi.easycoding.education.mapper;
+
+import com.semi.easycoding.education.dto.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Mapper
+public interface EducationMapper {
+
+    int insertQuiz(EducationDto myDto);
+    // 문제 삽입
+
+    int insertOptions(EducationOptionTypeDto myDto);
+    // 객관식 답변 삽입
+
+    int insertBlank(EducationBlankTypeDto myDto);
+    // 주관식 답변 삽입
+
+    List<EducationCategoryDto> selectAllEduCategory();
+    // 모든 문제 카테고리 조회
+
+    List<EducationDto> selectUserEducationAtDate(@Param("memberId") Long memberId,
+                                                 @Param("startDate") LocalDateTime startDate,
+                                                 @Param("endDate") LocalDateTime endDate);
+    // 특정 기간 동안 사용자에게 할당된 문제 조회
+
+    List<EducationDto> selectUserEducationAtDateNotsubmitted(@Param("memberId") Long memberId,
+                                                             @Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
+    // 특정 기간 동안 사용자에게 할달된 문제 중, 풀지 않은 문제 조회
+
+    List<EducationDto> selectEducationNotAssigned(@Param("memberId") Long memberId);
+    // 사용자에게 할당되지 않은 문제 조회
+    List<EducationDto> selectEducationNotAssignedByCategory(@Param("memberId") Long memberId,
+                                                            @Param("categoryId") Short categoryId);
+
+
+    int insertMemberQuizHistory(@Param("memberId") Long memberId,
+                                @Param("educationIdList") List<Long> educationIdList);
+    // 사용자에게 문제를 할당, 멤버_퀴즈_히스토리 테이블에 삽입시행
+
+    List<MemberQuizHistoryDto> selectMemberQuizHistoryAtDate(@Param("memberId") Long memberId,
+                                                             @Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
+
+    List<OptionDto> selectOptionsByEducationId(@Param("educationId") Long educationId);
+    // 문제ID로 객관식 답변 조회(answer_option) 테이블
+
+    Long selectHistoryByMemberIdAndEducationId(@Param("memberId") Long memberId,
+                                          @Param("educationId") Long educationId);
+    // memberId 와 educationId를 이용해서 MemberQuizHistory 테이블 조회
+
+    int updateMemberQuizHistory(@Param("historyId") Long historyId,
+                                @Param("answered") boolean answered,
+                                @Param("correct") boolean correct);
+    // MemberQuizHistory 테이블에서 historyId를 이용해서 answered와 correct를 업데이트
+
+    int insertAnsweredOption(@Param("historyId") Long historyId,
+                            @Param("choseOption") Short choseOption);
+    // AnsweredOption 테이블 삽입
+
+    List<EducationOptionTypeSubmitDto> selectMemberQuizHistoryJoinAnsweredOptionJoinQuizAtDate(@Param("memberId") Long memberId,
+                                                                             @Param("startDate") LocalDateTime startDate,
+                                                                             @Param("endDate") LocalDateTime endDate);
+}

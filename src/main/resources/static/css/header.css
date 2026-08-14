@@ -25,13 +25,16 @@
 
 /* ── 로고 ── */
 .header-logo {
-  font-family: 'Jua', sans-serif;
+  font-family: var(--font-logo);
+  font-weight: 400;
   font-size: 36px;
-  color: var(--color-primary);   /* #4CAF50 */
+  color: var(--color-primary);
   text-decoration: none;
   flex-shrink: 0;
   line-height: 1;
 }
+
+
 .header-logo:hover {
   color: var(--color-primary-hover);
 }
@@ -76,7 +79,7 @@
 .dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 16px);
+  top: calc(100% + 4px);
   left: -12px;
   min-width: 150px;
   background-color: #fff;
@@ -105,14 +108,24 @@
   color: var(--color-primary);
 }
 
+.has-dropdown::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 16px;
+}
+
 .has-dropdown:hover .dropdown {
   display: block;
 }
 
 /* 드롭다운 - 우측 정렬 (프로필 메뉴) */
 .dropdown.dropdown-right {
+  top: calc(100% + 1px);
   left: auto;
-  right: 0;
+  right: -20px;
 }
 
 /* ── 비로그인: 로그인 영역 ── */
@@ -215,4 +228,27 @@
 }
 .dropdown-divider a {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    height: 64px;
+  }
+
+  .header-inner {
+    padding: 0 20px;
+  }
+
+  .header-logo {
+    font-size: 30px;
+  }
+
+  .header-nav,
+  .auth-text {
+    display: none;
+  }
+
+  .auth-login-btn {
+    font-size: 15px;
+  }
 }

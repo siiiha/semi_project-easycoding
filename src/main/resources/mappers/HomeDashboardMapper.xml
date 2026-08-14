@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.easycoding.home.mapper.HomeDashboardMapper">
+
+    <select id="selectGrassCells"
+            resultType="com.semi.easycoding.home.dto.GrassCellDto">
+        <!-- 두 달 전의 1일부터 오늘까지 달력 날짜를 생성한다. -->
+        WITH RECURSIVE dates AS (
+            SELECT CAST(
+                       DATE_FORMAT(
+                           CURDATE() - INTERVAL 2 MONTH,
+                           '%Y-%m-01'
+                       ) AS DATE
+                   ) AS calendar_date
+
+            UNION ALL
+
+            SELECT calendar_date + INTERVAL 1 DAY
+            FROM dates
+            WHERE calendar_date &lt; CURDATE()
+        ),
+
+        <!-- 현재 회원이 완료한 문제 수를 날짜별로 계산한다. -->
+        daily_activity AS (
+            SELECT DATE(exam_at) AS study_date,
+                   COUNT(*) AS solved_count
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+              AND answered = TRUE
+              AND exam_at >= (SELECT MIN(calendar_date) FROM dates)
+              AND exam_at &lt; CURDATE() + INTERVAL 1 DAY
+            GROUP BY DATE(exam_at)
+        )
+
+        <!-- 완료 문제 수를 잔디 색상 단계로 변환한다. -->
+        SELECT dates.calendar_date AS date,
+               CASE
+                   WHEN COALESCE(daily_activity.solved_count, 0) = 0 THEN 0
+                   WHEN daily_activity.solved_count &lt; 5 THEN 1
+                   ELSE 2
+               END AS level
+        FROM dates
+        LEFT JOIN daily_activity
+               ON daily_activity.study_date = dates.calendar_date
+        ORDER BY dates.calendar_date
+    </select>
+
+    <select id="selectTodayProgress"
+            resultType="com.semi.easycoding.home.dto.TodayProgressDto">
+        <!-- 현재 회원에게 오늘 배정된 전체 문제 수와 완료 문제 수를 계산한다. -->
+        SELECT COALESCE(SUM(answered = TRUE), 0) AS done,
+               COUNT(*) AS total
+        FROM member_quiz_history
+        WHERE member_id = #{memberId}
+          AND exam_at >= CURDATE()
+          AND exam_at &lt; CURDATE() + INTERVAL 1 DAY
+    </select>
+
+</mapper>

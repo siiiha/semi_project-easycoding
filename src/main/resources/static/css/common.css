@@ -3,6 +3,8 @@
    Spring Web + JSP 프로젝트
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 /* ── 색상 팔레트 (CSS 변수) ── */
 :root {
   /* Brand Colors - Primary Green */
@@ -29,9 +31,16 @@
   --color-text-on-primary:#FFFFFF;   /* 버튼 위 텍스트 */
 
   /* Semantic */
-  --color-error:          #E53935;   /* 오류, 경고 */
-  --color-warning:        #FFA726;   /* 주의 */
-  --color-info:           #42A5F5;   /* 정보 */
+  --color-error: #E03A3A;
+  --color-error-bg: rgba(255, 68, 68, 0.08);
+  --color-error-border: rgba(255, 68, 68, 0.3);
+  --color-warning: #FFA726;
+  --color-info: #42A5F5;
+
+  /* ── font ── */
+  --font-body: 'Pretendard', sans-serif;
+  --font-logo: 'Jua', sans-serif;
+
 
   /* ── 공통 수치 ── */
   --border-radius-sm:     6px;
@@ -59,7 +68,7 @@ html {
 }
 
 body {
-  font-family: 'Noto Sans KR', 'Inter', sans-serif;
+  font-family: var(--font-body);
   background-color: var(--color-bg-main);
   color: var(--color-text-primary);
   line-height: 1.6;
@@ -73,6 +82,10 @@ a {
 }
 a:hover {
   color: var(--color-primary-hover);
+}
+
+.text-primary {
+  color: var(--color-primary);
 }
 
 img {

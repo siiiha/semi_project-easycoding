@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modal.css">
+
+
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="withdraw-main">
     <div class="withdraw-inner">
@@ -26,9 +27,9 @@
             <div class="withdraw-warning-header">
                 <div class="warning-icon-wrap">
                     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                        <path d="M18 3L33 30H3L18 3z" stroke="#FF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <line x1="18" y1="14" x2="18" y2="22" stroke="#FF4444" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="18" cy="26" r="1.5" fill="#FF4444"/>
+                        <path d="M18 3L33 30H3L18 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="18" y1="14" x2="18" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="18" cy="26" r="1.5" fill="currentColor"/>
                     </svg>
                 </div>
                 <h1 class="withdraw-title">정말 탈퇴하시겠습니까?</h1>
@@ -68,28 +69,42 @@
             <!-- ── 복구 불가 경고 ── -->
             <div class="withdraw-irreversible">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <circle cx="10" cy="10" r="8" stroke="#FF4444" stroke-width="2"/>
-                    <line x1="10" y1="6" x2="10" y2="11" stroke="#FF4444" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="10" cy="14" r="1" fill="#FF4444"/>
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+                    <line x1="10" y1="6" x2="10" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="10" cy="14" r="1" fill="currentColor"/>
                 </svg>
                 <p class="withdraw-irreversible-text">탈퇴 완료 후에는 계정을 다시 복구하거나 데이터를 되돌릴 수 없습니다.</p>
             </div>
 
-            <!-- ── 비밀번호 확인 (1차) → modal_withdraw.jsp로 처리됨 ── -->
-            <%-- 실제 탈퇴 요청은 modal_withdraw.jsp에서 비밀번호 확인 후 진행 --%>
-            <jsp:include page="/WEB-INF/views/common/modal_withdraw.jsp" />
+            <c:if test="${not empty errorMsg}">
+                <p class="edit-error">${errorMsg}</p>
+            </c:if>
+            <jsp:include page="/WEB-INF/views/common/modal/inputModal.jsp" />
+
 
             <!-- ── 액션 버튼 ── -->
             <div class="withdraw-actions">
-                <button type="button" class="withdraw-btn-confirm" onclick="openModal('withdrawModal')">탈퇴하기</button>
-                <a href="${pageContext.request.contextPath}/mypage" class="withdraw-btn-return">돌아가기</a>
+                <button type="button"
+                        id="withdraw-button"
+                        class="withdraw-btn-confirm">
+                    탈퇴하기
+                </button>
+                <a href="${pageContext.request.contextPath}/member/mypage" class="withdraw-btn-return">돌아가기</a>
             </div>
 
         </div>
     </div>
 </main>
 
+<form id="withdraw-form"
+      action="${pageContext.request.contextPath}/member/withdraw"
+      method="post">
+    <input type="hidden" name="password">
+</form>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 <script src="${pageContext.request.contextPath}/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/js/mypage-withdraw.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,129 @@
+/* 임시저장 목록 패널 */
+.comm-draft-panel {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    border: 1.5px solid #D9D9D9;
+    border-radius: 8px;
+    background: #FAFCF9;
+    box-sizing: border-box;
+}
+
+.comm-draft-panel.is-open {
+    display: flex;
+}
+
+/* 패널 제목 / 닫기 버튼 */
+.comm-draft-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #1E1E1E;
+    font-size: 15px;
+    font-weight: 600;
+    padding-bottom: 4px;
+}
+
+.comm-draft-close {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    color: #767676;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.comm-draft-close:hover {
+    color: #1E1E1E;
+    text-decoration: underline;
+}
+
+/* AJAX로 추가할 목록 */
+.comm-draft-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* AJAX로 만드는 각 임시글 항목 */
+.comm-draft-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 4px;
+    border-top: 1px solid #E5E7EB;
+    color: #1E1E1E;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.comm-draft-item:hover {
+    color: var(--color-primary);
+}
+
+.comm-draft-title {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 14px;
+    color: #1E1E1E;
+    cursor: pointer;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: inherit;
+}
+.comm-draft-title:hover {
+    color: var(--color-primary, #4CAF50); /* 정의된 기본 컬러 매칭 */
+    text-decoration: underline;
+}
+
+.comm-draft-date {
+    flex-shrink: 0;
+    color: #9CA3AF;
+    font-size: 12px;
+}
+
+/* [추가] JS에서 생성한 deleteButton(삭제 버튼) 스타일링 */
+.comm-draft-delete {
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #FA5252; /* 삭제 느낌의 선명한 빨간색 */
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: inherit;
+    border-radius: 4px;
+    opacity: 0.5; /* 평소엔 흐리게 */
+    transition: all 0.2s;
+}
+/* 항목에 마우스를 올리면 삭제 버튼이 선명해짐 */
+.comm-draft-item:hover .comm-draft-delete {
+    opacity: 1;
+}
+
+.comm-draft-delete:hover {
+    background-color: #FFE3E3; /* 호버 시 연한 빨간 배경 생성 */
+}
+
+/* 현재 임시저장 버튼 안의 개수 영역 */
+.btn-temp-save > span {
+    cursor: pointer;
+}
+
+.btn-temp-save > span:last-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: #E8F5E9;
+    font-size: 12px;
+}

@@ -8,3 +8,5 @@ CREATE TABLE IF NOT EXISTS `quiz_and_quiz_category` (
 	CONSTRAINT `fk_quiz_and_quiz_category_quiz_id` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`quiz_id`),
 	CONSTRAINT `fk_quiz_and_quiz_category_category_id` FOREIGN KEY (`category_id`) REFERENCES `quiz_category` (`category_id`)
 );
+
+drop table if exists `quiz_and_quiz_category`;

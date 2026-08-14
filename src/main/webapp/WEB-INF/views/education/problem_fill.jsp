@@ -29,7 +29,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="problem-main">
     <div class="problem-page-inner">

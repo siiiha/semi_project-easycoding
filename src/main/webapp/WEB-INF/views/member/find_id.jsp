@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아이디 찾기 - 쉽코딩</title>
+    <title>이메일 찾기 - 쉽코딩</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/common/header_guest.jsp" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <main class="find-page">
 
@@ -22,17 +22,10 @@
     <div class="find-hero">
         <div class="find-hero-text">
             <h1 class="find-hero-title">
-                <span class="text-primary">계정 정보를</span><br>잊어버리셨나요?
+                쉽코딩과 함께 <span class="text-primary">오늘의 한 문제</span>로<br>
+                <span class="text-primary">내일의 실력</span>을 키워요.
             </h1>
             <p class="find-hero-sub">쉽코딩과 함께 다시 학습 여정을 이어가요.</p>
-        </div>
-        <!-- 배경 일러스트 (SVG 장식) -->
-        <div class="find-hero-image" aria-hidden="true">
-            <svg viewBox="0 0 394 336" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="197" cy="168" rx="180" ry="148" fill="#E8F5E9" opacity="0.7"/>
-                <ellipse cx="320" cy="80" rx="60" ry="50" fill="#E8F5E9" opacity="0.5"/>
-                <ellipse cx="80" cy="260" rx="70" ry="55" fill="#E8F5E9" opacity="0.5"/>
-            </svg>
         </div>
     </div>
 
@@ -42,12 +35,12 @@
 
             <!-- 탭 -->
             <div class="find-tabs">
-                <a href="${pageContext.request.contextPath}/find-id" class="find-tab active">아이디 찾기</a>
-                <a href="${pageContext.request.contextPath}/find-password" class="find-tab">비밀번호 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-id" class="find-tab active">아이디 찾기</a>
+                <a href="${pageContext.request.contextPath}/member/find-password" class="find-tab">비밀번호 찾기</a>
             </div>
 
             <!-- 폼 -->
-            <form action="${pageContext.request.contextPath}/find-id" method="post" class="find-form">
+            <form action="${pageContext.request.contextPath}/member/find-id" method="post" class="find-form">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                     <label class="find-field-label" for="nickname">닉네임</label>
@@ -56,7 +49,8 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
                         <input type="text" id="nickname" name="nickname" class="form-input-inner"
-                               placeholder="닉네임을 입력해주세요." value="${param.nickname}">
+                               placeholder="닉네임을 입력해주세요." value="${param.nickname}"
+                               maxlength="8">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary find-submit-btn">아이디 찾기</button>
@@ -65,14 +59,8 @@
             <!-- 결과 (닉네임으로 조회 후 model에 결과 담아서 전달) -->
             <c:if test="${not empty foundEmail}">
                 <div class="find-result">
-                    <p class="find-result-title">아이디 찾기 결과</p>
-                    <div class="find-result-row">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                        </svg>
-                        <span>회원님의 아이디는 <span class="result-email">${foundEmail}</span> 입니다.</span>
-                    </div>
-                    <p class="find-result-note">보안을 위해 아이디의 일부만 표시됩니다.</p>
+                    회원님의 이메일은
+                    <span class="result-email">${foundEmail}</span>입니다.
                 </div>
             </c:if>
             <c:if test="${not empty notFoundMsg}">
@@ -81,7 +69,7 @@
 
             <!-- 로그인 링크 -->
             <div class="find-alt-link">
-                <a href="${pageContext.request.contextPath}/login">로그인하러 가기</a>
+                <a href="${pageContext.request.contextPath}/member/login">로그인하러 가기</a>
             </div>
 
         </div>

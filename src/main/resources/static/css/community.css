@@ -124,12 +124,38 @@
 .popular-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 .popular-item {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 10px;
+  padding: 4px;
+}
+/* 마우스 올렸을 때 상태: flex로 변경하여 노출 */
+.popular-card:hover .popular-item {
+  display: flex;
+  /* 부드럽게 나타나는 애니메이션을 0.35초 동안 실행 */
+  animation: expandFade 0.4s ease forwards;
+}
+/* 애니메이션 정의 */
+@keyframes expandFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px); /* 살짝 위에서 아래로 내려오는 효과 */
+  }
+  33% {
+    opacity: 0.4;
+    transform: translateY(-3px);
+  }
+  66% {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .popular-rank {
   width: 24px;
@@ -145,10 +171,15 @@
 .popular-rank.top { background: var(--color-primary); color: #fff; }
 .popular-rank.normal { background: #E8F5E9; color: var(--color-primary); }
 .popular-name {
-  flex: 1;
+  /*flex: 1;*/
   font-size: 14px;
   font-weight: 600;
   color: #1E1E1E;
+}
+.popular-points {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .popular-point { font-size: 12px; color: #767676; }
 
@@ -246,15 +277,22 @@
 }
 .post-search-btn {
   padding: 0 18px;
-  background: var(--color-primary);
+  background: #FFFFFF;
+  border: 1.5px solid #EAEAEA;
   border-radius: 8px;
-  color: #fff;
+  color: #4B5563;
   font-size: 14px;
   font-weight: 600;
   height: 42px;
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.post-search-btn:hover {
+  background: #F0FDF4;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .post-table {
@@ -292,6 +330,26 @@
 .post-table-num  { color: #9CA3AF; font-weight: 500; }
 .post-table-title { font-weight: 600; color: #1E1E1E; }
 .post-table-date  { color: #9CA3AF; }
+
+/* 게시글 목록이 없는 경우 */
+.empty-post-list {
+  padding: 56px 20px;
+  color: #777;
+  text-align: center;
+}
+
+/* 목록 헤더·행: 기본은 중앙 정렬 */
+.post-table-head > span,
+.post-table-row > span {
+  display: block;
+  text-align: center;
+}
+
+/* 제목 열만 왼쪽 정렬 */
+.post-table-head > span:nth-child(3),
+.post-table-row .post-table-title {
+  text-align: left;
+}
 
 /* ─────────────── 글 상세 ─────────────── */
 /* PostDetailScreen 컴포넌트가 자체 레이아웃을 갖고 있으므로
@@ -393,7 +451,7 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 15px;
   color: #1E1E1E;
-  resize: vertical;
+  resize: none;
   outline: none;
   line-height: 1.6;
   width: 100%;
@@ -418,7 +476,10 @@
 }
 .btn-submit:hover { background: var(--color-primary-hover); }
 .btn-temp-save {
-  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
   background: #fff;
   border: 1.5px solid #43A047;
   border-radius: 6px;
@@ -464,3 +525,327 @@
   font-weight: 700;
 }
 .page-btn-comm.disabled { color: #D1D5DB; pointer-events: none; }
+
+/* 댓글 영역 스타일 */
+#comments-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-area {
+  /*background: pink;*/
+  padding: 6px 10px;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.comment-reply {
+  position: relative;
+  margin-left: 50px;
+  background: transparent;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.comment-reply::before {
+  position: absolute;
+  top: 0;
+  left: -22px;
+  width: 14px;
+  height: 18px;
+  border-bottom: 1px solid #D1D5DB;
+  border-left: 1px solid #D1D5DB;
+  content: "";
+}
+
+/* 삭제된 댓글 전용 스타일 예시 */
+.comment-area.comment-deleted {
+  background-color: #F9FAFB; /* 연한 회색 배경 */
+  border-color: #E5E7EB;
+  min-height: 56px;
+  text-align: center;
+  border-bottom: none;
+}
+/* 삭제된 댓글 전용 글씨 스타일 */
+.deleted-msg {
+  color: #9CA3AF;
+  font-size: 18px;
+  font-weight: 500;
+  font-style: italic;
+  padding: 8px 4px;
+  margin: 30px 0;
+}
+
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 8px 38px;
+}
+
+.reply-form textarea {
+  width: 100%;
+  min-height: 78px;
+  padding: 10px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+  resize: none;
+}
+
+.reply-form textarea:focus {
+  border-color: #2DB34A;
+  outline: none;
+}
+
+.reply-form button {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reply-form button[type="submit"] {
+  background: #2DB34A;
+  color: #FFFFFF;
+}
+
+.reply-form button[type="button"] {
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
+.reply-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.reply-form-footer .char-count-area {
+  margin: 0;
+}
+
+.reply-button-area {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.writer-area {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.writer {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1E1E1E;
+}
+
+.created-at {
+  font-size: 11px;
+  color: #9CA3AF;
+}
+
+.content-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1E1E1E;
+  line-height: 1.6;
+  padding: 8px 0 8px 6px;
+  flex: 1;
+}
+
+.reply-area {
+  display: flex;
+  justify-content: end;
+}
+
+.reply-btn {
+  font-size: 10px;
+  padding: 1px 4px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.reply-btn:hover {
+  scale: calc(1.03);
+  font-weight: 800;
+  color: #6B7280;
+}
+
+/* 상단 영역 (프로필 + 수정/삭제) */
+.top-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 수정/삭제 영역 */
+.comment-action {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+/* 수정/삭제 버튼 */
+.comment-action-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #9CA3AF;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.comment-action-btn:hover {
+  font-weight: 600;
+  color: #6B7280;
+}
+
+/* 실제 수정 form 영역 */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  gap: 6px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.edit-content-input {
+  padding: 8px;
+  flex: 1;
+  resize: none;
+  min-height: 100px;
+  border-radius: 6px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+}
+
+.edit-content-input:focus {
+  border: 1.4px solid;
+  border-color: #2db34a;
+  outline: none;
+}
+
+.char-count-area {
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    margin-right: 8px;
+}
+
+.edit-comment-btn {
+  background: #2db34a;
+  color: #E5E7EB;
+}
+
+.edit-btn-area {
+  display: flex;
+  justify-content: end;
+}
+
+.btns {
+  display: flex;
+  gap: 4px;
+}
+
+/* 게시글 상세 - 화면 고정 목록 버튼 */
+.back-to-list-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.back-to-list-btn a{
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: #fff;
+  border: 1.5px solid #9CA3AF;
+  border-radius: 8px;
+  color: #5B5B5B;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.back-to-list-btn a:hover {
+  background: #F9FBF9;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 고정 버튼이 마지막 댓글을 가리지 않도록 여백 확보 */
+.comm-content {
+  padding-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+  .comm-back-to-list {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .comm-back-to-list a {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.94);
+  }
+}
+
+.un-login-comment {
+  border: 1px solid #9ea4ac;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 24px;
+}
+
+.un-login-comment p {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.un-login-comment a {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a9f43;
+}

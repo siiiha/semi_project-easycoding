@@ -38,7 +38,7 @@ git branch
 git checkout develop
 ```
 
-최신 내용 가져오기
+원격의 develop브랜치의 최신 내용 가져오기
 
 ```bash
 git pull origin develop
@@ -60,23 +60,41 @@ git checkout -b feature/login
 
 ## 4. 개발 진행
 
+코드 작성 후
+
 변경사항 확인
 
 ```bash
 git status
 ```
+> 변경사항이 빨간색 글씨로 리스트업 되어있으면 됨
 
-변경사항 Stage
+변경사항 전부 Stage
 
 ```bash
 git add .
 ```
+
+Stage에 올라갔는지 한번 더 확인
+
+```bash
+git status
+```
+> 변경사항이 초록색 으로 반영 되었으면 잘 올라간 것임.
 
 Commit
 
 ```bash
 git commit -m "feat: 로그인 기능 구현"
 ```
+
+최신 develop 반영
+
+```bash
+git pull origin develop
+```
+> 충돌이 발생하면 충돌을 해결한 후 다시 commit합니다.<br>
+> **(git commit -m "conflict clear")**
 
 최초 Push
 
@@ -87,7 +105,13 @@ git push -u origin feature/login
 이후 Push
 
 ```bash
-git push
+git push origin "로컬에서 작업한 브랜치명"
+```
+
+예시
+
+```bash
+git push origin feature/login
 ```
 
 ---
@@ -97,16 +121,25 @@ git push
 GitHub에서
 
 ```
-feature/기능명
+Pull requests 메뉴 클릭
         ↓
-develop
+우측 상단에 [New pull request] 녹색 버튼 클릭
+        ↓
+작업한 브랜치 [feature/기능명] 클릭
+        ↓
+왼쪽 상단에 merge하는 base브랜치를 develop으로 변경
+        ↓
+[Create pull request] 녹색 버튼 클릭
+        ↓
+충돌나는 부분 없는지 확인 / 충돌 난다면 local에서 해결 후 push까지 다시 진행
 ```
 
 Pull Request 생성
 
 ---
 
-## 6. Merge 완료 후
+## 6. Merge(병합) 완료 후
+#### local에 develop브랜치를 원격에서 병합한 develop브랜치의 최신상태로 최신화
 
 develop 브랜치로 이동
 
@@ -120,10 +153,15 @@ git checkout develop
 git pull origin develop
 ```
 
+로컬에 있는 브랜치 리스트 확인
+```bash
+git branch
+```
+
 로컬 브랜치 삭제
 
 ```bash
-git branch -d feature/기능명
+git branch -d "삭제하려는 로컬 브랜치명"
 ```
 
 예시
@@ -138,7 +176,7 @@ git branch -d feature/login
 
 # 자주 사용하는 Git 명령어
 
-## 현재 브랜치 확인
+## 현재 로컬 브랜치 확인
 
 ```bash
 git branch
@@ -209,7 +247,7 @@ git push -u origin 브랜치명
 이후
 
 ```bash
-git push
+git push origin 브랜치명
 ```
 
 ## 로컬 브랜치 삭제

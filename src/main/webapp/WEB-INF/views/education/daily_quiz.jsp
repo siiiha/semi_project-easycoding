@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,114 +12,94 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/daily_quiz.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<jsp:include page="/WEB-INF/views/common/header_user.jsp" />
+<c:set var="totalCount" value="${fn:length(todayEducation)}" />
 
-<main class="quiz-page">
-    <div class="quiz-card">
+<main class="daily-quiz-page">
+    <div class="daily-quiz-wrap">
+        <div class="quiz-top-row">
+            <a class="quiz-back-link" href="${pageContext.request.contextPath}/education/daily">← 일일학습으로</a>
 
-        <!-- 문제 번호 + 카테고리 + 진행 바 -->
-        <div class="quiz-header">
-            <div class="quiz-header-top">
-                <h1 class="quiz-problem-num">문제 ${currentIndex} / ${totalCount}</h1>
-                <span class="quiz-category-badge">${quiz.categoryName}</span>
+            <div class="quiz-step-dots" aria-label="퀴즈 진행도">
+                <c:if test="${totalCount > 0}">
+                    <c:forEach begin="1" end="${totalCount}" var="idx">
+                        <span class="dot ${idx == 1 ? 'active' : ''}"></span>
+                    </c:forEach>
+                </c:if>
             </div>
-            <div class="quiz-progress-bar-wrap">
-                <div class="quiz-progress-bar" style="width: ${progressPercent}%"></div>
-            </div>
+
+            <p class="quiz-step-text">
+                <span id="quiz-current-index">${totalCount > 0 ? 1 : 0}</span> /
+                <span id="quiz-total-count">${totalCount}</span>
+            </p>
         </div>
 
-        <!-- 문제 본문 -->
-        <div class="quiz-body">
-            <p class="quiz-question">${quiz.questionText}</p>
+        <section class="quiz-card">
+            <div class="quiz-card-head">
+                <div class="quiz-badges">
+                    <span class="badge-type" id="quiz-type-text">객관식</span>
+                </div>
+                <span class="badge-lang" id="quiz-topic-text">Java 개념</span>
+            </div>
 
-            <!-- 코드 블록 (코드 문제인 경우만 표시) -->
-            <c:if test="${not empty quiz.codeSnippet}">
-            <div class="quiz-code-block">
-                <div class="quiz-code-lines">
-                    <c:forEach var="line" items="${quiz.codeLines}" varStatus="s">
-                    <div class="quiz-code-row">
-                        <span class="quiz-code-linenum">${s.index + 1}</span>
-                        <span class="quiz-code-text">${line}</span>
+            <div class="quiz-divider"></div>
+
+            <h1 class="quiz-question" id="quiz-question">테스트 문제 텍스트</h1>
+
+            <form class="quiz-form" id="quiz-form" action="#" method="post"
+                  data-submit-url="${pageContext.request.contextPath}/education/submit">
+                <div id="quiz-options"></div>
+
+                <div class="quiz-feedback quiz-feedback-correct is-hidden">
+                    <span class="feedback-icon">✓</span>
+                    <div>
+                        <p class="feedback-title">테스트 정답 안내 텍스트</p>
+                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
                     </div>
-                    </c:forEach>
                 </div>
-            </div>
-            </c:if>
 
-            <!-- 보기 선택지 -->
-            <form action="${pageContext.request.contextPath}/learn/daily-quiz/answer" method="post" id="quizForm">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                <input type="hidden" name="quizId" value="${quiz.id}">
-                <input type="hidden" name="sessionId" value="${quizSessionId}">
-                <div class="quiz-choices">
-                    <c:forEach var="choice" items="${quiz.choices}" varStatus="s">
-                    <label class="quiz-choice ${not empty selectedAnswer && selectedAnswer == choice.number ? 'selected' : ''}">
-                        <input type="radio" name="answer" value="${choice.number}"
-                               ${not empty selectedAnswer && selectedAnswer == choice.number ? 'checked' : ''}>
-                        <span class="quiz-choice-num">
-                            <c:choose>
-                                <c:when test="${s.index == 0}">❶</c:when>
-                                <c:when test="${s.index == 1}">②</c:when>
-                                <c:when test="${s.index == 2}">③</c:when>
-                                <c:otherwise>④</c:otherwise>
-                            </c:choose>
-                        </span>
-                        <span class="quiz-choice-text">${choice.text}</span>
-                    </label>
-                    </c:forEach>
+                <div class="quiz-feedback quiz-feedback-wrong is-hidden">
+                    <span class="feedback-icon">✕</span>
+                    <div>
+                        <p class="feedback-title">테스트 오답 안내 텍스트</p>
+                        <p class="feedback-desc">테스트 설명 텍스트입니다.</p>
+                    </div>
                 </div>
+
+                <button type="submit" class="quiz-submit-btn" id="quiz-next-btn">다음 문제 →</button>
             </form>
-        </div>
+        </section>
 
-        <!-- 구분선 + 이전/다음 버튼 -->
-        <div class="quiz-footer">
-            <div class="quiz-footer-divider"></div>
-            <div class="quiz-nav-btns">
-                <c:choose>
-                    <c:when test="${currentIndex > 1}">
-                        <a href="${pageContext.request.contextPath}/learn/daily-quiz?index=${currentIndex - 1}&sessionId=${quizSessionId}"
-                           class="quiz-btn quiz-btn-prev">&lt;&nbsp; 이전 문제</a>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="quiz-btn quiz-btn-prev disabled">&lt;&nbsp; 이전 문제</span>
-                    </c:otherwise>
-                </c:choose>
-
-                <c:choose>
-                    <c:when test="${currentIndex < totalCount}">
-                        <button type="button" class="quiz-btn quiz-btn-next"
-                                onclick="submitAndNext()">다음 문제 &nbsp;&gt;</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button type="button" class="quiz-btn quiz-btn-next quiz-btn-finish"
-                                onclick="submitAndFinish()">학습 완료 &nbsp;✓</button>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-
+        <section id="today-education-data" class="is-hidden">
+            <c:forEach var="edu" items="${todayEducation}">
+                <article class="quiz-data-item">
+                    <p class="quiz-data-id"><c:out value="${edu.educationId}" /></p>
+                    <p class="quiz-data-type"><c:out value="${edu.educationType}" /></p>
+                    <p class="quiz-data-category-id"><c:out value="${edu.educationCategoryID}" /></p>
+                    <p class="quiz-data-category-name"><c:out value="${edu.educationCategoryName}" /></p>
+                    <p class="quiz-data-title"><c:out value="${edu.educationTitle}" /></p>
+                    <p class="quiz-data-content"><c:out value="${edu.educationContent}" /></p>
+                    <p class="quiz-data-explanation"><c:out value="${edu.educationExplanation}" /></p>
+                    <div class="quiz-data-options">
+                        <c:forEach var="opt" items="${edu.options}">
+                            <p class="quiz-data-option-item"
+                               data-order="${opt.orderingNumber}"
+                               data-correct="${opt.correct}">
+                                <c:out value="${opt.optionContents}" />
+                            </p>
+                        </c:forEach>
+                    </div>
+                </article>
+            </c:forEach>
+        </section>
     </div>
 </main>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-<script src="${pageContext.request.contextPath}/js/modal.js"></script>
-<script>
-function submitAndNext() {
-    var form = document.getElementById('quizForm');
-    var action = form.action;
-    form.action = action + '?next=true';
-    form.submit();
-}
-function submitAndFinish() {
-    var form = document.getElementById('quizForm');
-    var action = form.action;
-    form.action = action + '?finish=true';
-    form.submit();
-}
-</script>
+<script src="${pageContext.request.contextPath}/js/daily_quiz.js"></script>
 </body>
 </html>

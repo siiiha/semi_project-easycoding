@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 해당 XML파일을 어떤 Mapper 인터페이스와 연결할지를 정해주는 속성.
+-->
+<mapper namespace="com.semi.easycoding.member.mapper.MemberMapper">
+
+    <select id="findByMemberId" parameterType="Long" resultType="MemberDto">
+        <!-- 1. id="findByMemberId"는 MemberDto findByMemberId(Long memberId)와 연결
+                Mapper 인터페이스의 메서드 이름과 동일해야함.-->
+        <!-- 2. parameterType="Long"인 이유는 findByMemberId(Long memberId)를 받기 때문-->
+        <!-- 3. resultType="MemberDto"인 이유는 조회 결과를 MemberDto로 받기 때문 -->
+
+        SELECT member_id,
+               email,
+               nickname,
+               profile_id,
+               DATE_FORMAT(created_at, '%Y.%m.%d') AS created_at
+          FROM member
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </select>
+
+    <select id="findPasswordByMemberId"
+            parameterType="Long"
+            resultType="String">
+
+        SELECT password
+          FROM member
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </select>
+
+    <select id="findMaskedEmailByNickname"
+            parameterType="String"
+            resultType="String">
+        SELECT CONCAT(
+                   LEFT(email, 4),
+                   REPEAT(
+                       '*',
+                       GREATEST(LOCATE('@', email) - 5, 0)
+                   ),
+                   SUBSTRING(email, LOCATE('@', email))
+               )
+        FROM member
+        WHERE nickname = #{nickname}
+          AND deleted_at IS NULL
+    </select>
+
+    <!-- 조회 결과이기 때문에 resultType을 적어야 한다.-->
+    <select id="login" parameterType="MemberDto" resultType="MemberDto">
+        select member_id, password
+        from member
+        where BINARY email = BINARY #{email}
+          and deleted_at is null
+    </select>
+
+    <select id="countByEmail" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+          FROM member
+         WHERE email = #{email}
+    </select>
+
+    <select id="countByNickname" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+          FROM member
+         WHERE nickname = #{nickname}
+    </select>
+
+    <!-- 실제로 DB에 회원을 저장하는 SQL -->
+    <insert id="join" parameterType="MemberDto">
+        insert into member (login_id, email, password, nickname)
+        values (#{email}, #{email}, #{password}, #{nickname})
+        <!-- 첫번째 email에는 login_id가 두번째에는 email이 저장 -->
+        <!-- #{...}는 MemberDto에서 값을 꺼내는 표현 -->
+    </insert>
+
+    <!-- 회원이 작성한 게시글 개수 -->
+    <select id="countPostByMemberId"
+            parameterType="Long"
+            resultType="int">
+        SELECT COUNT(*)
+          FROM post
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </select>
+
+    <!-- 회원이 작성한 댓글 개수 -->
+    <select id="countCommentByMemberId"
+            parameterType="Long"
+            resultType="int">
+        SELECT COUNT(*)
+          FROM comment
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </select>
+
+    <!-- 회원탈퇴 처리 -->
+    <update id="withdraw" parameterType="Long">
+        UPDATE member
+           SET deleted_at = NOW()
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+
+        <!-- WHERE member_id = #{memberId} 로그인한 사람만
+             원래 NULL이던 deleted_at에 탈퇴 시간을 넣는 것이 소프트 삭제
+             소프트 삭제와 그냥 삭제의 차이는 DB에 회원 행을 남겨두는지에 따라 달라진다.-->
+    </update>
+
+    <update id="updateNickname">
+        UPDATE member
+           SET nickname = #{nickname}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </update>
+    <!-- 비밀번호 변경 SQL -->
+    <update id="updatePasswordByEmail">
+        UPDATE member
+           SET password = #{password}
+         WHERE email = #{email}
+           AND deleted_at IS NULL
+    </update>
+
+    <update id="updatePasswordByMemberId">
+        UPDATE member
+           SET password = #{password}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </update>
+
+    <select id="findExpiredWithdrawnMemberIds"
+            resultType="long">
+        SELECT member_id
+        FROM member
+        WHERE deleted_at IS NOT NULL
+        AND deleted_at &lt; NOW() - INTERVAL 30 DAY
+    </select>
+
+    <update id="clearPostMemberId">
+        UPDATE post
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
+
+    <update id="clearCommentMemberId">
+        UPDATE comment
+        SET member_id = NULL
+        WHERE member_id = #{memberId}
+    </update>
+
+    <delete id="deleteAnsweredBlankByMemberId">
+        DELETE FROM answered_blank
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteAnsweredOptionByMemberId">
+        DELETE FROM answered_option
+        WHERE history_id IN (
+            SELECT history_id
+            FROM member_quiz_history
+            WHERE member_id = #{memberId}
+        )
+    </delete>
+
+    <delete id="deleteQuizHistoryByMemberId">
+        DELETE FROM member_quiz_history
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteQuizCategoriesByMemberId">
+        DELETE FROM member_and_quiz_category
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteMemberById">
+        DELETE FROM member
+        WHERE member_id = #{memberId}
+    </delete>
+
+    <update id="updateProfileId">
+        UPDATE member
+           SET profile_id = #{profileId}
+         WHERE member_id = #{memberId}
+           AND deleted_at IS NULL
+    </update>
+</mapper>

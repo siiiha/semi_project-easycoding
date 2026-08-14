@@ -10,9 +10,9 @@
 }
 
 .mypage-inner {
-  max-width: 1280px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 56px 100px 80px;
+  padding: 48px 24px 72px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -20,23 +20,23 @@
 
 /* ── 페이지 타이틀 ── */
 .mypage-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-weight: 800;
-  font-size: 48px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 32px;
   color: var(--color-primary);
-  line-height: 1;
+  line-height: 1.3;
 }
 
 /* ── 카드 ── */
 .mypage-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.13);
-  padding: 48px;
+  box-shadow: var(--shadow-card);
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 32px;
 }
 
 /* ── 섹션 공통 ── */
@@ -47,20 +47,20 @@
 }
 
 .mypage-section-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 36px;
-  color: #43A047;
+  font-size: 24px;
+  color: var(--color-primary-hover);
 }
 
 .section-title-sm {
-  font-size: 32px;
+  font-size: 22px;
 }
 
 .mypage-divider {
   width: 100%;
-  height: 1.3px;
-  background-color: #D9D9D9;
+  height: 1px;
+  background-color: var(--color-border);
   flex-shrink: 0;
 }
 
@@ -68,7 +68,7 @@
 .account-layout {
   display: flex;
   gap: 48px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 /* ── 아바타 ── */
@@ -76,16 +76,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
   width: 260px;
   flex-shrink: 0;
 }
 
 .avatar-circle {
-  width: 120px;
-  height: 120px;
+  width: 144px;
+  height: 144px;
   border-radius: 50%;
-  background-color: #EADDFF;
+  background-color: var(--color-light-green);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,26 +104,50 @@
   object-fit: cover;
 }
 
-.avatar-change-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  background-color: #F3F4F6;
-  border: 1px solid #9CA3AF;
-  border-radius: 8px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color var(--transition-fast);
-  white-space: nowrap;
+.profile-options {
+  display: grid;
+  grid-template-columns: repeat(6, 56px);
+  gap: 8px;
 }
-.avatar-change-btn:hover {
-  background-color: #E5E7EB;
-  color: var(--color-text-secondary);
+
+.profile-option {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.profile-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  box-sizing: border-box;
+  transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+}
+
+.profile-option:hover img {
+  transform: scale(1.05);
+}
+
+.profile-option input:checked + img {
+  border-color: var(--color-primary);
+}
+
+.profile-option input:focus-visible + img {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* ── 정보 행 ── */
@@ -147,9 +171,9 @@
 }
 
 .info-value {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 26px;
-  color: #1D1B20;
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--color-text-primary);
 }
 
 .info-name {
@@ -160,17 +184,17 @@
   margin-left: auto;
   padding: 8px 16px;
   background-color: var(--color-primary);
-  color: #fff;
-  border-radius: 8px;
-  font-size: 16px;
+  color: var(--color-text-on-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   flex-shrink: 0;
   transition: filter var(--transition-fast);
 }
 .info-modify-btn:hover {
-  filter: brightness(1.08);
-  color: #fff;
+  background-color: var(--color-primary-hover);
+  color: var(--color-text-on-primary);
 }
 
 /* ── 내 활동 ── */
@@ -187,17 +211,18 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: #F3F4F6;
-  border-radius: 12px;
-  padding: 20px;
-  width: 320px;
-  margin-right: 24px;
+  background-color: var(--color-bg-sub);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  width: 280px;
+  margin-right: 16px;
 }
 
 .activity-icon-wrap {
-  width: 100px;
-  height: 100px;
-  border-radius: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,11 +230,13 @@
 }
 
 .activity-icon-wrap.green {
-  background-color: #DCEFD9;
+  background-color: var(--color-light-green);
+  color: var(--color-primary-hover);
 }
 
 .activity-icon-wrap.yellow {
-  background-color: #FFF2D3;
+  background-color: var(--color-bg-sub);
+  color: var(--color-warning);
 }
 
 .activity-info {
@@ -219,16 +246,16 @@
 }
 
 .activity-label {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 20px;
-  color: #1D1B20;
+  font-size: 15px;
+  color: var(--color-text-primary);
 }
 
 .activity-count {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 26px;
-  color: #1D1B20;
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: var(--color-text-primary);
 }
 
 .activity-withdraw-wrap {
@@ -239,19 +266,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 32px;
-  background-color: #FF4444;
-  color: #fff;
-  border-radius: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  padding: 12px 20px;
+  background-color: var(--color-error);
+  color: var(--color-text-on-primary);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   transition: filter var(--transition-fast);
 }
 .withdraw-btn:hover {
   filter: brightness(1.08);
-  color: #fff;
+  color: var(--color-text-on-primary);
 }
 
 
@@ -264,6 +291,7 @@
   display: flex;
   gap: 48px;
   align-items: flex-start;
+  padding-bottom: 24px;
 }
 
 .edit-fields-grid {
@@ -287,9 +315,9 @@
 }
 
 .edit-field-label {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 20px;
+  font-size: 14px;
   color: var(--color-text-primary);
 }
 
@@ -297,39 +325,36 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 64px;
-  border: 2px solid #9CA3AF;
-  border-radius: 12px;
-  padding: 0 20px;
-  background: #fff;
-  transition: border-color var(--transition-fast);
+  color: var(--color-text-muted);
+  height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  padding: 0 14px;
+  background: var(--color-bg-card);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .edit-input-wrap:focus-within {
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-light-green);
 }
 
 .edit-input {
   flex: 1;
   border: none;
   outline: none;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--color-text-primary);
   background: transparent;
 }
 
 .edit-input::placeholder {
-  color: #9CA3AF;
+  color: var(--color-text-muted);
 }
 
-.edit-input[readonly] {
-  color: var(--color-text-secondary);
-  cursor: not-allowed;
-}
-
-/* 읽기 전용 행 (2열) */
-.edit-readonly-row {
+/* 입력 필드 2열 배치 */
+.edit-two-column-row {
   display: flex;
   gap: 20px;
 }
@@ -338,21 +363,38 @@
 .password-section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  padding-top: 24px;
 }
 
 .password-section-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 24px;
   color: var(--color-primary);
 }
 
 .edit-error {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--color-error);
   margin-top: -8px;
+}
+
+#check-edit-nickname-result,
+#check-new-password-result,
+#check-confirm-password-result {
+  min-height: 18px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-error);
+}
+
+#check-edit-nickname-result.is-success,
+#check-new-password-result.is-success,
+#check-confirm-password-result.is-success {
+  color: var(--color-success);
 }
 
 /* 액션 버튼 */
@@ -363,26 +405,26 @@
 }
 
 .btn-save {
-  padding: 16px 48px;
+  padding: 12px 28px;
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-on-primary);
   border: none;
-  border-radius: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: filter var(--transition-fast);
 }
-.btn-save:hover { filter: brightness(1.08); }
+.btn-save:hover { background-color: var(--color-primary-hover); }
 
 .btn-cancel {
-  padding: 16px 32px;
-  background: #fff;
-  border: 1px solid #9CA3AF;
-  border-radius: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  padding: 12px 24px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text-secondary);
   text-decoration: none;
@@ -391,7 +433,7 @@
   transition: border-color var(--transition-fast);
 }
 .btn-cancel:hover {
-  border-color: #6B7280;
+  border-color: var(--color-primary);
   color: var(--color-text-secondary);
 }
 
@@ -401,20 +443,20 @@
    ═══════════════════════════════════════════════════════════ */
 
 .withdraw-inner {
-  max-width: 1280px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 56px 100px 80px;
+  padding: 48px 24px 72px;
   display: flex;
   justify-content: center;
 }
 
 .withdraw-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  padding: 56px;
-  width: 853px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  width: 720px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -433,7 +475,8 @@
 .warning-icon-wrap {
   width: 76px;
   height: 76px;
-  background-color: #FFEBEE;
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -442,16 +485,16 @@
 }
 
 .withdraw-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-weight: 800;
-  font-size: 36px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 28px;
   color: var(--color-text-primary);
   text-align: center;
 }
 
 .withdraw-subtitle {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 18px;
+  font-family: var(--font-body);
+  font-size: 15px;
   color: var(--color-text-secondary);
   text-align: center;
 }
@@ -464,7 +507,7 @@
 }
 
 .withdraw-items-title {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   color: var(--color-text-primary);
@@ -481,15 +524,16 @@
   align-items: center;
   gap: 16px;
   background-color: var(--color-bg-main);
-  border-radius: 12px;
-  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
 }
 
 .withdraw-bullet {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #FF4444;
+  background-color: var(--color-error);
   flex-shrink: 0;
 }
 
@@ -500,14 +544,14 @@
 }
 
 .withdraw-item-name {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   color: var(--color-text-primary);
 }
 
 .withdraw-item-desc {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--color-text-secondary);
   line-height: 1.5;
@@ -518,17 +562,18 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #FFF2F2;
-  border: 1px solid #FFCDD2;
-  border-radius: 12px;
-  padding: 20px;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  color: var(--color-error);
 }
 
 .withdraw-irreversible-text {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 16px;
-  color: #FF4444;
+  color: var(--color-error);
   flex: 1;
   line-height: 1.5;
 }
@@ -541,13 +586,13 @@
 
 .withdraw-btn-confirm {
   flex: 1;
-  padding: 18px 0;
-  background-color: #FF4444;
-  color: #fff;
+  padding: 14px 0;
+  background-color: var(--color-error);
+  color: var(--color-text-on-primary);
   border: none;
-  border-radius: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: filter var(--transition-fast);
@@ -556,12 +601,12 @@
 
 .withdraw-btn-return {
   flex: 1;
-  padding: 18px 0;
-  background: #fff;
-  border: 1px solid #9CA3AF;
-  border-radius: 12px;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  padding: 14px 0;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text-secondary);
   text-decoration: none;
@@ -571,6 +616,75 @@
   transition: border-color var(--transition-fast);
 }
 .withdraw-btn-return:hover {
-  border-color: #6B7280;
+  border-color: var(--color-primary);
   color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .mypage-inner,
+  .withdraw-inner {
+    padding: 32px 20px 48px;
+  }
+
+  .mypage-title {
+    font-size: 28px;
+  }
+
+  .mypage-card,
+  .withdraw-card {
+    padding: 24px 20px;
+  }
+
+  .account-layout,
+  .edit-upper-layout {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .avatar-section {
+    width: 100%;
+  }
+
+  .profile-options {
+    grid-template-columns: repeat(3, 56px);
+  }
+
+  .info-rows,
+  .edit-fields-grid {
+    width: 100%;
+  }
+
+  .edit-two-column-row {
+    flex-direction: column;
+  }
+
+  .activity-stats {
+    gap: 12px;
+  }
+
+  .activity-card {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .activity-withdraw-wrap {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .withdraw-btn {
+    width: 100%;
+  }
+
+  .form-actions,
+  .withdraw-actions {
+    flex-direction: column;
+  }
+
+  .btn-save,
+  .btn-cancel {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }

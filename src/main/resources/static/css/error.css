@@ -1,0 +1,122 @@
+/* ============================================================
+   error.css - 오류 안내 페이지 스타일
+   common.css의 색상·버튼·카드 변수를 사용합니다.
+   ============================================================ */
+
+.error-page {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    align-items: center;
+    padding: 72px 24px;
+    background: linear-gradient(180deg, var(--color-very-light) 0%, var(--color-bg-main) 100%);
+}
+
+.error-card {
+    width: min(100%, 960px);
+    margin: 0 auto;
+    padding: 56px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 56px;
+    overflow: hidden;
+}
+
+.error-copy {
+    max-width: 510px;
+}
+
+.error-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    margin-bottom: 16px;
+    border: 1px solid var(--color-error-border);
+    border-radius: 999px;
+    color: var(--color-error);
+    background: var(--color-error-bg);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.error-badge svg {
+    width: 16px;
+    height: 16px;
+}
+
+.error-code {
+    color: var(--color-primary);
+    font-family: var(--font-logo);
+    font-size: clamp(2.7rem, 7vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.error-title {
+    margin: 14px 0 12px;
+    font-size: clamp(1.55rem, 3vw, 2.2rem);
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+}
+
+.error-description {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    word-break: keep-all;
+}
+
+.error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.error-actions .btn {
+    min-width: 128px;
+}
+
+.error-illustration {
+    width: min(260px, 32vw);
+    flex: 0 0 auto;
+    position: relative;
+}
+
+.error-illustration::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 8% -2% 8% 2%;
+    border-radius: 50%;
+    background: var(--color-light-green);
+}
+
+.error-illustration img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 720px) {
+    .error-page {
+        padding: 40px 20px;
+    }
+
+    .error-card {
+        padding: 40px 28px 32px;
+        flex-direction: column-reverse;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .error-illustration {
+        width: 190px;
+    }
+
+    .error-actions {
+        justify-content: center;
+    }
+}
