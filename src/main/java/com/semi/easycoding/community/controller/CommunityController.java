@@ -173,7 +173,7 @@ public class CommunityController {
 //            }
         } catch (IllegalArgumentException e) {
             model.addAttribute("errMsg", e.getMessage());
-            return "community/community_detail";
+            return "common/error";
         }
 
         return "community/community_edit";
